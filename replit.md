@@ -1,9 +1,10 @@
-# [Project name]
+# GEIT Ltd Corporate Website
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+A corporate website for Global Energy Innovation Technologies Ltd (GEIT Ltd), presenting its energy advisory, project development, digital energy, and carbon services to clients in Rwanda and beyond.
 
 ## Run & Operate
 
+- `pnpm --filter @workspace/geit-website run dev` — run the public website
 - `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
 - `pnpm run typecheck` — full typecheck across all packages
 - `pnpm run build` — typecheck + build all packages
@@ -22,23 +23,29 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `artifacts/geit-website/` — public React/Vite website
+- `artifacts/api-server/src/routes/enquiries.ts` — consultation enquiry endpoint
+- `lib/api-spec/openapi.yaml` — API contract source of truth
+- `lib/db/src/schema/enquiries.ts` — persisted enquiry schema
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- The site uses the platform's React/Vite web artifact scaffold rather than the Next.js stack named in the source brief.
+- Enquiries are validated from the generated OpenAPI/Zod contract and saved in PostgreSQL before the API returns an accepted receipt.
+- The initial site is a public corporate website and lead form, not a client portal or energy SaaS product.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+GEIT Ltd presents 11 energy consulting and digital service areas, sector solutions, company information, insights, legal pages, and a server-backed consultation enquiry form.
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+- Use the supplied company facts and brand palette as the source of truth.
+- Do not invent clients, completed projects, credentials, awards, partnerships, certifications, energy savings, investment returns, or emissions-reduction figures.
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- Replace origin-neutral sitemap paths with absolute URLs once GEIT's official publication domain is confirmed; do not assume `geit.rw`.
 
 ## Pointers
 

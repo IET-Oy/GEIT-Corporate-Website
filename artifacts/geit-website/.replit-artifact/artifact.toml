@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "GEIT Corporate Website"
+description = "A premium corporate website for Global Energy Innovation Technologies Ltd, presenting its energy advisory, project development, digital energy, and carbon services, with a consultation enquiry workflow."
+version = "1.0.0"
+id = "artifacts/geit-website"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 18414
+
+[services.development]
+run = "pnpm --filter @workspace/geit-website run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/geit-website", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/geit-website/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "18414"
+BASE_PATH = "/"

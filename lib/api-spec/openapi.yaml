@@ -10,6 +10,8 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: enquiries
+    description: Public consultation enquiries
 paths:
   /healthz:
     get:
@@ -24,6 +26,37 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /enquiries:
+    post:
+      operationId: createEnquiry
+      tags: [enquiries]
+      summary: Submit a consultation enquiry
+      description: Validates and records a consultation enquiry for GEIT Ltd.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EnquiryInput"
+      responses:
+        "201":
+          description: Enquiry accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EnquiryReceipt"
+        "400":
+          description: Invalid enquiry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "429":
+          description: Too many enquiries submitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +66,82 @@ components:
           type: string
       required:
         - status
+    EnquiryInput:
+      type: object
+      additionalProperties: false
+      required:
+        - fullName
+        - organization
+        - businessEmail
+        - country
+        - serviceOfInterest
+        - projectDescription
+        - privacyConsent
+      properties:
+        fullName:
+          type: string
+          minLength: 2
+          maxLength: 120
+        organization:
+          type: string
+          minLength: 2
+          maxLength: 160
+        businessEmail:
+          type: string
+          format: email
+          maxLength: 254
+        telephone:
+          type: ["string", "null"]
+          maxLength: 40
+        country:
+          type: string
+          minLength: 2
+          maxLength: 80
+        serviceOfInterest:
+          type: string
+          enum:
+            - Energy Management
+            - Energy Consulting
+            - Energy Project Development
+            - Energy Market Research
+            - Energy Technology Solutions
+            - Renewable Energy Advisory
+            - Energy Efficiency & Energy Auditing
+            - Battery Energy Storage & Energy Flexibility Consulting
+            - EV Charging Infrastructure Advisory
+            - AI-Powered Energy Analytics & Digital Energy Solutions
+            - Carbon Footprint Services
+            - Other
+        projectDescription:
+          type: string
+          minLength: 20
+          maxLength: 5000
+        preferredContactMethod:
+          type: ["string", "null"]
+          enum: [email, phone, video-call, null]
+        privacyConsent:
+          type: boolean
+          const: true
+        website:
+          type: string
+          maxLength: 200
+          description: Spam honeypot; must be empty when submitted by a person.
+    EnquiryReceipt:
+      type: object
+      required: [accepted, reference, receivedAt]
+      properties:
+        accepted:
+          type: boolean
+          const: true
+        reference:
+          type: string
+        receivedAt:
+          type: string
+          format: date-time
+    ApiError:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
 
