@@ -1,2 +1,3 @@
 - [GEIT scope and identity](geit-scope.md) — logo-only header; no enquiry infrastructure without approval.
 - [WebGL verification](webgl-verification.md) — browser automation could verify fallback only; GPU visuals require WebGL-capable evidence.
+- [GEIT language review](geit-language-review.md) — complete translation drafts are allowed, but must be labelled as awaiting human review.

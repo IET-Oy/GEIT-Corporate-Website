@@ -1,20 +1,21 @@
+import { useLanguage } from "@/lib/language-context";
 import { useId, useState } from "react";
 
 const phases = ["Energy Orb", "Spiral Galaxy", "Neural Brain"] as const;
 
 /** Static, selectable illustrations for browsers without a 3D graphics context. */
 export function EnergyOrbFallback({ unavailable = false }: { unavailable?: boolean }) {
+  const { c } = useLanguage();
+
   const [phase, setPhase] = useState(0);
   const id = useId().replace(/:/g, "");
   return (
     <div className="absolute inset-0 flex items-center justify-center pb-20 pt-9">
       {unavailable && (
-        <p className="absolute inset-x-4 top-4 text-center text-[10px] tracking-wide text-white/65">
-          Static preview · 3D graphics unavailable on this device
-        </p>
+        <p className="absolute inset-x-4 top-4 text-center text-[10px] tracking-wide text-white/65">{c("Static preview · 3D graphics unavailable on this device")}</p>
       )}
       <svg viewBox="0 0 400 300" className="max-h-full w-full max-w-[520px]" role="img" aria-labelledby={`${id}-title`}>
-        <title id={`${id}-title`}>{phases[phase]} — conceptual energy intelligence illustration</title>
+        <title id={`${id}-title`}>{c("{phase} — conceptual energy intelligence illustration", { phase: c(phases[phase]) })}</title>
         <defs>
           <radialGradient id={`${id}-glow`}>
             <stop stopColor="#42E8D5" stopOpacity=".24" />
@@ -61,11 +62,11 @@ export function EnergyOrbFallback({ unavailable = false }: { unavailable?: boole
         )}
       </svg>
       {unavailable && (
-        <div className="absolute inset-x-2 bottom-12 flex justify-center gap-1.5" role="group" aria-label="Illustration preview">
+        <div className="absolute inset-x-2 bottom-12 flex justify-center gap-1.5" role="group" aria-label={c("Illustration preview")}>
           {phases.map((name, index) => (
             <button key={name} type="button" aria-pressed={phase === index} onClick={() => setPhase(index)}
               className={`min-h-11 rounded border px-2.5 text-[10px] font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e8b64b] sm:text-xs ${phase === index ? "border-[#8FFFD2] bg-[#8FFFD2]/10 text-[#8FFFD2]" : "border-white/20 text-white/70 hover:border-white/60 hover:text-white"}`}>
-              {name}
+              {c(name)}
             </button>
           ))}
         </div>

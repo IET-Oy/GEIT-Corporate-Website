@@ -1,8 +1,8 @@
 export const languageOptions = [
   { code: "en", label: "English" },
-  { code: "fr", label: "French" },
+  { code: "fr", label: "Français" },
   { code: "rw", label: "Kinyarwanda" },
-  { code: "sw", label: "Swahili" },
+  { code: "sw", label: "Kiswahili" },
 ] as const;
 
 export type LanguageCode = (typeof languageOptions)[number]["code"];
@@ -21,7 +21,7 @@ const english = {
   menuClose: "Close menu",
   exploreAllServices: "Explore all services",
   contentLanguageNotice:
-    "Navigation and form labels use your selected language. Page content is currently in English.",
+    "Draft translation — awaiting human review. Technical and legal wording may be inaccurate. Refer to the English source when needed.",
   footerCompany: "Company",
   footerServices: "Services",
   footerContact: "Contact us",
@@ -94,7 +94,7 @@ const messages: Record<LanguageCode, Record<MessageKey, string>> = {
     menuClose: "Fermer le menu",
     exploreAllServices: "Voir tous les services",
     contentLanguageNotice:
-      "La navigation et les libellés du formulaire utilisent la langue choisie. Le contenu des pages est actuellement en anglais.",
+      "Traduction provisoire — en attente de révision humaine. Les formulations techniques et juridiques peuvent être inexactes. Consultez la version anglaise si nécessaire.",
     footerCompany: "Entreprise",
     footerServices: "Services",
     footerContact: "Nous contacter",
@@ -162,7 +162,7 @@ const messages: Record<LanguageCode, Record<MessageKey, string>> = {
     menuClose: "Funga menu",
     exploreAllServices: "Reba serivisi zose",
     contentLanguageNotice:
-      "Imiyoborere n'amazina y'ibice by'ifishi biri mu rurimi wahisemo. Ibindi bikubiye ku mapaji biri mu Cyongereza.",
+      "Ubu buhinduzi buracyategereje gusuzumwa n’umuntu. Imvugo ya tekiniki n’iy’amategeko ishobora kuba irimo amakosa. Reba inyandiko y’Icyongereza igihe bikenewe.",
     footerCompany: "Ikigo",
     footerServices: "Serivisi",
     footerContact: "Twandikire",
@@ -195,7 +195,7 @@ const messages: Record<LanguageCode, Record<MessageKey, string>> = {
     country: "Igihugu",
     countryHint: "Igihugu urimo cyangwa aho umushinga uzakorera.",
     serviceOfInterest: "Serivisi ushaka",
-    serviceHint: "Hitamo serivisi ikwegereye, cyangwa Other.",
+    serviceHint: "Hitamo serivisi ikwegereye, cyangwa Ikindi.",
     chooseService: "Hitamo serivisi",
     projectDescription: "Ibisobanuro by'umushinga",
     descriptionHint: "Andika nibura inyuguti 20. Irinde amakuru y'ibanga.",
@@ -230,7 +230,7 @@ const messages: Record<LanguageCode, Record<MessageKey, string>> = {
     menuClose: "Funga menyu",
     exploreAllServices: "Tazama huduma zote",
     contentLanguageNotice:
-      "Urambazaji na lebo za fomu ziko katika lugha uliyochagua. Maudhui ya kurasa bado yako kwa Kiingereza.",
+      "Tafsiri ya rasimu — inasubiri ukaguzi wa binadamu. Maneno ya kiufundi na kisheria yanaweza kuwa na makosa. Rejelea toleo la Kiingereza inapohitajika.",
     footerCompany: "Kampuni",
     footerServices: "Huduma",
     footerContact: "Wasiliana nasi",
@@ -263,7 +263,7 @@ const messages: Record<LanguageCode, Record<MessageKey, string>> = {
     country: "Nchi",
     countryHint: "Nchi uliko au mahali mradi ulipo.",
     serviceOfInterest: "Huduma unayohitaji",
-    serviceHint: "Chagua huduma inayokaribiana zaidi, au Other.",
+    serviceHint: "Chagua huduma inayokaribiana zaidi, au Nyingine.",
     chooseService: "Chagua huduma",
     projectDescription: "Maelezo ya mradi",
     descriptionHint: "Angalau herufi 20. Epuka taarifa za siri.",

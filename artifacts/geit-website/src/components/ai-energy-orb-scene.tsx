@@ -1,3 +1,4 @@
+import { useLanguage } from "@/lib/language-context";
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 
@@ -159,6 +160,8 @@ const LN_FRAG = /* glsl */ `precision mediump float; varying float vL; varying v
 void main(){ gl_FragColor = vec4(vCol * vL * uFade, vL * uFade); }`;
 
 export default function AiEnergyOrbScene({ onFallback }: { onFallback: () => void }) {
+  const { c } = useLanguage();
+
   const host = useRef<HTMLDivElement>(null);
   const [phase, setPhase] = useState(0);
   const fallbackRef = useRef(onFallback);
@@ -348,7 +351,7 @@ export default function AiEnergyOrbScene({ onFallback }: { onFallback: () => voi
       <div className="pointer-events-none absolute left-4 top-4 flex gap-2" aria-live="polite">
         {PHASES.map((p, i) => (
           <span key={p} className={`border px-2 py-1 font-mono text-[10px] tracking-[.12em] transition-colors duration-700 ${phase === i ? 'border-[#8FFFD2]/70 text-[#8FFFD2]' : 'border-white/10 text-white/30'}`}>
-            {p.toUpperCase()}
+            {c(p)}
           </span>
         ))}
       </div>

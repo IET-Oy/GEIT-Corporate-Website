@@ -4,6 +4,7 @@ import { Link, useLocation } from "wouter";
 import LanguageSelector from "@/components/language-selector";
 import { useLanguage } from "@/lib/language-context";
 import type { MessageKey } from "@/lib/i18n";
+import { translationReview } from "@/lib/page-copy";
 
 const primary = [
   { key: "navHome", href: "/" },
@@ -20,7 +21,7 @@ const secondary = [
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [path] = useLocation();
-  const { t } = useLanguage();
+  const { c, t } = useLanguage();
 
   useEffect(() => setOpen(false), [path]);
   useEffect(() => {
@@ -44,9 +45,9 @@ export function SiteHeader() {
     <>
       <header className="sticky top-0 z-40 border-b border-[#dce3e8] bg-[#f2f5f7]/95 backdrop-blur-md">
         <div className="mx-auto flex min-h-[74px] max-w-[1320px] items-center gap-3 px-3 sm:min-h-[84px] sm:px-5 lg:px-8">
-          <Link href="/" className="flex min-w-0 shrink-0 items-center" aria-label="GEIT Ltd. — Global Energy Innovation Technologies, home" data-testid="link-home-brand">
+          <Link href="/" className="flex min-w-0 shrink-0 items-center" aria-label={c("GEIT Ltd. — Global Energy Innovation Technologies, home")} data-testid="link-home-brand">
             <span className="shrink-0 bg-white p-1">
-              <img src="/images/geit-logo.jpg" alt="GEIT Ltd. — Global Energy Innovation Technologies" className="h-[50px] w-[120px] object-contain sm:h-[60px] sm:w-[144px]" width="373" height="157" />
+              <img src="/images/geit-logo.jpg" alt={c("GEIT Ltd. — Global Energy Innovation Technologies")} className="h-[50px] w-[120px] object-contain sm:h-[60px] sm:w-[144px]" width="373" height="157" />
             </span>
           </Link>
           <div className="ml-auto flex min-w-0 items-center gap-2 sm:gap-3">
@@ -61,7 +62,7 @@ export function SiteHeader() {
             </button>
           </div>
         </div>
-        <nav className="hidden items-center justify-end gap-6 border-t border-[#e3e9ed] px-8 py-2 text-sm lg:flex xl:hidden" aria-label="Secondary">
+        <nav className="hidden items-center justify-end gap-6 border-t border-[#e3e9ed] px-8 py-2 text-sm lg:flex xl:hidden" aria-label={c("Secondary navigation")}>
           {secondary.map((l) => item(l))}
         </nav>
         {open && (
@@ -80,8 +81,8 @@ export function SiteHeader() {
 }
 
 function LanguageNotice() {
-  const { language, t } = useLanguage();
-  if (language === "en") return null;
+  const { language, setLanguage, t } = useLanguage();
+  if (translationReview[language].status !== "awaiting-human-review") return null;
   return (
     <div
       className="border-b border-[#d6e5df] bg-[#e8f2ef] px-4 py-2 text-center text-xs leading-5 text-[#285b4d]"
@@ -90,6 +91,10 @@ function LanguageNotice() {
       data-testid="language-coverage-notice"
     >
       {t("contentLanguageNotice")}
+      {" "}
+      <button type="button" onClick={() => setLanguage("en")} className="font-semibold underline underline-offset-2 focus-visible:outline focus-visible:outline-2" lang="en">
+        Read in English
+      </button>
     </div>
   );
 }

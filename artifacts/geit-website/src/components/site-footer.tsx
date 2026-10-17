@@ -22,7 +22,7 @@ const socialItems: { key: SocialProfileKey; name: string; Icon: LucideIcon }[] =
 ];
 
 export function SiteFooter() {
-  const { t } = useLanguage();
+  const { c, t } = useLanguage();
   const configuredSocials = socialItems.filter(({ key }) => companyContact.socialProfiles[key]);
 
   return (
@@ -33,12 +33,12 @@ export function SiteFooter() {
             <Link
               href="/"
               className="inline-flex items-center gap-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#e8b64b]"
-              aria-label="GEIT Ltd. — Global Energy Innovation Technologies, home"
+              aria-label={c("GEIT Ltd. — Global Energy Innovation Technologies, home")}
             >
               <span className="bg-white p-1">
                 <img
                   src="/images/geit-logo.jpg"
-                  alt="GEIT Ltd. — Global Energy Innovation Technologies"
+                  alt={c("GEIT Ltd. — Global Energy Innovation Technologies")}
                   className="h-[48px] w-[116px] object-contain"
                   width="373"
                   height="157"
@@ -46,8 +46,8 @@ export function SiteFooter() {
               </span>
             </Link>
             <p className="mt-4 text-sm font-semibold">{companyContact.companyName}</p>
-            <p className="mt-2 text-sm text-white/65">Energy Intelligence. Measurable Impact.</p>
-            <p className="mt-4 max-w-xs text-sm leading-6 text-white/70">Engineering analysis, investment advice and digital tools to help organisations make informed energy and carbon decisions.</p>
+            <p className="mt-2 text-sm text-white/65">{c("Energy Intelligence. Measurable Impact.")}</p>
+            <p className="mt-4 max-w-xs text-sm leading-6 text-white/70">{c("Engineering analysis, investment advice and digital tools to help organisations make informed energy and carbon decisions.")}</p>
             <p className="mt-5 text-xs font-semibold tracking-[.12em] text-[#e8b64b]">
               {companyContact.officeAddress.toUpperCase()}
             </p>
@@ -71,7 +71,7 @@ export function SiteFooter() {
             <div className="mt-5 grid gap-3 text-sm text-white/65">
               {footerServices.map((service) => (
                 <Link key={service.href} href={service.href} className="hover:text-white">
-                  {service.label}
+                  {c(service.label)}
                 </Link>
               ))}
             </div>
@@ -106,7 +106,7 @@ export function SiteFooter() {
                       href={companyContact.socialProfiles[key] ?? undefined}
                       target="_blank"
                       rel="noopener noreferrer"
-                      aria-label={`GEIT on ${name}`}
+                      aria-label={c("GEIT on {name}", { name })}
                       className="grid h-11 w-11 place-items-center rounded-full border border-white/20 text-white/75 transition hover:border-white hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#e8b64b]"
                     >
                       <Icon size={16} aria-hidden="true" />
@@ -123,8 +123,8 @@ export function SiteFooter() {
         <div className="mt-12 flex flex-col justify-between gap-4 border-t border-white/15 pt-6 text-xs text-white/50 sm:flex-row sm:items-center">
           <span>© {new Date().getFullYear()} {companyContact.companyName}.</span>
           <div className="flex gap-5">
-            <Link href="/privacy-policy" className="hover:text-white">Privacy policy</Link>
-            <Link href="/terms-of-use" className="hover:text-white">Terms of use</Link>
+            <Link href="/privacy-policy" className="hover:text-white">{c("Privacy policy")}</Link>
+            <Link href="/terms-of-use" className="hover:text-white">{c("Terms of use")}</Link>
           </div>
         </div>
       </div>

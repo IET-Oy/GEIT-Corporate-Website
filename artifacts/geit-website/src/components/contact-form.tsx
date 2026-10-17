@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { ArrowRight } from "lucide-react";
@@ -70,7 +70,7 @@ function Field({
 }
 
 export default function ContactForm() {
-  const { language, t } = useLanguage();
+  const { language, t, c } = useLanguage();
   const schema = useMemo(() => createContactFormSchema(language), [language]);
   const [submissionResult, setSubmissionResult] = useState<ReturnType<
     typeof getUnconfiguredSubmissionResult
@@ -85,6 +85,11 @@ export default function ContactForm() {
   const errors = form.formState.errors;
   const hasErrors = Object.keys(errors).length > 0;
   const fieldError = (name: keyof ContactFormValues) => errors[name]?.message;
+  const { trigger, formState: { isSubmitted } } = form;
+  useEffect(() => {
+    // Refresh existing feedback on a language switch without changing entries.
+    if (isSubmitted) void trigger();
+  }, [language, isSubmitted, trigger]);
 
   const onSubmit = () => {
     // Intentionally do not send, store, or log form values.
@@ -120,7 +125,7 @@ export default function ContactForm() {
           aria-live="polite"
           data-testid="status-enquiry-not-sent"
         >
-          {submissionResult.message}
+          {t("formNotSent")}
         </div>
       )}
 
@@ -263,7 +268,7 @@ export default function ContactForm() {
               >
                 <option value="">{t("chooseService")}</option>
                 {contactServiceOptions.map((service) => (
-                  <option key={service} value={service}>{service}</option>
+                  <option key={service} value={service}>{c(service)}</option>
                 ))}
               </select>
             )}
