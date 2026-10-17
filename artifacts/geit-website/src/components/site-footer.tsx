@@ -47,6 +47,7 @@ export function SiteFooter() {
             </Link>
             <p className="mt-4 text-sm font-semibold">{companyContact.companyName}</p>
             <p className="mt-2 text-sm text-white/65">Energy Intelligence. Measurable Impact.</p>
+            <p className="mt-4 max-w-xs text-sm leading-6 text-white/70">Engineering analysis, investment advice and digital tools to help organisations make informed energy and carbon decisions.</p>
             <p className="mt-5 text-xs font-semibold tracking-[.12em] text-[#e8b64b]">
               {companyContact.officeAddress.toUpperCase()}
             </p>
@@ -55,11 +56,13 @@ export function SiteFooter() {
           <section>
             <h2 className="text-sm font-bold">{t("footerCompany")}</h2>
             <div className="mt-5 grid gap-3 text-sm text-white/65">
+              <Link href="/" className="hover:text-white">{t("navHome")}</Link>
               <Link href="/about" className="hover:text-white">{t("footerAbout")}</Link>
               <Link href="/services" className="hover:text-white">{t("footerOurServices")}</Link>
               <Link href="/industries" className="hover:text-white">{t("footerIndustries")}</Link>
               <Link href="/digital-energy-solutions" className="hover:text-white">{t("footerDigital")}</Link>
               <Link href="/insights" className="hover:text-white">{t("footerInsights")}</Link>
+              <Link href="/contact" className="hover:text-white">{t("navContact")}</Link>
             </div>
           </section>
 
@@ -104,7 +107,7 @@ export function SiteFooter() {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={`GEIT on ${name}`}
-                      className="grid h-9 w-9 place-items-center rounded-full border border-white/20 text-white/75 transition hover:border-white hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#e8b64b]"
+                      className="grid h-11 w-11 place-items-center rounded-full border border-white/20 text-white/75 transition hover:border-white hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#e8b64b]"
                     >
                       <Icon size={16} aria-hidden="true" />
                     </a>

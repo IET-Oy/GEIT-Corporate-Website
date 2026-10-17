@@ -1,0 +1,326 @@
+# PROMPT 7 — GEIT LTD WEBSITE PROFESSIONALIZATION AND UX IMPROVEMENT
+
+Act as a senior UI/UX designer, frontend engineer, corporate branding specialist and SEO consultant.
+
+Improve the existing Global Energy Innovation Technologies Ltd (GEIT Ltd) website. Inspect the current codebase and preview before making changes. Preserve the official GEIT logo, company identity, approved color palette, AI energy-orb animation, existing service pages and working functionality.
+
+The objective is to make the website easier to navigate, more informative, visually consistent, trustworthy and ready for professional business use.
+
+## 1. FIX THE MAIN NAVIGATION BAR
+
+The following four pages must be directly visible in the main navigation bar without being hidden inside a dropdown:
+
+- Home
+- About
+- Services
+- Contact
+
+Also provide access to:
+- Industries & Solutions
+- Digital Energy Solutions
+- Insights
+
+Use a desktop navigation structure such as:
+
+Home | About | Services | Industries & Solutions | Digital Energy Solutions | Insights | Contact
+
+Add a prominent "Request a Consultation" CTA button if space permits.
+
+Requirements:
+- Home, About, Services and Contact must remain directly accessible.
+- Do not hide these four primary links inside a hamburger menu on desktop.
+- On mobile, use an accessible hamburger menu that opens and closes correctly.
+- All navigation items must link to the correct existing routes.
+- The GEIT logo and company identity must link to the homepage.
+- Keep the full company name, "Global Energy Innovation Technologies", visibly associated with GEIT Ltd in the header.
+- Make the active page visually distinguishable.
+- Ensure the navigation remains readable at common laptop, tablet and mobile widths.
+- Prevent overlapping text, clipped links and horizontal scrolling.
+- If necessary, reduce spacing or typography slightly before removing important navigation links.
+
+Keep the header professional, lightweight and consistent across all pages.
+
+## 2. REWRITE THE INDUSTRIES & SOLUTIONS PAGE
+
+Review the existing Industries & Solutions page and rewrite the descriptions so that each industry has distinct, useful and commercially relevant content.
+
+Do not repeat generic statements about reducing costs, improving efficiency or adopting technology across every sector.
+
+Create the following industry sections:
+
+### A. Commercial Buildings & Real Estate
+
+Explain how GEIT helps office buildings, shopping centres, hotels, property owners and facility managers understand electricity consumption, evaluate building energy performance, identify operational inefficiencies, assess energy-saving investments and plan solar PV, battery storage and electrification.
+
+Relevant services:
+Energy management, energy auditing, building-energy analytics, renewable-energy advisory and carbon accounting.
+
+### B. Industrial & Manufacturing Facilities
+
+Focus on electricity-intensive operations, production equipment, motors, refrigeration, compressed air, process loads, demand peaks and energy-cost exposure.
+
+Explain how GEIT can assess consumption patterns, identify improvement opportunities, evaluate operational flexibility and support investment decisions using engineering and economic analysis.
+
+Relevant services:
+Energy audits, energy management, feasibility studies, energy-market analysis and digital monitoring.
+
+### C. Renewable Energy Developers & Investors
+
+Focus on project feasibility, technology selection, resource and demand analysis, financial assumptions, project risks, commercial evaluation and implementation planning.
+
+Explain how GEIT supports developers, investors and asset owners throughout project development and investment decision-making.
+
+Relevant services:
+Renewable-energy advisory, project development, market research, financial and technical analysis, and performance monitoring.
+
+### D. Solar PV & Battery Energy Storage
+
+Focus on matching generation, consumption, storage capacity and operating schedules.
+
+Explain how GEIT evaluates self-consumption, load profiles, battery sizing, energy flexibility, system performance and project economics.
+
+Relevant services:
+Solar PV assessment, battery-storage consulting, flexibility strategies, energy modelling and digital performance analytics.
+
+Do not promise a specific payback period or savings percentage without project data.
+
+### E. Transport, Fleets & EV Charging
+
+Focus on fleet electrification, vehicle charging demand, charger sizing, charging schedules, electrical capacity, site selection and the relationship between vehicle operations and electricity tariffs.
+
+Explain how GEIT supports practical, phased charging infrastructure decisions.
+
+Relevant services:
+EV charging advisory, energy-demand modelling, infrastructure planning, load management and carbon-footprint assessment.
+
+### F. Financial Institutions & Infrastructure Investors
+
+Focus on technical due diligence, energy-market intelligence, project screening, investment assumptions, technology risk and evidence-based evaluation of energy assets.
+
+Explain how GEIT helps investors and lenders better understand technical and commercial energy risks.
+
+Relevant services:
+Market research, project feasibility, technology assessment, investment advisory and performance analysis.
+
+### G. Public Institutions & Development Organizations
+
+Focus on public-building energy performance, energy-access initiatives, renewable-energy projects, energy planning, emissions reporting and evidence-based programme evaluation.
+
+Explain how GEIT can support public bodies, development partners and programme implementers with technical analysis and implementation planning.
+
+Relevant services:
+Energy consulting, project development, market research, carbon accounting and energy analytics.
+
+### H. Agriculture, Water & Food Systems
+
+Focus on irrigation pumping, cold storage, food processing, water pumping and treatment, distributed solar power and electricity reliability in agricultural operations.
+
+Explain how GEIT can assess energy requirements and evaluate suitable energy technologies for productive uses.
+
+Relevant services:
+Energy audits, solar and storage advisory, energy-demand modelling, efficiency assessment and technology feasibility studies.
+
+## 3. USE A PROFESSIONAL INDUSTRY PAGE LAYOUT
+
+Present each industry using a consistent but visually engaging structure.
+
+Each industry section should include:
+1. Industry name.
+2. A unique, descriptive headline.
+3. A sector-specific explanation of the challenge.
+4. How GEIT helps.
+5. Relevant services linked to their actual service pages.
+6. A relevant image or restrained technical illustration.
+7. A clear CTA, such as "Discuss Your Project".
+
+Use a balanced card grid or alternating image-and-text sections. Avoid making every section look identical.
+
+Use appropriate images representing real energy applications. Optimize image sizes and provide meaningful alternative text.
+
+If the website already has an Industries & Solutions page, update it rather than creating a duplicate route.
+
+Do not claim that GEIT has completed projects in these sectors unless evidence exists. Present the industries as target markets and service capabilities.
+
+## 4. ADD DIRECT SOCIAL MEDIA LINKS TO THE FOOTER
+
+Create a professional footer with a clearly visible "Follow GEIT" section.
+
+Support:
+- LinkedIn
+- Facebook
+- Instagram
+- YouTube
+- X
+
+Use recognizable icons, readable accessible labels and direct links to GEIT's actual profiles.
+
+Keep all profile URLs in one central configuration file. Use the URLs already configured in the project if they are valid.
+
+If a profile URL is missing, do not invent one. Hide that specific icon until its real URL is configured.
+
+Requirements:
+- Open external social media links in a new tab where appropriate.
+- Use appropriate external-link security attributes.
+- Provide accessible labels for screen readers.
+- Ensure icons are large enough to tap on mobile.
+- Include a visible hover and keyboard-focus state.
+- Do not link to generic social media homepages.
+
+Add a direct email link using a properly configured business email address and a telephone link if a valid company number is available.
+
+The footer should also contain:
+- GEIT logo and company name
+- A short, original company description
+- Main navigation links
+- Selected service links
+- Contact details
+- Social media links
+- Privacy Policy
+- Terms of Use
+- Copyright notice with the current year generated dynamically
+
+Use actual company contact information. Do not show fabricated email addresses, phone numbers or social profiles.
+
+## 5. IMPROVE THE HOMEPAGE
+
+Preserve the approved hero headline:
+
+"Make smarter energy decisions. Build a more efficient, resilient and low-carbon future."
+
+Preserve the tagline:
+
+"Energy Intelligence. Measurable Impact."
+
+Retain the official GEIT logo and company name.
+
+Improve the homepage with the following sections where they are not already implemented:
+
+### What GEIT Does
+
+Explain the relationship between engineering analysis, energy investment advisory, digital intelligence and carbon management.
+
+### How We Work
+
+Present a clear engagement process:
+
+1. Understand the client's energy challenge.
+2. Collect and assess available data.
+3. Analyse technical and commercial options.
+4. Develop recommendations and an implementation roadmap.
+5. Support monitoring and performance evaluation where agreed.
+
+### Why GEIT
+
+Highlight:
+- Engineering-led analysis
+- Independent, evidence-based advice
+- Economic and technical evaluation
+- Practical digital-energy capabilities
+- African market relevance
+- Transparent assumptions and measurable objectives
+
+Present these as operating principles, not as unsupported claims of proven results.
+
+### Industries & Solutions Preview
+
+Feature the eight target industries described above, with links to the full Industries & Solutions page.
+
+### Clear Conversion Paths
+
+Ensure that business visitors can easily:
+- Explore services.
+- Learn about GEIT.
+- Review relevant industry solutions.
+- Request a consultation.
+- Contact the company.
+
+Keep the homepage concise enough to scan quickly.
+
+## 6. PROFESSIONALIZE THE COMPLETE WEBSITE
+
+Review every existing page and apply consistent design standards.
+
+Implement or improve:
+
+- Consistent typography and spacing.
+- Standardized buttons and form controls.
+- Reusable page headings and CTA components.
+- Breadcrumbs on appropriate inner pages.
+- Clear page titles and introductory text.
+- Consistent image ratios and cropping.
+- Subtle hover effects and restrained animation.
+- Loading, error and empty states where needed.
+- Readable line lengths and adequate color contrast.
+- Responsive layouts for phones, tablets and desktops.
+- Accessible focus states and keyboard navigation.
+- A polished 404 page with a working route to Home and Contact.
+
+Maintain the existing brand palette:
+- Deep navy: #10243A
+- Energy green: #168568
+- Light grey: #F2F5F7
+- White: #FFFFFF
+- Amber: #E8B64B
+
+Preserve the AI energy-orb animation, but do not let it obstruct text, navigation, page loading or consultation CTAs.
+
+Do not add excessive animations, decorative gradients, unnecessary popups or artificial counters.
+
+## 7. SEO AND CONTENT QUALITY
+
+For each major page:
+- Use a unique page title.
+- Write a relevant meta description.
+- Use one clear primary heading.
+- Maintain a logical heading hierarchy.
+- Add appropriate internal links.
+- Optimize images and alternative text.
+- Use descriptive URLs.
+- Ensure the sitemap includes valid public routes.
+
+Avoid keyword stuffing.
+
+Write in professional international English suitable for business customers, investors, institutions and development partners.
+
+Ensure that every sector description is distinct, specific and commercially relevant.
+
+## 8. FUNCTIONALITY AND SAFETY
+
+Do not introduce a database or paid services.
+
+Do not break existing GitHub integration or the official logo.
+
+Verify that:
+- All primary navigation links work.
+- All industry cards and CTAs work.
+- Service links point to the correct pages.
+- Social media links point to configured company profiles.
+- Email and telephone links work where configured.
+- The mobile menu works.
+- The contact form does not falsely claim to submit enquiries.
+- No secrets are exposed.
+- No internal links are broken.
+
+If a requested feature cannot be completed without missing information, identify that dependency instead of inventing information.
+
+## 9. FINAL TESTING AND REPORT
+
+After implementation:
+1. Run the application and inspect the homepage.
+2. Test the navigation at desktop, tablet and mobile widths.
+3. Inspect all eight industry descriptions.
+4. Verify the footer and configured social media links.
+5. Test the internal service links and CTA buttons.
+6. Run available linting, type checks and production build.
+7. Fix errors found during testing.
+8. Review the Git diff to ensure existing functionality has not been removed.
+
+Provide a final report identifying:
+- Changes implemented.
+- Pages and components modified.
+- Social profiles configured and missing.
+- Tests passed and failed.
+- Any information still needed from me.
+- Any issues that prevent immediate publication.
+
+Implement the changes directly in the existing project. Do not merely provide recommendations or sample code.

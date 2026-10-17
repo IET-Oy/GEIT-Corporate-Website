@@ -1,17 +1,21 @@
 import { useEffect, useState } from "react";
-import { ChevronDown, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import LanguageSelector from "@/components/language-selector";
 import { useLanguage } from "@/lib/language-context";
+import type { MessageKey } from "@/lib/i18n";
 
-const serviceMenu = [
-  { title: "Energy Management", slug: "energy-management" },
-  { title: "Energy Consulting", slug: "energy-consulting" },
-  { title: "Energy Project Development", slug: "energy-project-development" },
-  { title: "Energy Market Research", slug: "energy-market-research" },
-  { title: "Renewable Energy Advisory", slug: "renewable-energy-advisory" },
-  { title: "Carbon Footprint Services", slug: "carbon-footprint-services" },
-];
+const primary = [
+  { key: "navHome", href: "/" },
+  { key: "navAbout", href: "/about" },
+  { key: "navServices", href: "/services" },
+  { key: "navContact", href: "/contact" },
+] as const;
+const secondary = [
+  { key: "navIndustries", href: "/industries" },
+  { key: "navDigital", href: "/digital-energy-solutions" },
+  { key: "navInsights", href: "/insights" },
+] as const;
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
@@ -19,109 +23,52 @@ export function SiteHeader() {
   const { t } = useLanguage();
 
   useEffect(() => setOpen(false), [path]);
+  useEffect(() => {
+    if (!open) return;
+    const h = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
+    document.addEventListener("keydown", h);
+    return () => document.removeEventListener("keydown", h);
+  }, [open]);
 
-  const mobileLinks = [
-    { label: t("navHome"), href: "/" },
-    { label: t("navAbout"), href: "/about" },
-    { label: t("navServices"), href: "/services" },
-    { label: t("navIndustries"), href: "/industries" },
-    { label: t("navDigital"), href: "/digital-energy-solutions" },
-    { label: t("navInsights"), href: "/insights" },
-    { label: t("navContact"), href: "/contact" },
-  ];
+  const isActive = (href: string) => (href === "/" ? path === "/" : path === href || path.startsWith(href + "/"));
+  const cls = (href: string, extra = "") =>
+    `navlink whitespace-nowrap ${extra} ${isActive(href) ? "!text-[#168568] border-b-2 border-[#e8b64b] font-bold" : ""}`;
+  const item = (l: { key: MessageKey; href: string }, extra = "") => (
+    <Link key={l.href} href={l.href} className={cls(l.href, extra)} aria-current={isActive(l.href) ? "page" : undefined}>
+      {t(l.key)}
+    </Link>
+  );
+  const mobile = [primary[0], primary[1], primary[2], ...secondary, primary[3]];
 
   return (
     <>
       <header className="sticky top-0 z-40 border-b border-[#dce3e8] bg-[#f2f5f7]/95 backdrop-blur-md">
-        <div className="mx-auto flex min-h-[74px] max-w-[1320px] items-center gap-3 px-3 sm:min-h-[84px] sm:px-5 lg:px-10">
-          <Link
-            href="/"
-            className="group flex min-w-0 shrink-0 items-center gap-2"
-            aria-label="GEIT Ltd. — Global Energy Innovation Technologies, home"
-            data-testid="link-home-brand"
-          >
+        <div className="mx-auto flex min-h-[74px] max-w-[1320px] items-center gap-3 px-3 sm:min-h-[84px] sm:px-5 lg:px-8">
+          <Link href="/" className="flex min-w-0 shrink-0 items-center" aria-label="GEIT Ltd. — Global Energy Innovation Technologies, home" data-testid="link-home-brand">
             <span className="shrink-0 bg-white p-1">
-              <img
-                src="/images/geit-logo.jpg"
-                alt="GEIT Ltd. — Global Energy Innovation Technologies"
-                className="h-[34px] w-[82px] object-contain sm:h-[48px] sm:w-[116px]"
-                width="373"
-                height="157"
-              />
-            </span>
-            <span className="min-w-0 leading-tight">
-              <span className="block whitespace-nowrap text-sm font-bold text-[#10243a] sm:text-base">
-                GEIT Ltd.
-              </span>
-              <span className="mt-1 hidden max-w-[180px] text-[9px] font-semibold leading-tight text-[#60717e] sm:block">
-                Global Energy Innovation Technologies
-              </span>
+              <img src="/images/geit-logo.jpg" alt="GEIT Ltd. — Global Energy Innovation Technologies" className="h-[50px] w-[120px] object-contain sm:h-[60px] sm:w-[144px]" width="373" height="157" />
             </span>
           </Link>
-
-          <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-3">
-            <nav
-              className="hidden items-center gap-4 xl:flex"
-              aria-label={t("mainNavigation")}
-            >
-              <Link className="navlink" href="/">{t("navHome")}</Link>
-              <Link className="navlink" href="/about">{t("navAbout")}</Link>
-              <div className="group relative">
-                <Link className="navlink inline-flex items-center gap-1" href="/services">
-                  {t("navServices")} <ChevronDown size={14} aria-hidden="true" />
-                </Link>
-                <div className="invisible absolute left-0 top-full z-50 mt-0 w-[340px] border border-[#dce3e8] bg-white p-3 opacity-0 shadow-xl transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-                  {serviceMenu.map((service) => (
-                    <Link
-                      key={service.slug}
-                      href={`/services/${service.slug}`}
-                      className="block px-3 py-2.5 text-sm text-[#35495b] hover:bg-[#f2f5f7] hover:text-[#168568] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#168568]"
-                    >
-                      {service.title}
-                    </Link>
-                  ))}
-                  <Link
-                    href="/services"
-                    className="mt-2 block border-t px-3 pt-3 text-sm font-bold text-[#168568] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#168568]"
-                  >
-                    {t("exploreAllServices")} →
-                  </Link>
-                </div>
-              </div>
-              <Link className="navlink whitespace-nowrap" href="/industries">{t("navIndustries")}</Link>
-              <Link className="navlink whitespace-nowrap" href="/digital-energy-solutions">{t("navDigital")}</Link>
-              <Link className="navlink" href="/insights">{t("navInsights")}</Link>
-              <Link className="navlink" href="/contact">{t("navContact")}</Link>
+          <div className="ml-auto flex min-w-0 items-center gap-2 sm:gap-3">
+            <nav className="hidden items-center gap-5 py-1 lg:flex xl:gap-6" aria-label={t("mainNavigation")}>
+              {primary.slice(0, 3).map((l) => item(l))}
+              {secondary.map((l) => item(l, "hidden xl:inline-block"))}
+              {item(primary[3])}
             </nav>
-
             <LanguageSelector />
-            <button
-              type="button"
-              className="grid h-10 w-10 place-items-center rounded-md text-[#10243a] transition hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#168568] xl:hidden"
-              onClick={() => setOpen((value) => !value)}
-              aria-label={open ? t("menuClose") : t("menuOpen")}
-              aria-expanded={open}
-              aria-controls="mobile-navigation"
-              data-testid="button-mobile-menu"
-            >
+            <button type="button" className="grid h-10 w-10 place-items-center rounded-md text-[#10243a] transition hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#168568] lg:hidden" onClick={() => setOpen((v) => !v)} aria-label={open ? t("menuClose") : t("menuOpen")} aria-expanded={open} aria-controls="mobile-navigation" data-testid="button-mobile-menu">
               {open ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
             </button>
           </div>
         </div>
-
+        <nav className="hidden items-center justify-end gap-6 border-t border-[#e3e9ed] px-8 py-2 text-sm lg:flex xl:hidden" aria-label="Secondary">
+          {secondary.map((l) => item(l))}
+        </nav>
         {open && (
-          <nav
-            id="mobile-navigation"
-            className="border-t border-[#dce3e8] bg-white px-5 py-3 xl:hidden"
-            aria-label={t("mainNavigation")}
-          >
-            {mobileLinks.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="block border-b border-[#edf0f2] py-3 text-sm font-semibold text-[#10243a] hover:text-[#168568] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#168568]"
-              >
-                {item.label}
+          <nav id="mobile-navigation" className="border-t border-[#dce3e8] bg-white px-5 py-3 lg:hidden" aria-label={t("mainNavigation")}>
+            {mobile.map((l) => (
+              <Link key={l.href} href={l.href} aria-current={isActive(l.href) ? "page" : undefined} className={`block border-b border-[#edf0f2] py-3 text-sm font-semibold hover:text-[#168568] ${isActive(l.href) ? "text-[#168568]" : "text-[#10243a]"}`}>
+                {t(l.key)}
               </Link>
             ))}
           </nav>

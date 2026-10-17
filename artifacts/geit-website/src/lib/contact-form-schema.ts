@@ -55,9 +55,7 @@ export function createContactFormSchema(language: LanguageCode) {
       .trim()
       .min(20, message("descriptionTooShort"))
       .max(5000, message("tooLong")),
-    privacyConsent: z.literal(true, {
-      errorMap: () => ({ message: message("privacyRequired") }),
-    }),
+    privacyConsent: z.boolean().refine((value) => value, message("privacyRequired")),
   });
 }
 

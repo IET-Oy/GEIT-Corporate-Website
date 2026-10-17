@@ -2,7 +2,7 @@ import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
 const configuredBase = process.env.VITE_PUBLIC_SITE_URL?.trim();
-const outputDirectory = new URL("../dist/", import.meta.url);
+const outputDirectory = new URL("../dist/public/", import.meta.url);
 const sitemapPath = join(outputDirectory.pathname, "sitemap.xml");
 const robotsPath = join(outputDirectory.pathname, "robots.txt");
 

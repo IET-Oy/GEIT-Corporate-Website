@@ -135,7 +135,14 @@ export default function ContactForm() {
       )}
 
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(onSubmit, (validationErrors) => {
+          const order: (keyof ContactFormValues)[] = [
+            "fullName", "organization", "businessEmail", "telephone", "country",
+            "serviceOfInterest", "projectDescription", "privacyConsent",
+          ];
+          const firstInvalid = order.find((name) => validationErrors[name]);
+          if (firstInvalid) form.setFocus(firstInvalid);
+        })}
         className="space-y-5"
         noValidate
         autoComplete="off"
