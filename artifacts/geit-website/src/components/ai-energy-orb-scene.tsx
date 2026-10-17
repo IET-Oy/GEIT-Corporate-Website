@@ -1,8 +1,6 @@
-import { useLanguage } from "@/lib/language-context";
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
-const PHASES = ['Energy orb', 'Spiral galaxy', 'Neural brain'] as const;
 const CYCLE = 26; // seconds
 const smooth = (a: number, b: number, x: number) => {
   const t = Math.min(1, Math.max(0, (x - a) / (b - a)));
@@ -160,10 +158,7 @@ const LN_FRAG = /* glsl */ `precision mediump float; varying float vL; varying v
 void main(){ gl_FragColor = vec4(vCol * vL * uFade, vL * uFade); }`;
 
 export default function AiEnergyOrbScene({ onFallback }: { onFallback: () => void }) {
-  const { c } = useLanguage();
-
   const host = useRef<HTMLDivElement>(null);
-  const [phase, setPhase] = useState(0);
   const fallbackRef = useRef(onFallback);
   fallbackRef.current = onFallback;
 
@@ -274,7 +269,6 @@ export default function AiEnergyOrbScene({ onFallback }: { onFallback: () => voi
     const clock = { elapsed: 0, last: 0 };
 
     let running = false, raf = 0, visible = true, inView = true;
-    let lastPhase = 0;
     const frame = (now: number) => {
       raf = 0;
       if (!running) return;
@@ -296,8 +290,6 @@ export default function AiEnergyOrbScene({ onFallback }: { onFallback: () => voi
       const w = uniforms.uB.value;
       group.rotation.y = ptr.x * 0.35 + w * (0.95 + Math.sin(t * 0.35) * 0.3) + Math.sin(t * 0.15) * 0.2 * (1 - w);
       group.rotation.x = ptr.y * 0.22 + uniforms.uA.value * (1 - w) * 0.55 + w * 0.08;
-      const pn = st < 0.5 ? 0 : st < 1.5 ? 1 : 2;
-      if (pn !== lastPhase) { lastPhase = pn; setPhase(pn); }
       renderer.render(scene, camera);
       raf = requestAnimationFrame(frame);
     };
@@ -313,7 +305,6 @@ export default function AiEnergyOrbScene({ onFallback }: { onFallback: () => voi
       uniforms.uA.value = 1; uniforms.uB.value = 1; uniforms.uTime.value = 3;
       group.rotation.y = 1.0; group.rotation.x = 0.08;
       renderer.render(scene, camera);
-      setPhase(2);
     }
 
     const onVis = () => { visible = !document.hidden; visible ? start() : stop(); };
@@ -346,15 +337,8 @@ export default function AiEnergyOrbScene({ onFallback }: { onFallback: () => voi
   }, []);
 
   return (
-    <div className="relative h-full w-full">
-      <div ref={host} className="absolute inset-0 cursor-crosshair" />
-      <div className="pointer-events-none absolute left-4 top-4 flex gap-2" aria-live="polite">
-        {PHASES.map((p, i) => (
-          <span key={p} className={`border px-2 py-1 font-mono text-[10px] tracking-[.12em] transition-colors duration-700 ${phase === i ? 'border-[#8FFFD2]/70 text-[#8FFFD2]' : 'border-white/10 text-white/30'}`}>
-            {c(p)}
-          </span>
-        ))}
-      </div>
+    <div className="relative h-full w-full" aria-hidden="true">
+      <div ref={host} className="absolute inset-0" />
     </div>
   );
 }

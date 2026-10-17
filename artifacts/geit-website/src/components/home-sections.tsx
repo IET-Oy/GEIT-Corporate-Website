@@ -7,14 +7,8 @@ import { IndustriesPreview } from '@/components/industries-section';
 const Tag = ({ children, light = false }: { children: string; light?: boolean }) => <p className={`mb-5 flex items-center gap-3 text-[11px] font-bold tracking-[.19em] ${light ? 'text-[#e8b64b]' : 'text-[#168568]'}`}><span className="h-[2px] w-7 bg-[#e8b64b]"/>{children}</p>;
 
 export function HeroOrb() {
-  const { c } = useLanguage();
-
-  return <div className="w-full" data-testid="hero-orb">
-    <div className="relative mx-auto h-[300px] w-full max-w-[520px] sm:h-[380px] lg:h-[460px]"><AiEnergyOrb className="h-full w-full"/></div>
-    <ol className="mx-auto mt-2 grid max-w-[520px] grid-cols-3 gap-2 text-center text-[10px] font-bold tracking-[.1em] text-white/75 sm:text-[11px]">
-      {['Energy orb','Spiral galaxy','Neural brain'].map((l, i) => <li key={l} className="border-t border-[#e8b64b]/60 pt-2"><span className="block font-mono text-[#e8b64b]">0{i + 1}</span>{c(l).toUpperCase()}</li>)}
-    </ol>
-    <p className="mx-auto mt-3 max-w-[520px] text-center text-[11px] leading-4 text-white/55">{c("Illustrative visualization of data becoming structure and insight. Not live AI output or client data.")}</p>
+  return <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-20 select-none overflow-hidden bg-[#10243a]" data-testid="hero-orb">
+    <div className="absolute inset-y-0 -right-[40%] w-[170%] lg:right-0 lg:w-[68%]"><AiEnergyOrb className="h-full w-full"/></div>
   </div>;
 }
 

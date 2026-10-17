@@ -1,0 +1,34 @@
+.energy-background-fallback > .energy-background-orb,
+.energy-background-fallback > .energy-background-galaxy,
+.energy-background-fallback > .energy-background-brain {
+  transform-origin: 200px 150px;
+  animation-duration: 26s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-play-state: var(--orb-play-state, running);
+}
+.energy-background-orb { animation-name: energy-background-orb; }
+.energy-background-galaxy { opacity: 0; animation-name: energy-background-galaxy; }
+.energy-background-brain { opacity: 0; animation-name: energy-background-brain; }
+@keyframes energy-background-orb {
+  0%, 12%, 96%, 100% { opacity: 1; transform: scale(.94); }
+  28%, 80% { opacity: 0; transform: scale(1.32); }
+}
+@keyframes energy-background-galaxy {
+  0%, 12% { opacity: 0; transform: scale(.7) rotate(-12deg); }
+  28%, 40% { opacity: 1; transform: scale(1.1) rotate(0deg); }
+  54%, 64% { opacity: 0; transform: scale(.8) rotate(12deg); }
+  77%, 82% { opacity: 1; transform: scale(1.1) rotate(24deg); }
+  96%, 100% { opacity: 0; transform: scale(.7) rotate(36deg); }
+}
+@keyframes energy-background-brain {
+  0%, 40%, 77%, 100% { opacity: 0; transform: scale(.88); }
+  54%, 64% { opacity: 1; transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .energy-background-fallback > .energy-background-orb,
+  .energy-background-fallback > .energy-background-galaxy,
+  .energy-background-fallback > .energy-background-brain { animation: none; }
+  .energy-background-orb { opacity: .85; }
+  .energy-background-galaxy, .energy-background-brain { opacity: 0; }
+}

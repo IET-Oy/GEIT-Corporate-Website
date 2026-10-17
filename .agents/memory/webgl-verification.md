@@ -9,8 +9,8 @@ Do not treat a passing build or a fallback screenshot as evidence that the orb's
 
 **How to apply:** Check WebGL availability first. If it remains unavailable, report that limitation and require evidence from a WebGL-capable browser before claiming the animation is verified.
 
-Keep the Energy Orb, Spiral Galaxy and Neural Brain visualization on the homepage, with meaningful, explicitly static previews when WebGL is unavailable.
+Keep the Energy Orb, Spiral Galaxy and Neural Brain visualization purely decorative in the homepage hero background, with a meaningful text-free SVG fallback when WebGL is unavailable.
 
-**Why:** The user specifically reiterated that these illustrations should be on the homepage; an unavailable-graphics message with only an indistinct glow did not communicate the requested concepts.
+**Why:** The user explicitly requested an immersive hero background and prohibited visible labels, captions, element names or explanatory text. This overrides the earlier labelled preview presentation.
 
-**How to apply:** Preserve the GPU animation for supported browsers without leaving unsupported browsers with an empty visual. Do not describe static preview controls as live AI or as proof of the 3D animation.
+**How to apply:** Preserve the GPU animation for supported browsers; use decorative SVG artwork for unsupported browsers. Keep the background out of the accessibility tree and tab order, with no visible controls or status messages. Maintain foreground contrast and reduced-motion support.

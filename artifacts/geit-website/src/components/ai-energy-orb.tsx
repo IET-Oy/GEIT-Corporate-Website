@@ -1,6 +1,5 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { EnergyOrbFallback } from './energy-orb-fallback';
-import { useLanguage } from "@/lib/language-context";
 
 const Scene = lazy(() => import('./ai-energy-orb-scene'));
 
@@ -16,7 +15,6 @@ function hasWebGL() {
 
 /** Lazy-loaded GPU particle visualization. Three.js loads only when near the viewport. */
 export function AiEnergyOrb({ className = '' }: { className?: string }) {
-  const { c } = useLanguage();
   const ref = useRef<HTMLDivElement>(null);
   const [mount, setMount] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -33,10 +31,10 @@ export function AiEnergyOrb({ className = '' }: { className?: string }) {
   }, []);
 
   return (
-    <div ref={ref} className={`relative overflow-hidden bg-[#070d1a] ${className}`}>
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,#10243a_0%,#070d1a_72%)]" />
+    <div ref={ref} aria-hidden="true" className={`pointer-events-none relative overflow-hidden ${className}`}>
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_60%_50%,rgba(16,36,58,0)_0%,#10243a_78%)]" />
       {failed ? (
-        <EnergyOrbFallback unavailable />
+        <EnergyOrbFallback />
       ) : mount ? (
         <Suspense fallback={<EnergyOrbFallback />}>
           <Scene onFallback={() => setFailed(true)} />
@@ -44,9 +42,6 @@ export function AiEnergyOrb({ className = '' }: { className?: string }) {
       ) : (
         <EnergyOrbFallback />
       )}
-      <p className="pointer-events-none absolute bottom-3 left-4 right-4 text-[10px] tracking-[.08em] text-white/45">
-        {c("Illustrative visualization, not a live AI system.")}
-      </p>
     </div>
   );
 }
