@@ -10,15 +10,15 @@ export type CompanyContactConfig = {
   socialProfiles: Record<SocialProfileKey, string | null>;
 };
 
-// Contact values are intentionally null until GEIT provides verified details.
+// Contact values are supplied by GEIT; unknown values remain null.
 // Components must omit unavailable contact methods and social links from the public site.
 export const companyContact: CompanyContactConfig = {
   companyName: "Global Energy Innovation Technologies Ltd",
   shortName: "GEIT Ltd.",
   country: "Rwanda",
   officeAddress: "Kigali, Rwanda",
-  businessEmail: null,
-  businessTelephone: null,
+  businessEmail: "dntechnologies.info@gmail.com",
+  businessTelephone: "+250 78 866567",
   socialProfiles: {
     linkedin: null,
     facebook: null,

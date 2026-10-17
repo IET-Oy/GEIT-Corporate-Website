@@ -2,6 +2,7 @@ import { Facebook, Instagram, Linkedin, Youtube, X, type LucideIcon } from "luci
 import { Link } from "wouter";
 import { companyContact, type SocialProfileKey } from "@/config/company-contact";
 import { useLanguage } from "@/lib/language-context";
+import { ContactMethods } from "@/components/contact-methods";
 
 const footerServices = [
   { label: "Energy Management", href: "/services/energy-management" },
@@ -80,26 +81,23 @@ export function SiteFooter() {
           <section>
             <h2 className="text-sm font-bold">{t("footerContact")}</h2>
             <p className="mt-5 text-sm leading-6 text-white/65">{companyContact.officeAddress}</p>
-            {companyContact.businessEmail && (
-              <a className="mt-3 block text-sm text-white/65 hover:text-white" href={`mailto:${companyContact.businessEmail}`}>
-                {companyContact.businessEmail}
-              </a>
-            )}
-            {companyContact.businessTelephone && (
-              <a className="mt-3 block text-sm text-white/65 hover:text-white" href={`tel:${companyContact.businessTelephone}`}>
-                {companyContact.businessTelephone}
-              </a>
-            )}
+            <div className="mt-4"><ContactMethods dark /></div>
             <Link href="/contact" className="mt-5 inline-flex items-center text-sm font-bold text-[#e8b64b] hover:text-white">
               {t("footerContactLink")}
             </Link>
             <Link href="/contact" className="mt-3 block text-sm text-white/65 hover:text-white">
               {t("footerRequestConsultation")}
             </Link>
-            <div className="mt-8 border-t border-white/15 pt-5">
-              <h3 className="text-sm font-bold">{t("footerFollow")}</h3>
+          </section>
+        </div>
+
+            <section className="mt-10 flex flex-col justify-between gap-5 border-y border-white/15 bg-white/5 px-5 py-6 sm:flex-row sm:items-center" aria-labelledby="footer-follow-heading">
+              <div>
+                <h2 id="footer-follow-heading" className="text-lg font-bold text-[#e8b64b]">{t("footerFollow")}</h2>
+                {configuredSocials.length === 0 && <p className="mt-2 text-sm leading-6 text-white/65">{t("footerProfilesPending")}</p>}
+              </div>
               {configuredSocials.length > 0 ? (
-                <div className="mt-4 flex gap-3">
+                <div className="flex flex-wrap gap-3">
                   {configuredSocials.map(({ key, name, Icon }) => (
                     <a
                       key={key}
@@ -113,12 +111,8 @@ export function SiteFooter() {
                     </a>
                   ))}
                 </div>
-              ) : (
-                <p className="mt-3 text-xs leading-5 text-white/55">{t("footerProfilesPending")}</p>
-              )}
-            </div>
-          </section>
-        </div>
+              ) : <p className="max-w-md text-xs leading-6 text-white/60">LinkedIn · Facebook · Instagram · YouTube · X</p>}
+            </section>
 
         <div className="mt-12 flex flex-col justify-between gap-4 border-t border-white/15 pt-6 text-xs text-white/50 sm:flex-row sm:items-center">
           <span>© {new Date().getFullYear()} {companyContact.companyName}.</span>

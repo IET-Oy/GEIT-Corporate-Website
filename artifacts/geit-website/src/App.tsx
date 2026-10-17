@@ -16,6 +16,7 @@ import { HeroOrb, WhatGeitDoes, HowWeWork, WhyGeit, SectorsHome } from '@/compon
 import { IndustriesContent } from '@/components/industries-section';
 import { RouteScroll } from '@/components/route-scroll';
 import { companyContact } from '@/config/company-contact';
+import { ContactMethods } from '@/components/contact-methods';
 import { PageMetadata as Meta } from '@/components/page-metadata';
 
 const queryClient = new QueryClient();
@@ -216,7 +217,33 @@ function InsightsPage(){
 return <><Meta title={"Energy Insights"} description={"Practical educational notes from GEIT Ltd on energy decisions, digital energy and carbon measurement."} path="/insights"/><PageHero eyebrow={"INSIGHTS"} title={"Useful perspectives for real energy decisions."} description={"Short, practical explainers to help teams ask better questions. These educational notes do not replace assignment-specific technical, legal or financial advice."}/><section className="bg-[#f2f5f7]"><div className="mx-auto max-w-[1320px] px-5 py-10 lg:px-10"><Breadcrumb items={[{label:'Home',href:'/'},{label:'Insights'}]}/><div className="grid gap-4 md:grid-cols-2">{[{tag:'DECISION NOTE',title:'What belongs in an energy investment case?',text:'A useful investment case makes its assumptions visible. Clarify the decision, map alternatives, separate known costs from estimates, test sensitivities and record risks alongside expected benefits. The result should help a decision-maker understand what evidence could change the choice.',read:'Energy consulting'},{tag:'FIELD GUIDE',title:'Before you buy an energy analytics platform',text:'Start with a recurring operational question. Then identify the data needed, who owns it, how it is collected and what response a useful insight should trigger. Compare tools only after requirements, integrations and adoption needs are understood.',read:'Digital energy'},{tag:'EXPLAINER',title:'Building a useful organisational carbon baseline',text:'A baseline is only as useful as its stated purpose, boundaries and data. Document where figures came from, which factors and estimation choices were applied, and where gaps remain. Transparency allows future measurement to improve.',read:'Carbon measurement'},{tag:'PRACTICE NOTE',title:'Why load profiles matter to flexibility decisions',text:'Storage and flexible-load propositions depend on operating patterns, constraints and the value of shifting demand. A profile helps reveal timing; it does not, on its own, demonstrate feasibility or commercial value.',read:'Energy flexibility'}].map((x,i)=><article key={x.title} className="border border-[#dce3e8] bg-white p-7"><span className="text-[10px] font-bold tracking-[.16em] text-[#168568]">{c(x.tag)} · 0{i+1}</span><h2 className="mt-5 text-2xl font-bold leading-snug text-[#10243a]">{c(x.title)}</h2><p className="mt-4 text-sm leading-7 text-[#62737e]">{c(x.text)}</p><div className="mt-6 border-t border-[#e4e9ec] pt-4 text-xs font-semibold text-[#168568]">{c("RELATED: ")}{c(x.read)}</div></article>)}</div><p className="mt-8 text-xs leading-5 text-[#74838d]">{c("All methodologies and process examples are illustrative. Scope, data sources and conclusions depend on the specific assignment.")}</p></div></section></>}
 function ContactPage(){
   const { c } = useLanguage();
-return <><Meta title={"Contact GEIT"} description={"Contact GEIT Ltd to discuss energy management, consulting, project development, digital energy or carbon services."} path="/contact"/><PageHero eyebrow={"CONTACT GEIT"} title={"Start with the energy question on your mind."} description={"The enquiry form is not connected yet, so it will not send your details. You can still use it to organize the information you may want to share later."}/><section className="bg-[#e7eeef]"><div className="mx-auto grid max-w-[1320px] gap-10 px-5 py-10 lg:grid-cols-[.7fr_1.3fr] lg:px-10"><div><Breadcrumb items={[{label:'Home',href:'/'},{label:'Contact'}]}/><Eyebrow>{"INDEPENDENT. PRACTICAL. DATA-LED."}</Eyebrow><h2 className="text-3xl font-bold leading-tight text-[#10243a]">{c("What would you like to make clearer?")}</h2><p className="mt-5 text-sm leading-7 text-[#60717e]">{c("Maybe you are weighing a project, comparing options or trying to understand your energy use. The form can help you frame the question, but it does not send or save what you enter.")}</p><div className="mt-8 border-t border-[#d2dddf] pt-6"><p className="text-xs font-bold tracking-[.14em] text-[#168568]">{c("BASED IN")}</p><p className="mt-2 font-semibold text-[#10243a]">{companyContact.officeAddress}</p><p className="mt-1 text-sm text-[#697b85]">{c("With a regional and international outlook.")}</p></div><div className="mt-7 flex gap-3 border-t border-[#d2dddf] pt-6"><ShieldCheck className="shrink-0 text-[#168568]"/><p className="text-xs leading-5 text-[#657681]">{c("This form only checks your entries in the current page. Nothing is sent to GEIT or stored by this site. Read the ")}<Link href="/privacy-policy" className="font-semibold text-[#168568] underline">{c("privacy policy")}</Link>{c("for details.")}</p></div></div><ContactForm/></div></section></>}
+return <>
+  <Meta title="Contact GEIT" description="Contact GEIT Ltd to discuss energy management, consulting, project development, digital energy or carbon services." path="/contact"/>
+  <PageHero eyebrow="CONTACT GEIT" title="Start with the energy question on your mind." description="The enquiry form is not connected yet, so it will not send your details. You can still use it to organize the information you may want to share later."/>
+  <section className="bg-[#e7eeef]">
+    <div className="mx-auto grid max-w-[1320px] gap-10 px-5 py-10 lg:grid-cols-[.7fr_1.3fr] lg:px-10">
+      <div>
+        <Breadcrumb items={[{label:'Home',href:'/'},{label:'Contact'}]}/>
+        <Eyebrow>{"INDEPENDENT. PRACTICAL. DATA-LED."}</Eyebrow>
+        <h2 className="text-3xl font-bold leading-tight text-[#10243a]">{c("What would you like to make clearer?")}</h2>
+        <p className="mt-5 text-sm leading-7 text-[#60717e]">{c("Maybe you are weighing a project, comparing options or trying to understand your energy use. The form can help you frame the question, but it does not send or save what you enter.")}</p>
+        <div className="mt-6 rounded border border-[#d2dddf] bg-white p-5">
+          <ContactMethods />
+        </div>
+        <div className="mt-8 border-t border-[#d2dddf] pt-6">
+          <p className="text-xs font-bold tracking-[.14em] text-[#168568]">{c("BASED IN")}</p>
+          <p className="mt-2 font-semibold text-[#10243a]">{companyContact.officeAddress}</p>
+          <p className="mt-1 text-sm text-[#697b85]">{c("With a regional and international outlook.")}</p>
+        </div>
+        <div className="mt-7 flex gap-3 border-t border-[#d2dddf] pt-6">
+          <ShieldCheck className="shrink-0 text-[#168568]"/>
+          <p className="text-xs leading-5 text-[#657681]">{c("This form only checks your entries in the current page. Nothing is sent to GEIT or stored by this site. Read the ")}<Link href="/privacy-policy" className="font-semibold text-[#168568] underline">{c("privacy policy")}</Link>{c("for details.")}</p>
+        </div>
+      </div>
+      <ContactForm/>
+    </div>
+  </section>
+</>}
 function ConsultationStrip(){
   const { c } = useLanguage();
 return <section className="bg-[#168568] text-white"><div className="mx-auto flex max-w-[1320px] flex-col justify-between gap-7 px-5 py-14 sm:flex-row sm:items-center lg:px-10"><div><p className="text-xs font-bold tracking-[.16em] text-white/70">{c("ENERGY INTELLIGENCE. MEASURABLE IMPACT.")}</p><h2 className="mt-3 text-2xl font-bold">{c("Let’s make the next decision a better one.")}</h2></div><ButtonLink href="/contact" secondary>{"Request a consultation"}</ButtonLink></div></section>}
