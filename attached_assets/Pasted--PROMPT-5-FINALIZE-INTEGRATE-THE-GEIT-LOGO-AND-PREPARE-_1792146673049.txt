@@ -1,0 +1,291 @@
+# PROMPT 5 — FINALIZE, INTEGRATE THE GEIT LOGO, AND PREPARE FOR IMMEDIATE PUBLICATION
+
+Act as a senior full-stack developer, brand designer, accessibility specialist, SEO engineer and deployment engineer.
+
+Continue working on the existing GEIT Ltd website project in Replit. Inspect the entire existing codebase before making changes. Preserve the approved design, working features, existing routes and GitHub integration.
+
+The objective is to deliver a fully functional, professionally branded corporate website that I can publish immediately after testing.
+
+## 1. OFFICIAL GEIT LOGO — REQUIRED
+
+I have uploaded the official GEIT Ltd logo to this conversation.
+
+Use the attached logo as the company's actual logo. Do not redesign it, replace it with an icon, or generate an alternative.
+
+The logo must be added to the project as a local image asset, preferably:
+
+`public/images/geit-logo.jpg`
+
+If the Replit environment cannot access the uploaded image directly, tell me to upload it into the project using the Replit file manager. Do not create a fake logo or substitute a different image.
+
+Requirements:
+- Preserve the original logo and its proportions.
+- Use appropriate sizing without stretching or distorting it.
+- Display it clearly on desktop and mobile.
+- Use it in the site header and footer.
+- Provide meaningful alternative text.
+- Use a suitable light background where necessary for legibility.
+- Create a favicon or browser icon from the actual logo if technically appropriate.
+- Do not modify or overwrite the original logo file unnecessarily.
+
+## 2. HEADER — MAKE THE COMPANY NAME VISIBLE
+
+The header must clearly communicate what GEIT stands for.
+
+Display the official logo alongside or integrated with this company identity:
+
+**GEIT Ltd.**
+
+Global Energy Innovation Technologies
+
+Use the exact company name, with correct spelling and capitalization. The full company name must be visibly readable directly beneath the GEIT Ltd abbreviation in the header on desktop.
+
+On mobile, retain the company name wherever possible. If space is limited, use a compact but readable arrangement without making the company identity disappear.
+
+The logo already contains the company name. Nevertheless, implement the header identity so the company name remains readable and accessible, rather than relying exclusively on tiny text embedded in the image.
+
+Make the logo and company identity link to the homepage.
+
+## 3. PROFESSIONAL NAVIGATION
+
+Create or refine a responsive navigation bar containing:
+- Home
+- About
+- Services
+- Industries & Solutions
+- Digital Energy Solutions
+- Insights
+- Contact
+
+Include a prominent "Request a Consultation" button.
+
+Requirements:
+- All navigation items must lead to working pages.
+- Dropdowns must work on desktop and mobile if implemented.
+- The mobile menu must open and close correctly.
+- The header must not overflow on small screens.
+- Provide keyboard accessibility, visible focus states and accessible labels.
+- Keep the design professional, consistent and uncluttered.
+
+## 4. CONTACT INFORMATION AND SOCIAL MEDIA FOOTER
+
+Redesign the footer to include a comprehensive company contact section.
+
+Use the following company details where appropriate:
+
+Company: Global Energy Innovation Technologies Ltd  
+Abbreviation: GEIT Ltd  
+Country: Rwanda  
+Head office: Kigali, Rwanda
+
+Create the following footer sections:
+
+### Company
+- About GEIT
+- Our Services
+- Industries & Solutions
+- Digital Energy Solutions
+- Insights
+
+### Services
+- Energy Management
+- Energy Consulting
+- Renewable Energy Advisory
+- Energy Efficiency & Auditing
+- Battery Storage & Flexibility
+- AI & Digital Energy Solutions
+- Carbon Footprint Services
+
+### Contact Us
+- Official business email
+- Business telephone
+- Office address in Kigali, Rwanda
+- Contact page link
+- Request a Consultation link
+
+### Follow GEIT
+Provide social media links for:
+- LinkedIn
+- Facebook
+- Instagram
+- YouTube
+- X
+
+Use actual GEIT profile URLs only when I supply them or they can be verified from the existing project configuration. Do not invent social media profile URLs.
+
+Create a single central configuration file for contact details and social media URLs so they can be updated without editing multiple components.
+
+For example, create a configuration module containing clearly identified values for:
+- Company name
+- Business email
+- Telephone
+- Office address
+- LinkedIn URL
+- Facebook URL
+- Instagram URL
+- YouTube URL
+- X URL
+
+If the email address, telephone number or social URLs are not available, use clearly marked placeholders in the configuration and identify them in the final report. Do not display fake contact information to visitors.
+
+Hide social media icons whose profile URLs have not been configured. Do not link these icons to generic platform homepages.
+
+Use recognizable social media icons, accessible names and appropriate external-link security attributes.
+
+## 5. CONTACT PAGE AND ENQUIRY FUNCTIONALITY
+
+Ensure the contact page is complete and professional.
+
+Include:
+- Full name
+- Organization
+- Business email
+- Telephone, optional
+- Country
+- Service of interest
+- Project description
+- Privacy consent
+
+Requirements:
+- Validate all required fields.
+- Validate email format.
+- Display helpful validation errors.
+- Prevent accidental duplicate submissions where appropriate.
+- Provide accessible loading and error states.
+- Do not display a false success message.
+- Do not store personal data insecurely.
+- Do not expose API keys or secrets in frontend code.
+
+I have chosen to defer the database.
+
+Therefore, inspect whether a genuine enquiry-delivery mechanism already exists. If none exists, do not pretend that enquiries are being delivered. Make the limitation explicit and explain the minimum configuration needed to activate real submissions.
+
+Do not add Supabase, paid email services, authentication or unnecessary external infrastructure without my approval.
+
+The website itself must remain publishable even if the contact-delivery service has not yet been connected. Clearly flag this limitation before publication.
+
+## 6. COMPLETE WEBSITE FUNCTIONALITY
+
+Audit every existing page and interactive element.
+
+Check:
+- All navigation links
+- All service cards
+- All calls to action
+- Contact links
+- Social media links
+- Buttons
+- Mobile navigation
+- Forms
+- Breadcrumbs
+- Article links
+- Footer links
+- Logo navigation
+- 404 handling
+
+No button should appear functional if it does nothing.
+
+Where a feature is not implemented, either implement it properly or remove the misleading interaction.
+
+Do not invent case studies, client testimonials, customer logos, partnerships, certifications, measured savings or emissions-reduction results.
+
+Do not claim the company holds certifications or regulatory approvals that have not been verified.
+
+## 7. BRAND AND VISUAL QUALITY
+
+Maintain the approved GEIT brand palette:
+- Deep navy: #10243A
+- Energy green: #168568
+- Light grey: #F2F5F7
+- White: #FFFFFF
+- Amber: #E8B64B
+
+Maintain the tagline:
+
+"Energy Intelligence. Measurable Impact."
+
+Use professional imagery of energy infrastructure, solar PV, batteries, electrical systems, commercial buildings, energy analytics and digital technologies.
+
+Prioritize the actual company logo over decorative graphics.
+
+Ensure consistent typography, spacing, cards, buttons, imagery and section layouts.
+
+The website must look credible for commercial customers, industrial clients, renewable-energy investors, development partners and public institutions.
+
+## 8. SEO AND TECHNICAL REQUIREMENTS
+
+Verify and implement:
+- Unique page titles
+- Relevant meta descriptions
+- Canonical URLs where appropriate
+- Open Graph metadata
+- Sitemap
+- robots.txt
+- Semantic HTML
+- Image alternative text
+- Responsive images
+- Accessible navigation
+- Appropriate favicon
+- Custom 404 page
+- No broken internal links
+- No missing assets
+- No unnecessary dependencies
+- No exposed secrets
+- No TypeScript errors
+- Successful production build
+
+Use the actual public website URL for canonical metadata only after the production domain has been selected. Do not invent a domain.
+
+If the domain is not yet configured, keep the site compatible with adding it later.
+
+## 9. GITHUB AND DEPLOYMENT PREPARATION
+
+I already have a GitHub account and intend to publish the website immediately after the final checks.
+
+Inspect the existing Git configuration and ensure the project can be synchronized with my GitHub repository.
+
+Do not create a duplicate repository or overwrite existing remote history.
+
+Before deployment:
+1. Run the available lint checks.
+2. Run TypeScript checks.
+3. Run the production build.
+4. Fix critical errors.
+5. Check the desktop and mobile layouts.
+6. Verify all local assets, especially the GEIT logo.
+7. Check all internal routes and external links.
+8. Check the contact form's actual behavior.
+9. Check for secrets accidentally included in the repository.
+10. Report all outstanding issues honestly.
+
+Do not claim that a build, GitHub push or deployment succeeded unless you have verified the result.
+
+Do not deploy to a paid service or incur additional costs without my approval.
+
+## 10. FINAL ACCEPTANCE REPORT
+
+At completion, provide a concise report containing:
+
+A. Logo integration: complete or incomplete.
+
+B. Header company name: verified or incomplete.
+
+C. Footer contact section: complete or incomplete.
+
+D. Social media links: list the configured profiles and identify missing URLs.
+
+E. Contact form: explain whether actual enquiry delivery works.
+
+F. Website functionality: identify any broken links or incomplete features.
+
+G. Quality checks: report actual lint, type-check and production-build results.
+
+H. GitHub: report whether changes are committed and pushed.
+
+I. Deployment: provide the actual publication steps for the selected hosting environment.
+
+J. Remaining tasks: list only the items that genuinely require my action.
+
+Prioritize a functional, secure and publishable corporate website. Do not introduce unnecessary features or redesign the website without a clear reason.
+
+Begin by inspecting the existing project, locating the uploaded logo and identifying the current contact, footer, navigation and deployment configuration. Then implement the required changes and verify them.

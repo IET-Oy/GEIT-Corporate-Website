@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { translate, type LanguageCode } from "@/lib/i18n";
 
 export const contactServiceOptions = [
   "Energy Management",
@@ -17,47 +18,50 @@ export const contactServiceOptions = [
 
 const allowedServices = new Set<string>(contactServiceOptions);
 
-export const contactFormSchema = z.object({
-  fullName: z
-    .string()
-    .trim()
-    .min(2, "Enter your full name.")
-    .max(120, "Full name must be 120 characters or fewer."),
-  organization: z
-    .string()
-    .trim()
-    .min(2, "Enter your organization.")
-    .max(160, "Organization must be 160 characters or fewer."),
-  businessEmail: z
-    .string()
-    .trim()
-    .min(1, "Enter your business email.")
-    .email("Enter a valid business email address.")
-    .max(254, "Business email must be 254 characters or fewer."),
-  telephone: z
-    .string()
-    .trim()
-    .max(40, "Telephone must be 40 characters or fewer."),
-  country: z
-    .string()
-    .trim()
-    .min(2, "Enter your country.")
-    .max(80, "Country must be 80 characters or fewer."),
-  serviceOfInterest: z
-    .string()
-    .min(1, "Select a service of interest.")
-    .refine((value) => allowedServices.has(value), "Select a listed service."),
-  projectDescription: z
-    .string()
-    .trim()
-    .min(20, "Add at least 20 characters about the project or question.")
-    .max(5000, "Project description must be 5,000 characters or fewer."),
-  privacyConsent: z.literal(true, {
-    errorMap: () => ({ message: "Please confirm the privacy notice before continuing." }),
-  }),
-});
+export function createContactFormSchema(language: LanguageCode) {
+  const message = (key: Parameters<typeof translate>[1]) => translate(language, key);
+  return z.object({
+    fullName: z
+      .string()
+      .trim()
+      .min(2, message("nameRequired"))
+      .max(120, message("tooLong")),
+    organization: z
+      .string()
+      .trim()
+      .min(2, message("organizationRequired"))
+      .max(160, message("tooLong")),
+    businessEmail: z
+      .string()
+      .trim()
+      .min(1, message("emailRequired"))
+      .email(message("emailInvalid"))
+      .max(254, message("tooLong")),
+    telephone: z
+      .string()
+      .trim()
+      .max(40, message("tooLong")),
+    country: z
+      .string()
+      .trim()
+      .min(2, message("countryRequired"))
+      .max(80, message("tooLong")),
+    serviceOfInterest: z
+      .string()
+      .min(1, message("serviceRequired"))
+      .refine((value) => allowedServices.has(value), message("serviceInvalid")),
+    projectDescription: z
+      .string()
+      .trim()
+      .min(20, message("descriptionTooShort"))
+      .max(5000, message("tooLong")),
+    privacyConsent: z.literal(true, {
+      errorMap: () => ({ message: message("privacyRequired") }),
+    }),
+  });
+}
 
-export type ContactFormValues = z.infer<typeof contactFormSchema>;
+export type ContactFormValues = z.infer<ReturnType<typeof createContactFormSchema>>;
 
 export const contactFormDefaultValues: ContactFormValues = {
   fullName: "",
@@ -70,12 +74,9 @@ export const contactFormDefaultValues: ContactFormValues = {
   privacyConsent: false,
 };
 
-export const UNCONFIGURED_SUBMISSION_MESSAGE =
-  "The form passed validation, but the enquiry submission service is not configured yet. Your details were not sent or stored, and the form has been cleared.";
-
-export function getUnconfiguredSubmissionResult() {
+export function getUnconfiguredSubmissionResult(language: LanguageCode) {
   return {
     status: "not-configured" as const,
-    message: UNCONFIGURED_SUBMISSION_MESSAGE,
+    message: translate(language, "formNotSent"),
   };
 }
