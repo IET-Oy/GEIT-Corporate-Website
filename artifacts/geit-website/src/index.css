@@ -282,7 +282,7 @@ h1,h2,h3,h4 { font-family: var(--app-font-serif); letter-spacing: -0.035em; }
 .form-input::placeholder { color:#9aa6ad; }
 .form-input:focus { border-color:#168568; box-shadow:0 0 0 3px rgba(22,133,104,.12); }
 textarea.form-input { min-height:120px; line-height:1.6; }
-select.form-input { appearance:auto; }
+select.form-input { appearance:auto; max-width:100%; }
 button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible { outline:3px solid rgba(232,182,75,.85); outline-offset:3px; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior:auto; } *,*::before,*::after { animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; } }
 

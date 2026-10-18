@@ -5,6 +5,1106 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+export type EngineeringModule = typeof EngineeringModule[keyof typeof EngineeringModule];
+
+
+export const EngineeringModule = {
+  'energy-consulting': 'energy-consulting',
+  'energy-auditing': 'energy-auditing',
+  'renewable-energy': 'renewable-energy',
+  'battery-flexibility': 'battery-flexibility',
+  'carbon-footprint': 'carbon-footprint',
+  'digital-energy': 'digital-energy',
+} as const;
+
+export type CarbonUnit = typeof CarbonUnit[keyof typeof CarbonUnit];
+
+
+export const CarbonUnit = {
+  kWh: 'kWh',
+  MWh: 'MWh',
+  GJ: 'GJ',
+  L: 'L',
+  m3: 'm3',
+  kg: 'kg',
+  km: 'km',
+  passenger_km: 'passenger_km',
+  tonne_km: 'tonne_km',
+} as const;
+
+export type CarbonScope = typeof CarbonScope[keyof typeof CarbonScope];
+
+
+export const CarbonScope = {
+  scope1: 'scope1',
+  scope2: 'scope2',
+  scope3: 'scope3',
+} as const;
+
+export type CarbonCategory = typeof CarbonCategory[keyof typeof CarbonCategory];
+
+
+export const CarbonCategory = {
+  stationary_combustion: 'stationary_combustion',
+  mobile_combustion: 'mobile_combustion',
+  fugitive: 'fugitive',
+  process: 'process',
+  purchased_electricity: 'purchased_electricity',
+  purchased_heat: 'purchased_heat',
+  purchased_goods: 'purchased_goods',
+  upstream_fuel_energy: 'upstream_fuel_energy',
+  waste: 'waste',
+  business_travel: 'business_travel',
+  employee_commuting: 'employee_commuting',
+  upstream_transport: 'upstream_transport',
+  downstream_transport: 'downstream_transport',
+} as const;
+
+export type EmissionFactorInputEmissionUnit = typeof EmissionFactorInputEmissionUnit[keyof typeof EmissionFactorInputEmissionUnit];
+
+
+export const EmissionFactorInputEmissionUnit = {
+  kgCO2e: 'kgCO2e',
+  tCO2e: 'tCO2e',
+} as const;
+
+/**
+ * @nullable
+ */
+export type EmissionFactorInputScope2Method = typeof EmissionFactorInputScope2Method[keyof typeof EmissionFactorInputScope2Method] | null;
+
+
+export const EmissionFactorInputScope2Method = {
+  location_based: 'location_based',
+  market_based: 'market_based',
+} as const;
+
+export interface EmissionFactorInput {
+  /** @pattern ^[A-Z0-9_-]{2,64}$ */
+  code: string;
+  /**
+     * @minLength 2
+     * @maxLength 160
+     */
+  name: string;
+  /**
+     * @minLength 10
+     * @maxLength 1000
+     */
+  source: string;
+  /**
+     * @maxLength 1000
+     * @pattern ^https://
+     */
+  sourceUrl: string;
+  /**
+     * @minLength 2
+     * @maxLength 120
+     */
+  geography: string;
+  activityUnit: CarbonUnit;
+  emissionUnit: EmissionFactorInputEmissionUnit;
+  /**
+     * @minimum 0
+     * @maximum 1000000000
+     */
+  value: number;
+  /** @pattern ^\d{4}-\d{2}-\d{2}$ */
+  validFrom: string;
+  /** @pattern ^\d{4}-\d{2}-\d{2}$ */
+  validUntil: string;
+  scope: CarbonScope;
+  category: CarbonCategory;
+  /** @nullable */
+  scope2Method: EmissionFactorInputScope2Method;
+  /**
+     * @minLength 5
+     * @maxLength 160
+     */
+  gwpBasis: string;
+}
+
+export type EmissionFactor = EmissionFactorInput & {
+  id: string;
+  /** @minimum 1 */
+  version: number;
+  created_at: string;
+};
+
+export interface CarbonActivity {
+  /**
+     * @minLength 2
+     * @maxLength 160
+     */
+  name: string;
+  factorId: string;
+  /**
+     * @minimum 0
+     * @maximum 1000000000000
+     */
+  quantity: number;
+  unit: CarbonUnit;
+  /**
+     * @minLength 2
+     * @maxLength 120
+     */
+  geography: string;
+  scope: CarbonScope;
+  category: CarbonCategory;
+}
+
+export interface CarbonReduction {
+  /**
+     * @minimum 0
+     * @maximum 99
+     */
+  activityIndex: number;
+  /**
+     * @minLength 2
+     * @maxLength 160
+     */
+  label: string;
+  /**
+     * @minimum 0
+     * @maximum 100
+     */
+  reductionPercent: number;
+}
+
+export type CarbonInputsModel = typeof CarbonInputsModel[keyof typeof CarbonInputsModel];
+
+
+export const CarbonInputsModel = {
+  carbon: 'carbon',
+} as const;
+
+export type CarbonInputsScope2Method = typeof CarbonInputsScope2Method[keyof typeof CarbonInputsScope2Method];
+
+
+export const CarbonInputsScope2Method = {
+  location_based: 'location_based',
+  market_based: 'market_based',
+} as const;
+
+export interface CarbonInputs {
+  model: CarbonInputsModel;
+  /**
+     * @minLength 10
+     * @maxLength 2000
+     */
+  sourceNotes: string;
+  /** @pattern ^\d{4}-\d{2}-\d{2}$ */
+  periodStart: string;
+  /** @pattern ^\d{4}-\d{2}-\d{2}$ */
+  periodEnd: string;
+  /**
+     * @minLength 10
+     * @maxLength 2000
+     */
+  boundary: string;
+  scope2Method: CarbonInputsScope2Method;
+  /**
+     * @minItems 1
+     * @maxItems 100
+     */
+  activities: CarbonActivity[];
+  /** @maxItems 100 */
+  reductions: CarbonReduction[];
+}
+
+export type TwinBatteryDispatchMode = typeof TwinBatteryDispatchMode[keyof typeof TwinBatteryDispatchMode];
+
+
+export const TwinBatteryDispatchMode = {
+  self_consumption: 'self_consumption',
+  peak_shaving: 'peak_shaving',
+} as const;
+
+export interface TwinBattery {
+  /**
+     * @maximum 10000000
+     * @exclusiveMinimum 0
+     */
+  capacityKwh: number;
+  /**
+     * @minimum 0
+     * @maximum 100
+     */
+  minSocPercent: number;
+  /**
+     * @minimum 0
+     * @maximum 100
+     */
+  maxSocPercent: number;
+  /**
+     * @minimum 0
+     * @maximum 100
+     */
+  initialSocPercent: number;
+  /**
+     * @maximum 10000000
+     * @exclusiveMinimum 0
+     */
+  maxChargeKw: number;
+  /**
+     * @maximum 10000000
+     * @exclusiveMinimum 0
+     */
+  maxDischargeKw: number;
+  /**
+     * @minimum 0.01
+     * @maximum 1
+     */
+  chargeEfficiency: number;
+  /**
+     * @minimum 0.01
+     * @maximum 1
+     */
+  dischargeEfficiency: number;
+  dispatchMode: TwinBatteryDispatchMode;
+  /**
+     * @minimum 0
+     * @maximum 10000000
+     * @nullable
+     */
+  gridTargetKw?: number | null;
+}
+
+export type TwinInputsModel = typeof TwinInputsModel[keyof typeof TwinInputsModel];
+
+
+export const TwinInputsModel = {
+  twin: 'twin',
+} as const;
+
+export type TwinInputsLoadBasis = typeof TwinInputsLoadBasis[keyof typeof TwinInputsLoadBasis];
+
+
+export const TwinInputsLoadBasis = {
+  gross_building_load: 'gross_building_load',
+} as const;
+
+export interface TwinInputs {
+  model: TwinInputsModel;
+  /**
+     * @minLength 10
+     * @maxLength 2000
+     */
+  sourceNotes: string;
+  buildingMeterId: string;
+  /** @nullable */
+  solarMeterId: string | null;
+  /** @maxLength 40 */
+  start: string;
+  /** @maxLength 40 */
+  end: string;
+  loadBasis: TwinInputsLoadBasis;
+  battery: TwinBattery | null;
+  /**
+     * @minimum 1
+     * @maximum 168
+     */
+  forecastHorizonHours: number;
+  /**
+     * @minimum 2
+     * @maximum 10
+     */
+  anomalyThreshold: number;
+}
+
+export type DigitalTwinSourcesConnectedProviderStatus = typeof DigitalTwinSourcesConnectedProviderStatus[keyof typeof DigitalTwinSourcesConnectedProviderStatus];
+
+
+export const DigitalTwinSourcesConnectedProviderStatus = {
+  not_configured: 'not_configured',
+} as const;
+
+export type EnergyUnit = typeof EnergyUnit[keyof typeof EnergyUnit];
+
+
+export const EnergyUnit = {
+  Wh: 'Wh',
+  kWh: 'kWh',
+  MWh: 'MWh',
+  MJ: 'MJ',
+  GJ: 'GJ',
+  W: 'W',
+  kW: 'kW',
+  MW: 'MW',
+} as const;
+
+export interface EnergyMeter {
+  id: string;
+  name: string;
+  site_id: string;
+  unit: EnergyUnit;
+  is_demo: boolean;
+  archived: boolean;
+}
+
+export interface EnergySite {
+  id: string;
+  name: string;
+  timezone: string;
+  /** @nullable */
+  area_m2: number | null;
+  is_demo: boolean;
+  archived: boolean;
+}
+
+export interface DigitalTwinSources {
+  meters: EnergyMeter[];
+  sites: EnergySite[];
+  connectedProviderStatus: DigitalTwinSourcesConnectedProviderStatus;
+  readingLimit: number;
+}
+
+export interface EvidenceQuestion {
+  /**
+     * @minLength 5
+     * @maxLength 1000
+     */
+  question: string;
+  consent: true;
+}
+
+export interface EvidenceItem {
+  id: string;
+  text: string;
+}
+
+export interface EvidenceAnswer {
+  provider: string;
+  model: string;
+  scenarioId: string;
+  inputHash: string;
+  evidence: EvidenceItem[];
+  limitation: string;
+}
+
+export type EngineeringProjectInputStatus = typeof EngineeringProjectInputStatus[keyof typeof EngineeringProjectInputStatus];
+
+
+export const EngineeringProjectInputStatus = {
+  draft: 'draft',
+  active: 'active',
+  completed: 'completed',
+} as const;
+
+export interface EngineeringProjectInput {
+  id?: string;
+  /**
+     * @minLength 2
+     * @maxLength 120
+     */
+  name: string;
+  /**
+     * @minLength 2
+     * @maxLength 160
+     */
+  facility: string;
+  /**
+     * @minLength 10
+     * @maxLength 4000
+     */
+  brief: string;
+  /** @pattern ^[A-Z]{3}$ */
+  currency: string;
+  status: EngineeringProjectInputStatus;
+  archived?: boolean;
+}
+
+export type EngineeringProjectStatus = typeof EngineeringProjectStatus[keyof typeof EngineeringProjectStatus];
+
+
+export const EngineeringProjectStatus = {
+  draft: 'draft',
+  active: 'active',
+  completed: 'completed',
+} as const;
+
+export interface EngineeringProject {
+  id: string;
+  module: EngineeringModule;
+  name: string;
+  facility: string;
+  brief: string;
+  currency: string;
+  status: EngineeringProjectStatus;
+  archived: boolean;
+  created_at: string;
+}
+
+export type ConsultingInputsModel = typeof ConsultingInputsModel[keyof typeof ConsultingInputsModel];
+
+
+export const ConsultingInputsModel = {
+  consulting: 'consulting',
+} as const;
+
+export type ConsultingInputsEnergyUnit = typeof ConsultingInputsEnergyUnit[keyof typeof ConsultingInputsEnergyUnit];
+
+
+export const ConsultingInputsEnergyUnit = {
+  kWh: 'kWh',
+  MWh: 'MWh',
+  GJ: 'GJ',
+} as const;
+
+export interface ConsultingInputs {
+  model: ConsultingInputsModel;
+  /**
+     * @minLength 10
+     * @maxLength 2000
+     */
+  sourceNotes: string;
+  energyUnit: ConsultingInputsEnergyUnit;
+  /**
+     * @minimum 0
+     * @maximum 1000000000
+     */
+  baselineEnergy: number;
+  /**
+     * @minimum 0
+     * @maximum 1000000000
+     */
+  proposedEnergy: number;
+  /**
+     * @minimum 0
+     * @maximum 1000000
+     */
+  tariffPerKwh: number;
+  /**
+     * @minimum 0
+     * @maximum 1000000000000
+     */
+  capex: number;
+  /**
+     * @minimum -1000000000
+     * @maximum 1000000000
+     */
+  annualOpexDelta: number;
+  /**
+     * @minimum 0
+     * @maximum 100
+     */
+  discountRatePercent: number;
+  /**
+     * @minimum 1
+     * @maximum 50
+     */
+  years: number;
+}
+
+export type AuditMeasurePowerUnit = typeof AuditMeasurePowerUnit[keyof typeof AuditMeasurePowerUnit];
+
+
+export const AuditMeasurePowerUnit = {
+  W: 'W',
+  kW: 'kW',
+} as const;
+
+export interface AuditMeasure {
+  /**
+     * @minLength 2
+     * @maxLength 120
+     */
+  name: string;
+  /**
+     * @minimum 1
+     * @maximum 1000000
+     */
+  quantity: number;
+  powerUnit: AuditMeasurePowerUnit;
+  /**
+     * @minimum 0
+     * @maximum 1000000
+     */
+  baselinePower: number;
+  /**
+     * @minimum 0
+     * @maximum 1000000
+     */
+  proposedPower: number;
+  /**
+     * @minimum 0
+     * @maximum 8784
+     */
+  hoursPerYear: number;
+  /**
+     * @minimum 0
+     * @maximum 1000000000000
+     */
+  capex: number;
+  /**
+     * @minimum -1000000000
+     * @maximum 1000000000
+     */
+  annualOpexDelta: number;
+}
+
+export type AuditingInputsModel = typeof AuditingInputsModel[keyof typeof AuditingInputsModel];
+
+
+export const AuditingInputsModel = {
+  auditing: 'auditing',
+} as const;
+
+export interface AuditingInputs {
+  model: AuditingInputsModel;
+  /**
+     * @minLength 10
+     * @maxLength 2000
+     */
+  sourceNotes: string;
+  /**
+     * @minimum 0
+     * @maximum 1000000
+     */
+  tariffPerKwh: number;
+  /**
+     * @minimum 0
+     * @maximum 100
+     */
+  discountRatePercent: number;
+  /**
+     * @minimum 1
+     * @maximum 50
+     */
+  years: number;
+  /**
+     * @maximum 1000000000000
+     * @exclusiveMinimum 0
+     * @nullable
+     */
+  facilityBaselineKwh?: number | null;
+  /**
+     * @minItems 1
+     * @maxItems 30
+     */
+  measures: AuditMeasure[];
+}
+
+export interface SolarMonth {
+  /**
+     * @minimum 1
+     * @maximum 12
+     */
+  month: number;
+  /**
+     * @minimum 0
+     * @maximum 500
+     */
+  irradiationKwhM2: number;
+  /**
+     * @minimum 0
+     * @maximum 1000000000
+     */
+  demandKwh: number;
+}
+
+export type SolarInputsModel = typeof SolarInputsModel[keyof typeof SolarInputsModel];
+
+
+export const SolarInputsModel = {
+  solar: 'solar',
+} as const;
+
+export type SolarInputsIrradiationUnit = typeof SolarInputsIrradiationUnit[keyof typeof SolarInputsIrradiationUnit];
+
+
+export const SolarInputsIrradiationUnit = {
+  'kWh/m2/month': 'kWh/m2/month',
+} as const;
+
+export interface SolarInputs {
+  model: SolarInputsModel;
+  /**
+     * @minLength 10
+     * @maxLength 2000
+     */
+  sourceNotes: string;
+  irradiationUnit: SolarInputsIrradiationUnit;
+  /**
+     * @maximum 1000000
+     * @exclusiveMinimum 0
+     */
+  capacityKwp: number;
+  /**
+     * @maximum 1
+     * @exclusiveMinimum 0
+     */
+  performanceRatio: number;
+  /**
+     * @minimum 0
+     * @maximum 1
+     */
+  coincidenceFactor: number;
+  /**
+     * @minimum 0
+     * @maximum 1000000
+     */
+  importRatePerKwh: number;
+  /**
+     * @minimum 0
+     * @maximum 1000000
+     */
+  exportRatePerKwh: number;
+  /**
+     * @minimum 0
+     * @maximum 1000000000000
+     */
+  capex: number;
+  /**
+     * @minimum 0
+     * @maximum 1000000000
+     */
+  annualOpex: number;
+  /**
+     * @minimum 0
+     * @maximum 100
+     */
+  discountRatePercent: number;
+  /**
+     * @minimum 1
+     * @maximum 50
+     */
+  years: number;
+  /**
+     * @minItems 12
+     * @maxItems 12
+     */
+  months: SolarMonth[];
+}
+
+export interface BatteryInterval {
+  /** @maxLength 40 */
+  start: string;
+  /** @maxLength 40 */
+  end: string;
+  /**
+     * @minimum 0
+     * @maximum 1000000000
+     */
+  loadKwh: number;
+  /**
+     * @minimum 0
+     * @maximum 1000000000
+     */
+  solarKwh: number;
+  /**
+     * @minimum 0
+     * @maximum 1000000
+     */
+  importRatePerKwh: number;
+  /**
+     * @minimum 0
+     * @maximum 1000000
+     */
+  exportRatePerKwh: number;
+}
+
+export type BatteryInputsModel = typeof BatteryInputsModel[keyof typeof BatteryInputsModel];
+
+
+export const BatteryInputsModel = {
+  battery: 'battery',
+} as const;
+
+export type BatteryInputsEnergyUnit = typeof BatteryInputsEnergyUnit[keyof typeof BatteryInputsEnergyUnit];
+
+
+export const BatteryInputsEnergyUnit = {
+  kWh: 'kWh',
+} as const;
+
+export type BatteryInputsPowerUnit = typeof BatteryInputsPowerUnit[keyof typeof BatteryInputsPowerUnit];
+
+
+export const BatteryInputsPowerUnit = {
+  kW: 'kW',
+} as const;
+
+export type BatteryInputsDispatchMode = typeof BatteryInputsDispatchMode[keyof typeof BatteryInputsDispatchMode];
+
+
+export const BatteryInputsDispatchMode = {
+  self_consumption: 'self_consumption',
+  peak_shaving: 'peak_shaving',
+} as const;
+
+export interface BatteryInputs {
+  model: BatteryInputsModel;
+  /**
+     * @minLength 10
+     * @maxLength 2000
+     */
+  sourceNotes: string;
+  energyUnit: BatteryInputsEnergyUnit;
+  powerUnit: BatteryInputsPowerUnit;
+  /**
+     * @maximum 10000000
+     * @exclusiveMinimum 0
+     */
+  capacityKwh: number;
+  /**
+     * @minimum 0
+     * @maximum 100
+     */
+  minSocPercent: number;
+  /**
+     * @minimum 0
+     * @maximum 100
+     */
+  maxSocPercent: number;
+  /**
+     * @minimum 0
+     * @maximum 100
+     */
+  initialSocPercent: number;
+  /**
+     * @maximum 10000000
+     * @exclusiveMinimum 0
+     */
+  maxChargeKw: number;
+  /**
+     * @maximum 10000000
+     * @exclusiveMinimum 0
+     */
+  maxDischargeKw: number;
+  /**
+     * @minimum 0.01
+     * @maximum 1
+     */
+  chargeEfficiency: number;
+  /**
+     * @minimum 0.01
+     * @maximum 1
+     */
+  dischargeEfficiency: number;
+  dispatchMode: BatteryInputsDispatchMode;
+  /**
+     * @minimum 0
+     * @maximum 10000000
+     * @nullable
+     */
+  gridTargetKw?: number | null;
+  /**
+     * @minItems 1
+     * @maxItems 1000
+     */
+  intervals: BatteryInterval[];
+}
+
+export type EngineeringInputs = ConsultingInputs | AuditingInputs | SolarInputs | BatteryInputs | CarbonInputs | TwinInputs;
+
+export interface EngineeringScenarioInput {
+  projectId: string;
+  /**
+     * @minLength 2
+     * @maxLength 120
+     */
+  name: string;
+  inputs: EngineeringInputs;
+}
+
+export interface EngineeringMetric {
+  key: string;
+  label: string;
+  /** @nullable */
+  value: number | null;
+  unit: string;
+  description: string;
+}
+
+export interface EngineeringColumn {
+  key: string;
+  label: string;
+  unit: string;
+}
+
+export type EngineeringTableRowsItem = {[key: string]: string | number | null};
+
+export interface EngineeringTable {
+  title: string;
+  columns: EngineeringColumn[];
+  rows: EngineeringTableRowsItem[];
+}
+
+export type EngineeringResultProvenance = {[key: string]: unknown};
+
+export interface EngineeringResult {
+  provenance?: EngineeringResultProvenance;
+  version: string;
+  metrics: EngineeringMetric[];
+  tables: EngineeringTable[];
+  assumptions: string[];
+  warnings: string[];
+  formulas: string[];
+}
+
+export interface EngineeringScenarioSummary {
+  id: string;
+  name: string;
+  project_id: string;
+  module: EngineeringModule;
+  created_at: string;
+}
+
+export type EngineeringScenario = EngineeringScenarioSummary & {
+  inputs: EngineeringInputs;
+  result: EngineeringResult;
+  projectSnapshot: EngineeringProject;
+  inputHash: string;
+};
+
+export type EngineeringWorkspaceAiStatus = typeof EngineeringWorkspaceAiStatus[keyof typeof EngineeringWorkspaceAiStatus];
+
+
+export const EngineeringWorkspaceAiStatus = {
+  disabled: 'disabled',
+  configured: 'configured',
+} as const;
+
+export type EngineeringWorkspaceExternalDataStatus = typeof EngineeringWorkspaceExternalDataStatus[keyof typeof EngineeringWorkspaceExternalDataStatus];
+
+
+export const EngineeringWorkspaceExternalDataStatus = {
+  not_configured: 'not_configured',
+} as const;
+
+export interface EngineeringWorkspace {
+  aiStatus?: EngineeringWorkspaceAiStatus;
+  projects: EngineeringProject[];
+  scenarios: EngineeringScenarioSummary[];
+  externalDataStatus: EngineeringWorkspaceExternalDataStatus;
+}
+
+export interface EnergyEmptyInput { [key: string]: unknown }
+
+export type EnergyRecordInputKind = typeof EnergyRecordInputKind[keyof typeof EnergyRecordInputKind];
+
+
+export const EnergyRecordInputKind = {
+  site: 'site',
+  meter: 'meter',
+  tariff: 'tariff',
+  rule: 'rule',
+} as const;
+
+export type EnergyRecordInputMetric = typeof EnergyRecordInputMetric[keyof typeof EnergyRecordInputMetric];
+
+
+export const EnergyRecordInputMetric = {
+  daily_kwh: 'daily_kwh',
+  peak_kw: 'peak_kw',
+} as const;
+
+export interface EnergyRecordInput {
+  kind: EnergyRecordInputKind;
+  id?: string;
+  /**
+     * @minLength 2
+     * @maxLength 120
+     */
+  name: string;
+  siteId?: string;
+  meterId?: string;
+  /** @maxLength 80 */
+  timezone?: string;
+  /**
+     * @maximum 1000000000
+     * @exclusiveMinimum 0
+     * @nullable
+     */
+  areaM2?: number | null;
+  unit?: EnergyUnit;
+  /** @pattern ^[A-Z]{3}$ */
+  currency?: string;
+  /**
+     * @minimum 0
+     * @maximum 1000000
+     */
+  energyRate?: number;
+  /**
+     * @minimum 0
+     * @maximum 1000000
+     */
+  dailyCharge?: number;
+  /**
+     * @minimum 0
+     * @maximum 1000000
+     */
+  demandRate?: number;
+  metric?: EnergyRecordInputMetric;
+  /**
+     * @maximum 1000000000000
+     * @exclusiveMinimum 0
+     */
+  threshold?: number;
+  archived?: boolean;
+}
+
+export interface EnergyTariff {
+  id: string;
+  name: string;
+  currency: string;
+  energy_rate: number;
+  daily_charge: number;
+  demand_rate: number;
+  is_demo: boolean;
+  archived: boolean;
+}
+
+export type EnergyRuleMetric = typeof EnergyRuleMetric[keyof typeof EnergyRuleMetric];
+
+
+export const EnergyRuleMetric = {
+  daily_kwh: 'daily_kwh',
+  peak_kw: 'peak_kw',
+} as const;
+
+export interface EnergyRule {
+  id: string;
+  name: string;
+  meter_id: string;
+  metric: EnergyRuleMetric;
+  threshold: number;
+  is_demo: boolean;
+  archived: boolean;
+}
+
+export interface EnergyImportInput {
+  meterId: string;
+  /**
+     * @minLength 1
+     * @maxLength 180
+     */
+  filename: string;
+  /**
+     * @minLength 1
+     * @maxLength 2800000
+     */
+  fileBase64: string;
+}
+
+export interface EnergyImportError {
+  row: number;
+  message: string;
+}
+
+export type EnergyImportStatus = typeof EnergyImportStatus[keyof typeof EnergyImportStatus];
+
+
+export const EnergyImportStatus = {
+  preview: 'preview',
+  committed: 'committed',
+} as const;
+
+export interface EnergyImport {
+  id: string;
+  meter_id: string;
+  filename: string;
+  status: EnergyImportStatus;
+  row_count: number;
+  valid_count: number;
+  errors: EnergyImportError[];
+  created_at: string;
+  is_demo: boolean;
+}
+
+export interface EnergyAnalysisInput {
+  /**
+     * @minLength 2
+     * @maxLength 120
+     */
+  name: string;
+  meterId: string;
+  /** @nullable */
+  tariffId?: string | null;
+  start: string;
+  end: string;
+  /**
+     * @exclusiveMinimum 0
+     * @nullable
+     */
+  baselineKwh?: number | null;
+  /**
+     * @minimum 0
+     * @nullable
+     */
+  targetKwh?: number | null;
+}
+
+export interface EnergyPoint {
+  label: string;
+  kwh: number;
+  kw: number;
+}
+
+export interface EnergyResult {
+  version: string;
+  timezone: string;
+  kwh: number;
+  peakKw: number;
+  averageKw: number;
+  /** @nullable */
+  loadFactorPercent: number | null;
+  coveragePercent: number;
+  coveredHours: number;
+  readingCount: number;
+  /** @nullable */
+  cost: number | null;
+  /** @nullable */
+  currency: string | null;
+  /** @nullable */
+  energyCost: number | null;
+  /** @nullable */
+  standingCost: number | null;
+  /** @nullable */
+  demandCost: number | null;
+  /** @nullable */
+  intensityKwhM2: number | null;
+  /** @nullable */
+  baselineChangePercent: number | null;
+  /** @nullable */
+  targetDifferenceKwh: number | null;
+  daily: EnergyPoint[];
+  loadProfile: EnergyPoint[];
+  notes: string[];
+}
+
+export interface EnergyAnalysisSummary {
+  id: string;
+  name: string;
+  meter_id: string;
+  is_demo: boolean;
+  created_at: string;
+}
+
+export type EnergyAnalysis = EnergyAnalysisSummary & {
+  result: EnergyResult;
+};
+
+export interface EnergyAlert {
+  id: string;
+  analysis_id: string;
+  message: string;
+  acknowledged: boolean;
+  created_at: string;
+  is_demo: boolean;
+}
+
+export interface EnergyWorkspace {
+  sites: EnergySite[];
+  meters: EnergyMeter[];
+  tariffs: EnergyTariff[];
+  rules: EnergyRule[];
+  imports: EnergyImport[];
+  analyses: EnergyAnalysisSummary[];
+  alerts: EnergyAlert[];
+}
+
 export interface PlatformCredentials {
   /** @maxLength 254 */
   email?: string;

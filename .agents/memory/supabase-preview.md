@@ -31,3 +31,20 @@ without exercising a real inbox or Supabase's redirect allowlist.
 
 **How to apply:** Keep actual verification/recovery delivery as an explicit phase
 gate. Report it unverified until a real same-browser PKCE email round trip succeeds.
+
+Helpers that share synthetic users with a browser pass must end only their own
+Supabase session, never all sessions for the account.
+
+**Why:** Supabase `signOut()` defaults to global scope. A concurrent database
+verification helper invalidated the browser's otherwise valid session, causing a
+misleading verified-email error midway through a working import/analysis journey.
+
+**How to apply:** Use `signOut({ scope: "local" })` in overlapping test helpers,
+and defer fixture deletion until the browser pass ends. Distinguish test-session
+interference from a product authentication failure before changing auth logic.
+
+An identity-provider outage is not an invalid session.
+
+**Why:** The provider SDK can resolve with a null user and a retryable error rather than throwing. Ignoring that error made a temporary upstream failure clear otherwise legitimate customer cookies.
+
+**How to apply:** Classify transient provider failures before user/credential validation, including after refresh or code exchange. Return a safe 503 and preserve cookies; reserve session clearing for confirmed invalid authentication.

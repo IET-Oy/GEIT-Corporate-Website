@@ -13,6 +13,293 @@ tags:
   - name: enquiries
     description: Public consultation enquiries
 paths:
+  /platform/engineering/{orgId}/carbon-footprint/factors:
+    parameters:
+      - $ref: "#/components/parameters/EnergyOrg"
+    get:
+      operationId: getEmissionFactors
+      tags: [platform]
+      responses:
+        "200":
+          description: All immutable factor versions in this organisation
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/EmissionFactor" }
+    post:
+      operationId: createEmissionFactor
+      tags: [platform]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/EmissionFactorInput" }
+      responses:
+        "201":
+          description: New immutable factor version
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/EmissionFactor" }
+  /platform/engineering/{orgId}/digital-energy/sources:
+    parameters:
+      - $ref: "#/components/parameters/EnergyOrg"
+    get:
+      operationId: getDigitalTwinSources
+      tags: [platform]
+      responses:
+        "200":
+          description: Authorised non-demo sites and meters; no fabricated connections
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/DigitalTwinSources" }
+  /platform/engineering/{orgId}/{module}/scenarios/{id}/ai:
+    parameters:
+      - $ref: "#/components/parameters/EnergyOrg"
+      - $ref: "#/components/parameters/EngineeringModulePath"
+      - $ref: "#/components/parameters/EnergyId"
+    post:
+      operationId: explainEngineeringScenario
+      tags: [platform]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/EvidenceQuestion" }
+      responses:
+        "200":
+          description: AI-selected verified evidence; no AI-generated numeric claims
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/EvidenceAnswer" }
+  /platform/engineering/{orgId}/{module}:
+    get:
+      operationId: getEngineeringWorkspace
+      parameters:
+        - $ref: "#/components/parameters/EnergyOrg"
+        - $ref: "#/components/parameters/EngineeringModulePath"
+      responses:
+        "200":
+          description: Tenant-scoped projects and saved scenario summaries
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/EngineeringWorkspace" }
+  /platform/engineering/{orgId}/{module}/projects:
+    post:
+      operationId: saveEngineeringProject
+      parameters:
+        - $ref: "#/components/parameters/EnergyOrg"
+        - $ref: "#/components/parameters/EngineeringModulePath"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/EngineeringProjectInput" }
+      responses:
+        "200":
+          description: Project created or updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/EngineeringProject" }
+  /platform/engineering/{orgId}/{module}/scenarios:
+    post:
+      operationId: createEngineeringScenario
+      parameters:
+        - $ref: "#/components/parameters/EnergyOrg"
+        - $ref: "#/components/parameters/EngineeringModulePath"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/EngineeringScenarioInput" }
+      responses:
+        "201":
+          description: Calculated and signed immutable scenario snapshot
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/EngineeringScenario" }
+  /platform/engineering/{orgId}/{module}/scenarios/{id}:
+    get:
+      operationId: getEngineeringScenario
+      parameters:
+        - $ref: "#/components/parameters/EnergyOrg"
+        - $ref: "#/components/parameters/EngineeringModulePath"
+        - $ref: "#/components/parameters/EnergyId"
+      responses:
+        "200":
+          description: Verified saved input and result snapshot
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/EngineeringScenario" }
+  /platform/engineering/{orgId}/{module}/scenarios/{id}/export/{format}:
+    get:
+      operationId: exportEngineeringScenario
+      parameters:
+        - $ref: "#/components/parameters/EnergyOrg"
+        - $ref: "#/components/parameters/EngineeringModulePath"
+        - $ref: "#/components/parameters/EnergyId"
+        - in: path
+          name: format
+          required: true
+          schema: { type: string, enum: [csv, xlsx, pdf, json] }
+      responses:
+        "200":
+          description: Saved engineering report with provenance and assumptions
+          content:
+            application/octet-stream:
+              schema: { type: string, format: binary }
+  /platform/energy/{orgId}:
+    get:
+      operationId: getEnergyWorkspace
+      parameters:
+        - $ref: "#/components/parameters/EnergyOrg"
+      responses:
+        "200":
+          description: Tenant energy records; customer and demo records explicitly labelled
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/EnergyWorkspace" }
+  /platform/energy/{orgId}/records:
+    post:
+      operationId: saveEnergyRecord
+      parameters:
+        - $ref: "#/components/parameters/EnergyOrg"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/EnergyRecordInput" }
+      responses:
+        "200":
+          description: Site, meter, tariff or alert rule saved
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PlatformMessage" }
+  /platform/energy/{orgId}/imports:
+    post:
+      operationId: previewEnergyImport
+      parameters:
+        - $ref: "#/components/parameters/EnergyOrg"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/EnergyImportInput" }
+      responses:
+        "200":
+          description: Persistent import preview with row-level validation
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/EnergyImport" }
+  /platform/energy/{orgId}/imports/{id}/commit:
+    post:
+      operationId: commitEnergyImport
+      parameters:
+        - $ref: "#/components/parameters/EnergyOrg"
+        - $ref: "#/components/parameters/EnergyId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/EnergyEmptyInput" }
+      responses:
+        "200":
+          description: All readings committed atomically, or none
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PlatformMessage" }
+  /platform/energy/{orgId}/analyses:
+    post:
+      operationId: createEnergyAnalysis
+      parameters:
+        - $ref: "#/components/parameters/EnergyOrg"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/EnergyAnalysisInput" }
+      responses:
+        "201":
+          description: Saved reproducible analysis snapshot and evaluated alerts
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/EnergyAnalysis" }
+  /platform/energy/{orgId}/analyses/{id}:
+    get:
+      operationId: getEnergyAnalysis
+      parameters:
+        - $ref: "#/components/parameters/EnergyOrg"
+        - $ref: "#/components/parameters/EnergyId"
+      responses:
+        "200":
+          description: Saved analysis snapshot
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/EnergyAnalysis" }
+  /platform/energy/{orgId}/alerts/{id}/acknowledge:
+    post:
+      operationId: acknowledgeEnergyAlert
+      parameters:
+        - $ref: "#/components/parameters/EnergyOrg"
+        - $ref: "#/components/parameters/EnergyId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/EnergyEmptyInput" }
+      responses:
+        "200":
+          description: Alert acknowledged
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PlatformMessage" }
+  /platform/energy/{orgId}/demo:
+    post:
+      operationId: createEnergyDemo
+      parameters:
+        - $ref: "#/components/parameters/EnergyOrg"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/EnergyEmptyInput" }
+      responses:
+        "200":
+          description: Separate synthetic demo records created or already present
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PlatformMessage" }
+  /platform/energy/{orgId}/template/{format}:
+    get:
+      operationId: downloadEnergyTemplate
+      parameters:
+        - $ref: "#/components/parameters/EnergyOrg"
+        - in: path
+          name: format
+          required: true
+          schema: { type: string, enum: [csv, xlsx, demo-csv], default: csv }
+      responses:
+        "200":
+          description: Downloadable blank import template or explicitly synthetic demo CSV
+          content:
+            application/octet-stream:
+              schema: { type: string, format: binary }
+  /platform/energy/{orgId}/analyses/{id}/export/{format}:
+    get:
+      operationId: exportEnergyAnalysis
+      parameters:
+        - $ref: "#/components/parameters/EnergyOrg"
+        - $ref: "#/components/parameters/EnergyId"
+        - in: path
+          name: format
+          required: true
+          schema: { type: string, enum: [csv, xlsx, pdf], default: csv }
+      responses:
+        "200":
+          description: Reproducible report download
+          content:
+            application/octet-stream:
+              schema: { type: string, format: binary }
   /platform/session:
     get:
       operationId: getPlatformSession
@@ -184,7 +471,604 @@ paths:
               schema:
                 $ref: "#/components/schemas/ApiError"
 components:
+  parameters:
+    EngineeringModulePath:
+      in: path
+      name: module
+      required: true
+      schema: { $ref: "#/components/schemas/EngineeringModule" }
+    EnergyOrg:
+      in: path
+      name: orgId
+      required: true
+      schema: { type: string, format: uuid }
+    EnergyId:
+      in: path
+      name: id
+      required: true
+      schema: { type: string, format: uuid }
   schemas:
+    EngineeringModule:
+      type: string
+      enum: [energy-consulting, energy-auditing, renewable-energy, battery-flexibility, carbon-footprint, digital-energy]
+    CarbonUnit:
+      type: string
+      enum: [kWh, MWh, GJ, L, m3, kg, km, passenger_km, tonne_km]
+    CarbonScope:
+      type: string
+      enum: [scope1, scope2, scope3]
+    CarbonCategory:
+      type: string
+      enum: [stationary_combustion, mobile_combustion, fugitive, process, purchased_electricity, purchased_heat, purchased_goods, upstream_fuel_energy, waste, business_travel, employee_commuting, upstream_transport, downstream_transport]
+    EmissionFactorInput:
+      type: object
+      additionalProperties: false
+      required: [code, name, source, sourceUrl, geography, activityUnit, emissionUnit, value, validFrom, validUntil, scope, category, scope2Method, gwpBasis]
+      properties:
+        code: { type: string, pattern: "^[A-Z0-9_-]{2,64}$" }
+        name: { type: string, minLength: 2, maxLength: 160 }
+        source: { type: string, minLength: 10, maxLength: 1000 }
+        sourceUrl: { type: string, pattern: "^https://", maxLength: 1000 }
+        geography: { type: string, minLength: 2, maxLength: 120 }
+        activityUnit: { $ref: "#/components/schemas/CarbonUnit" }
+        emissionUnit: { type: string, enum: [kgCO2e, tCO2e] }
+        value: { type: number, minimum: 0, maximum: 1000000000 }
+        validFrom: { type: string, pattern: "^\\d{4}-\\d{2}-\\d{2}$" }
+        validUntil: { type: string, pattern: "^\\d{4}-\\d{2}-\\d{2}$" }
+        scope: { $ref: "#/components/schemas/CarbonScope" }
+        category: { $ref: "#/components/schemas/CarbonCategory" }
+        scope2Method: { type: ["string", "null"], enum: [location_based, market_based, null] }
+        gwpBasis: { type: string, minLength: 5, maxLength: 160 }
+    EmissionFactor:
+      allOf:
+        - $ref: "#/components/schemas/EmissionFactorInput"
+        - type: object
+          required: [id, version, created_at]
+          properties:
+            id: { type: string, format: uuid }
+            version: { type: integer, minimum: 1 }
+            created_at: { type: string }
+    CarbonActivity:
+      type: object
+      additionalProperties: false
+      required: [name, factorId, quantity, unit, geography, scope, category]
+      properties:
+        name: { type: string, minLength: 2, maxLength: 160 }
+        factorId: { type: string, format: uuid }
+        quantity: { type: number, minimum: 0, maximum: 1000000000000 }
+        unit: { $ref: "#/components/schemas/CarbonUnit" }
+        geography: { type: string, minLength: 2, maxLength: 120 }
+        scope: { $ref: "#/components/schemas/CarbonScope" }
+        category: { $ref: "#/components/schemas/CarbonCategory" }
+    CarbonReduction:
+      type: object
+      additionalProperties: false
+      required: [activityIndex, label, reductionPercent]
+      properties:
+        activityIndex: { type: integer, minimum: 0, maximum: 99 }
+        label: { type: string, minLength: 2, maxLength: 160 }
+        reductionPercent: { type: number, minimum: 0, maximum: 100 }
+    CarbonInputs:
+      type: object
+      additionalProperties: false
+      required: [model, sourceNotes, periodStart, periodEnd, boundary, scope2Method, activities, reductions]
+      properties:
+        model: { type: string, enum: [carbon] }
+        sourceNotes: { type: string, minLength: 10, maxLength: 2000 }
+        periodStart: { type: string, pattern: "^\\d{4}-\\d{2}-\\d{2}$" }
+        periodEnd: { type: string, pattern: "^\\d{4}-\\d{2}-\\d{2}$" }
+        boundary: { type: string, minLength: 10, maxLength: 2000 }
+        scope2Method: { type: string, enum: [location_based, market_based] }
+        activities:
+          type: array
+          minItems: 1
+          maxItems: 100
+          items: { $ref: "#/components/schemas/CarbonActivity" }
+        reductions:
+          type: array
+          maxItems: 100
+          items: { $ref: "#/components/schemas/CarbonReduction" }
+    TwinBattery:
+      type: object
+      additionalProperties: false
+      required: [capacityKwh, minSocPercent, maxSocPercent, initialSocPercent, maxChargeKw, maxDischargeKw, chargeEfficiency, dischargeEfficiency, dispatchMode]
+      properties:
+        capacityKwh: { type: number, exclusiveMinimum: 0, maximum: 10000000 }
+        minSocPercent: { type: number, minimum: 0, maximum: 100 }
+        maxSocPercent: { type: number, minimum: 0, maximum: 100 }
+        initialSocPercent: { type: number, minimum: 0, maximum: 100 }
+        maxChargeKw: { type: number, exclusiveMinimum: 0, maximum: 10000000 }
+        maxDischargeKw: { type: number, exclusiveMinimum: 0, maximum: 10000000 }
+        chargeEfficiency: { type: number, minimum: 0.01, maximum: 1 }
+        dischargeEfficiency: { type: number, minimum: 0.01, maximum: 1 }
+        dispatchMode: { type: string, enum: [self_consumption, peak_shaving] }
+        gridTargetKw: { type: ["number", "null"], minimum: 0, maximum: 10000000 }
+    TwinInputs:
+      type: object
+      additionalProperties: false
+      required: [model, sourceNotes, buildingMeterId, solarMeterId, start, end, loadBasis, battery, forecastHorizonHours, anomalyThreshold]
+      properties:
+        model: { type: string, enum: [twin] }
+        sourceNotes: { type: string, minLength: 10, maxLength: 2000 }
+        buildingMeterId: { type: string, format: uuid }
+        solarMeterId: { type: ["string", "null"], format: uuid }
+        start: { type: string, maxLength: 40 }
+        end: { type: string, maxLength: 40 }
+        loadBasis: { type: string, enum: [gross_building_load] }
+        battery:
+          oneOf:
+            - $ref: "#/components/schemas/TwinBattery"
+            - type: "null"
+        forecastHorizonHours: { type: integer, minimum: 1, maximum: 168 }
+        anomalyThreshold: { type: number, minimum: 2, maximum: 10 }
+    DigitalTwinSources:
+      type: object
+      required: [meters, sites, connectedProviderStatus, readingLimit]
+      properties:
+        meters:
+          type: array
+          items: { $ref: "#/components/schemas/EnergyMeter" }
+        sites:
+          type: array
+          items: { $ref: "#/components/schemas/EnergySite" }
+        connectedProviderStatus: { type: string, enum: [not_configured] }
+        readingLimit: { type: integer }
+    EvidenceQuestion:
+      type: object
+      additionalProperties: false
+      required: [question, consent]
+      properties:
+        question: { type: string, minLength: 5, maxLength: 1000 }
+        consent: { type: boolean, enum: [true] }
+    EvidenceItem:
+      type: object
+      required: [id, text]
+      properties:
+        id: { type: string }
+        text: { type: string }
+    EvidenceAnswer:
+      type: object
+      required: [provider, model, scenarioId, inputHash, evidence, limitation]
+      properties:
+        provider: { type: string }
+        model: { type: string }
+        scenarioId: { type: string }
+        inputHash: { type: string }
+        evidence:
+          type: array
+          items: { $ref: "#/components/schemas/EvidenceItem" }
+        limitation: { type: string }
+    EngineeringProjectInput:
+      type: object
+      additionalProperties: false
+      required: [name, facility, brief, currency, status]
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string, minLength: 2, maxLength: 120 }
+        facility: { type: string, minLength: 2, maxLength: 160 }
+        brief: { type: string, minLength: 10, maxLength: 4000 }
+        currency: { type: string, pattern: "^[A-Z]{3}$" }
+        status: { type: string, enum: [draft, active, completed] }
+        archived: { type: boolean }
+    EngineeringProject:
+      type: object
+      required: [id, module, name, facility, brief, currency, status, archived, created_at]
+      properties:
+        id: { type: string }
+        module: { $ref: "#/components/schemas/EngineeringModule" }
+        name: { type: string }
+        facility: { type: string }
+        brief: { type: string }
+        currency: { type: string }
+        status: { type: string, enum: [draft, active, completed] }
+        archived: { type: boolean }
+        created_at: { type: string }
+    ConsultingInputs:
+      type: object
+      additionalProperties: false
+      required: [model, sourceNotes, energyUnit, baselineEnergy, proposedEnergy, tariffPerKwh, capex, annualOpexDelta, discountRatePercent, years]
+      properties:
+        model: { type: string, enum: [consulting] }
+        sourceNotes: { type: string, minLength: 10, maxLength: 2000 }
+        energyUnit: { type: string, enum: [kWh, MWh, GJ] }
+        baselineEnergy: { type: number, minimum: 0, maximum: 1000000000 }
+        proposedEnergy: { type: number, minimum: 0, maximum: 1000000000 }
+        tariffPerKwh: { type: number, minimum: 0, maximum: 1000000 }
+        capex: { type: number, minimum: 0, maximum: 1000000000000 }
+        annualOpexDelta: { type: number, minimum: -1000000000, maximum: 1000000000 }
+        discountRatePercent: { type: number, minimum: 0, maximum: 100 }
+        years: { type: integer, minimum: 1, maximum: 50 }
+    AuditMeasure:
+      type: object
+      additionalProperties: false
+      required: [name, quantity, powerUnit, baselinePower, proposedPower, hoursPerYear, capex, annualOpexDelta]
+      properties:
+        name: { type: string, minLength: 2, maxLength: 120 }
+        quantity: { type: integer, minimum: 1, maximum: 1000000 }
+        powerUnit: { type: string, enum: [W, kW] }
+        baselinePower: { type: number, minimum: 0, maximum: 1000000 }
+        proposedPower: { type: number, minimum: 0, maximum: 1000000 }
+        hoursPerYear: { type: number, minimum: 0, maximum: 8784 }
+        capex: { type: number, minimum: 0, maximum: 1000000000000 }
+        annualOpexDelta: { type: number, minimum: -1000000000, maximum: 1000000000 }
+    AuditingInputs:
+      type: object
+      additionalProperties: false
+      required: [model, sourceNotes, tariffPerKwh, discountRatePercent, years, measures]
+      properties:
+        model: { type: string, enum: [auditing] }
+        sourceNotes: { type: string, minLength: 10, maxLength: 2000 }
+        tariffPerKwh: { type: number, minimum: 0, maximum: 1000000 }
+        discountRatePercent: { type: number, minimum: 0, maximum: 100 }
+        years: { type: integer, minimum: 1, maximum: 50 }
+        facilityBaselineKwh: { type: ["number", "null"], exclusiveMinimum: 0, maximum: 1000000000000 }
+        measures:
+          type: array
+          minItems: 1
+          maxItems: 30
+          items: { $ref: "#/components/schemas/AuditMeasure" }
+    SolarMonth:
+      type: object
+      additionalProperties: false
+      required: [month, irradiationKwhM2, demandKwh]
+      properties:
+        month: { type: integer, minimum: 1, maximum: 12 }
+        irradiationKwhM2: { type: number, minimum: 0, maximum: 500 }
+        demandKwh: { type: number, minimum: 0, maximum: 1000000000 }
+    SolarInputs:
+      type: object
+      additionalProperties: false
+      required: [model, sourceNotes, irradiationUnit, capacityKwp, performanceRatio, coincidenceFactor, importRatePerKwh, exportRatePerKwh, capex, annualOpex, discountRatePercent, years, months]
+      properties:
+        model: { type: string, enum: [solar] }
+        sourceNotes: { type: string, minLength: 10, maxLength: 2000 }
+        irradiationUnit: { type: string, enum: [kWh/m2/month] }
+        capacityKwp: { type: number, exclusiveMinimum: 0, maximum: 1000000 }
+        performanceRatio: { type: number, exclusiveMinimum: 0, maximum: 1 }
+        coincidenceFactor: { type: number, minimum: 0, maximum: 1 }
+        importRatePerKwh: { type: number, minimum: 0, maximum: 1000000 }
+        exportRatePerKwh: { type: number, minimum: 0, maximum: 1000000 }
+        capex: { type: number, minimum: 0, maximum: 1000000000000 }
+        annualOpex: { type: number, minimum: 0, maximum: 1000000000 }
+        discountRatePercent: { type: number, minimum: 0, maximum: 100 }
+        years: { type: integer, minimum: 1, maximum: 50 }
+        months:
+          type: array
+          minItems: 12
+          maxItems: 12
+          items: { $ref: "#/components/schemas/SolarMonth" }
+    BatteryInterval:
+      type: object
+      additionalProperties: false
+      required: [start, end, loadKwh, solarKwh, importRatePerKwh, exportRatePerKwh]
+      properties:
+        start: { type: string, maxLength: 40 }
+        end: { type: string, maxLength: 40 }
+        loadKwh: { type: number, minimum: 0, maximum: 1000000000 }
+        solarKwh: { type: number, minimum: 0, maximum: 1000000000 }
+        importRatePerKwh: { type: number, minimum: 0, maximum: 1000000 }
+        exportRatePerKwh: { type: number, minimum: 0, maximum: 1000000 }
+    BatteryInputs:
+      type: object
+      additionalProperties: false
+      required: [model, sourceNotes, energyUnit, powerUnit, capacityKwh, minSocPercent, maxSocPercent, initialSocPercent, maxChargeKw, maxDischargeKw, chargeEfficiency, dischargeEfficiency, dispatchMode, intervals]
+      properties:
+        model: { type: string, enum: [battery] }
+        sourceNotes: { type: string, minLength: 10, maxLength: 2000 }
+        energyUnit: { type: string, enum: [kWh] }
+        powerUnit: { type: string, enum: [kW] }
+        capacityKwh: { type: number, exclusiveMinimum: 0, maximum: 10000000 }
+        minSocPercent: { type: number, minimum: 0, maximum: 100 }
+        maxSocPercent: { type: number, minimum: 0, maximum: 100 }
+        initialSocPercent: { type: number, minimum: 0, maximum: 100 }
+        maxChargeKw: { type: number, exclusiveMinimum: 0, maximum: 10000000 }
+        maxDischargeKw: { type: number, exclusiveMinimum: 0, maximum: 10000000 }
+        chargeEfficiency: { type: number, minimum: 0.01, maximum: 1 }
+        dischargeEfficiency: { type: number, minimum: 0.01, maximum: 1 }
+        dispatchMode: { type: string, enum: [self_consumption, peak_shaving] }
+        gridTargetKw: { type: ["number", "null"], minimum: 0, maximum: 10000000 }
+        intervals:
+          type: array
+          minItems: 1
+          maxItems: 1000
+          items: { $ref: "#/components/schemas/BatteryInterval" }
+    EngineeringInputs:
+      oneOf:
+        - $ref: "#/components/schemas/ConsultingInputs"
+        - $ref: "#/components/schemas/AuditingInputs"
+        - $ref: "#/components/schemas/SolarInputs"
+        - $ref: "#/components/schemas/BatteryInputs"
+        - $ref: "#/components/schemas/CarbonInputs"
+        - $ref: "#/components/schemas/TwinInputs"
+    EngineeringScenarioInput:
+      type: object
+      additionalProperties: false
+      required: [projectId, name, inputs]
+      properties:
+        projectId: { type: string, format: uuid }
+        name: { type: string, minLength: 2, maxLength: 120 }
+        inputs: { $ref: "#/components/schemas/EngineeringInputs" }
+    EngineeringMetric:
+      type: object
+      required: [key, label, value, unit, description]
+      properties:
+        key: { type: string }
+        label: { type: string }
+        value: { type: ["number", "null"] }
+        unit: { type: string }
+        description: { type: string }
+    EngineeringColumn:
+      type: object
+      required: [key, label, unit]
+      properties:
+        key: { type: string }
+        label: { type: string }
+        unit: { type: string }
+    EngineeringTable:
+      type: object
+      required: [title, columns, rows]
+      properties:
+        title: { type: string }
+        columns:
+          type: array
+          items: { $ref: "#/components/schemas/EngineeringColumn" }
+        rows:
+          type: array
+          items:
+            type: object
+            additionalProperties: { type: ["string", "number", "null"] }
+    EngineeringResult:
+      type: object
+      required: [version, metrics, tables, assumptions, warnings, formulas]
+      properties:
+        provenance:
+          type: object
+          additionalProperties: {}
+        version: { type: string }
+        metrics:
+          type: array
+          items: { $ref: "#/components/schemas/EngineeringMetric" }
+        tables:
+          type: array
+          items: { $ref: "#/components/schemas/EngineeringTable" }
+        assumptions:
+          type: array
+          items: { type: string }
+        warnings:
+          type: array
+          items: { type: string }
+        formulas:
+          type: array
+          items: { type: string }
+    EngineeringScenarioSummary:
+      type: object
+      required: [id, name, project_id, module, created_at]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        project_id: { type: string }
+        module: { $ref: "#/components/schemas/EngineeringModule" }
+        created_at: { type: string }
+    EngineeringScenario:
+      allOf:
+        - $ref: "#/components/schemas/EngineeringScenarioSummary"
+        - type: object
+          required: [inputs, result, projectSnapshot, inputHash]
+          properties:
+            inputs: { $ref: "#/components/schemas/EngineeringInputs" }
+            result: { $ref: "#/components/schemas/EngineeringResult" }
+            projectSnapshot: { $ref: "#/components/schemas/EngineeringProject" }
+            inputHash: { type: string }
+    EngineeringWorkspace:
+      type: object
+      required: [projects, scenarios, externalDataStatus]
+      properties:
+        aiStatus: { type: string, enum: [disabled, configured] }
+        projects:
+          type: array
+          items: { $ref: "#/components/schemas/EngineeringProject" }
+        scenarios:
+          type: array
+          items: { $ref: "#/components/schemas/EngineeringScenarioSummary" }
+        externalDataStatus: { type: string, enum: [not_configured] }
+    EnergyEmptyInput:
+      type: object
+      additionalProperties: false
+    EnergyUnit:
+      type: string
+      enum: [Wh, kWh, MWh, MJ, GJ, W, kW, MW]
+    EnergyRecordInput:
+      type: object
+      additionalProperties: false
+      required: [kind, name]
+      properties:
+        kind: { type: string, enum: [site, meter, tariff, rule] }
+        id: { type: string, format: uuid }
+        name: { type: string, minLength: 2, maxLength: 120 }
+        siteId: { type: string, format: uuid }
+        meterId: { type: string, format: uuid }
+        timezone: { type: string, maxLength: 80 }
+        areaM2: { type: ["number", "null"], exclusiveMinimum: 0, maximum: 1000000000 }
+        unit: { $ref: "#/components/schemas/EnergyUnit" }
+        currency: { type: string, pattern: "^[A-Z]{3}$" }
+        energyRate: { type: number, minimum: 0, maximum: 1000000 }
+        dailyCharge: { type: number, minimum: 0, maximum: 1000000 }
+        demandRate: { type: number, minimum: 0, maximum: 1000000 }
+        metric: { type: string, enum: [daily_kwh, peak_kw] }
+        threshold: { type: number, exclusiveMinimum: 0, maximum: 1000000000000 }
+        archived: { type: boolean }
+    EnergySite:
+      type: object
+      required: [id, name, timezone, area_m2, is_demo, archived]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        timezone: { type: string }
+        area_m2: { type: ["number", "null"] }
+        is_demo: { type: boolean }
+        archived: { type: boolean }
+    EnergyMeter:
+      type: object
+      required: [id, name, site_id, unit, is_demo, archived]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        site_id: { type: string }
+        unit: { $ref: "#/components/schemas/EnergyUnit" }
+        is_demo: { type: boolean }
+        archived: { type: boolean }
+    EnergyTariff:
+      type: object
+      required: [id, name, currency, energy_rate, daily_charge, demand_rate, is_demo, archived]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        currency: { type: string }
+        energy_rate: { type: number }
+        daily_charge: { type: number }
+        demand_rate: { type: number }
+        is_demo: { type: boolean }
+        archived: { type: boolean }
+    EnergyRule:
+      type: object
+      required: [id, name, meter_id, metric, threshold, is_demo, archived]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        meter_id: { type: string }
+        metric: { type: string, enum: [daily_kwh, peak_kw] }
+        threshold: { type: number }
+        is_demo: { type: boolean }
+        archived: { type: boolean }
+    EnergyImportInput:
+      type: object
+      additionalProperties: false
+      required: [meterId, filename, fileBase64]
+      properties:
+        meterId: { type: string, format: uuid }
+        filename: { type: string, minLength: 1, maxLength: 180 }
+        fileBase64: { type: string, minLength: 1, maxLength: 2800000 }
+    EnergyImportError:
+      type: object
+      required: [row, message]
+      properties:
+        row: { type: integer }
+        message: { type: string }
+    EnergyImport:
+      type: object
+      required: [id, meter_id, filename, status, row_count, valid_count, errors, created_at, is_demo]
+      properties:
+        id: { type: string }
+        meter_id: { type: string }
+        filename: { type: string }
+        status: { type: string, enum: [preview, committed] }
+        row_count: { type: integer }
+        valid_count: { type: integer }
+        errors:
+          type: array
+          items: { $ref: "#/components/schemas/EnergyImportError" }
+        created_at: { type: string }
+        is_demo: { type: boolean }
+    EnergyAnalysisInput:
+      type: object
+      additionalProperties: false
+      required: [name, meterId, start, end]
+      properties:
+        name: { type: string, minLength: 2, maxLength: 120 }
+        meterId: { type: string, format: uuid }
+        tariffId: { type: ["string", "null"], format: uuid }
+        start: { type: string, format: date-time }
+        end: { type: string, format: date-time }
+        baselineKwh: { type: ["number", "null"], exclusiveMinimum: 0 }
+        targetKwh: { type: ["number", "null"], minimum: 0 }
+    EnergyPoint:
+      type: object
+      required: [label, kwh, kw]
+      properties:
+        label: { type: string }
+        kwh: { type: number }
+        kw: { type: number }
+    EnergyResult:
+      type: object
+      required: [version, timezone, kwh, peakKw, averageKw, loadFactorPercent, coveragePercent, coveredHours, readingCount, cost, currency, energyCost, standingCost, demandCost, intensityKwhM2, baselineChangePercent, targetDifferenceKwh, daily, loadProfile, notes]
+      properties:
+        version: { type: string }
+        timezone: { type: string }
+        kwh: { type: number }
+        peakKw: { type: number }
+        averageKw: { type: number }
+        loadFactorPercent: { type: ["number", "null"] }
+        coveragePercent: { type: number }
+        coveredHours: { type: number }
+        readingCount: { type: integer }
+        cost: { type: ["number", "null"] }
+        currency: { type: ["string", "null"] }
+        energyCost: { type: ["number", "null"] }
+        standingCost: { type: ["number", "null"] }
+        demandCost: { type: ["number", "null"] }
+        intensityKwhM2: { type: ["number", "null"] }
+        baselineChangePercent: { type: ["number", "null"] }
+        targetDifferenceKwh: { type: ["number", "null"] }
+        daily:
+          type: array
+          items: { $ref: "#/components/schemas/EnergyPoint" }
+        loadProfile:
+          type: array
+          items: { $ref: "#/components/schemas/EnergyPoint" }
+        notes:
+          type: array
+          items: { type: string }
+    EnergyAnalysisSummary:
+      type: object
+      required: [id, name, meter_id, is_demo, created_at]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        meter_id: { type: string }
+        is_demo: { type: boolean }
+        created_at: { type: string }
+    EnergyAnalysis:
+      allOf:
+        - $ref: "#/components/schemas/EnergyAnalysisSummary"
+        - type: object
+          required: [result]
+          properties:
+            result: { $ref: "#/components/schemas/EnergyResult" }
+    EnergyAlert:
+      type: object
+      required: [id, analysis_id, message, acknowledged, created_at, is_demo]
+      properties:
+        id: { type: string }
+        analysis_id: { type: string }
+        message: { type: string }
+        acknowledged: { type: boolean }
+        created_at: { type: string }
+        is_demo: { type: boolean }
+    EnergyWorkspace:
+      type: object
+      required: [sites, meters, tariffs, rules, imports, analyses, alerts]
+      properties:
+        sites:
+          type: array
+          items: { $ref: "#/components/schemas/EnergySite" }
+        meters:
+          type: array
+          items: { $ref: "#/components/schemas/EnergyMeter" }
+        tariffs:
+          type: array
+          items: { $ref: "#/components/schemas/EnergyTariff" }
+        rules:
+          type: array
+          items: { $ref: "#/components/schemas/EnergyRule" }
+        imports:
+          type: array
+          items: { $ref: "#/components/schemas/EnergyImport" }
+        analyses:
+          type: array
+          items: { $ref: "#/components/schemas/EnergyAnalysisSummary" }
+        alerts:
+          type: array
+          items: { $ref: "#/components/schemas/EnergyAlert" }
     PlatformCredentials:
       type: object
       additionalProperties: false

@@ -26,3 +26,9 @@ Use global energy-and-technology positioning throughout visible homepage content
 **Why:** The user requested that Home contain no Rwanda or Kigali references and position GEIT for international markets, while explicitly preserving registration details, legal information and contact addresses on other pages.
 
 **How to apply:** Keep homepage copy naturally global-facing across all four languages. Scope shared-footer positioning to Home; retain approved address and legal information elsewhere.
+
+Add subscription entitlements and billing only with a configured payment provider and verified webhooks.
+
+**Why:** The user explicitly set this condition for production-readiness work.
+
+**How to apply:** Leave billing disabled without that provider evidence. Do not create a fake paid tier, activate access from a browser checkout redirect, or claim untested payment behaviour is production-ready.

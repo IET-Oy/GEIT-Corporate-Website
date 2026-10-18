@@ -115,8 +115,8 @@ export function Workspace({ title, path, children }: { title: string; path: stri
   </>;
 
   return (
-    <div className="mx-auto grid max-w-[1320px] gap-0 lg:grid-cols-[270px_1fr]">
-      <aside className="border-b border-[#dce3e8] bg-white lg:min-h-[calc(100dvh-84px)] lg:border-b-0 lg:border-r">
+    <div className="mx-auto grid w-full min-w-0 max-w-[1320px] grid-cols-1 gap-0 lg:grid-cols-[270px_minmax(0,1fr)]">
+      <aside className="min-w-0 border-b border-[#dce3e8] bg-white lg:min-h-[calc(100dvh-84px)] lg:border-b-0 lg:border-r">
         <div className="px-5 pt-5">
           <p className="text-[10px] font-bold tracking-[.16em] text-[#6b7b87]">ORGANISATION</p>
           <label htmlFor="org-switch" className="sr-only">Switch organisation</label>
@@ -152,10 +152,10 @@ export function OverviewPage() {
           <h1 className="mt-3 text-3xl font-extrabold text-[#10243a]" data-testid="text-org-name">{org.name}</h1>
           <p className="mt-2 text-sm text-[#5d707c]">Signed in as {user.fullName}. Your role: <strong>{ROLE_LABELS[org.role]}</strong>. Time zone: {org.timezone}.</p>
         </header>
-        <Alert tone="info">Account and organisation management are live. The service modules below are planned and do not hold data yet; no figures are shown until they are built.</Alert>
+        <Alert tone="info">Account and organisation management are live. Energy Management, four engineering modules (consulting, auditing, renewable energy, battery), Carbon Footprint and AI & Digital Energy are available. Projects and Reports is planned and does not hold data yet; no figures are shown until they are built.</Alert>
         <div className="grid gap-px bg-[#d0dce1] sm:grid-cols-2">
           <Link href={withOrg("/app/organisation-settings", org.id)} data-testid="link-overview-settings" className="flex items-start gap-4 bg-white p-6 hover:bg-[#f2f5f7]"><Settings className="mt-1 text-[#168568]" size={20} aria-hidden="true" /><span><strong className="block text-[#10243a]">Organisation settings</strong><span className="text-sm text-[#5d707c]">Edit details and manage members.</span></span></Link>
-          <div className="flex items-start gap-4 bg-white p-6"><LayoutGrid className="mt-1 text-[#6b7b87]" size={20} aria-hidden="true" /><span><strong className="block text-[#10243a]">Service modules</strong><span className="text-sm text-[#5d707c]">Eight modules are planned. Use the side navigation to read each notice.</span></span></div>
+          <div className="flex items-start gap-4 bg-white p-6"><LayoutGrid className="mt-1 text-[#6b7b87]" size={20} aria-hidden="true" /><span><strong className="block text-[#10243a]">Service modules</strong><span className="text-sm text-[#5d707c]">Energy Management, six engineering and sustainability modules are available. Projects and Reports is planned; use the side navigation to read its notice.</span></span></div>
         </div>
       </div>)}
     </Workspace>

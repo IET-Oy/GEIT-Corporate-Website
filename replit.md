@@ -36,8 +36,9 @@ A corporate website for Global Energy Innovation Technologies Ltd (GEIT Ltd), wi
 
 - The site uses the platform's React/Vite web artifact scaffold rather than the Next.js stack named in the source brief.
 - The public consultation form is validation-only and does not send or store enquiries. A separate legacy enquiry API has PostgreSQL persistence code; do not implicitly connect the UI or migrate existing records.
-- The SaaS account/organisation foundation uses the configured development Supabase Auth and PostgreSQL. The additive identity migration has been applied; tenant RLS is enabled. Private uploads/storage and eight service modules are later phases. Preserve the legacy database.
-- See `docs/geit-saas-architecture.md` for the eight phases, verification results and open gates. Real email confirmation/recovery and redirect allowlists remain unverified; do not claim production readiness or start Phase 3 until addressed.
+- The SaaS foundation uses the configured development Supabase Auth, PostgreSQL and private Storage. Versioned identity, private-bucket and Energy Management migrations have been applied; tenant and storage RLS are enabled. Energy Management is functional; document-upload UI and seven other service modules remain later phases. Preserve the legacy database.
+- `docs/geit-foundation-setup.md` covers the user's current Phase 1 scope, configuration, migrations, permission matrix, storage rules, repeatable tests and honest release gates.
+- See `docs/geit-energy-management.md` for the implemented module, customer workflow, interval/cost assumptions, permissions, test commands and limits. The user explicitly authorised this module after the foundation. Real email confirmation/recovery and redirect allowlists remain unverified; do not claim production readiness.
 
 ## Product
 

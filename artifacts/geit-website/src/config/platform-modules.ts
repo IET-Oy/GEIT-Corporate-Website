@@ -4,13 +4,13 @@
  */
 export const platformModules = [
   { id: "overview", title: "Overview", path: "/app", readiness: "available" },
-  { id: "energy-management", title: "Energy Management", path: "/app/energy-management", readiness: "planned" },
-  { id: "energy-consulting", title: "Energy Consulting", path: "/app/energy-consulting", readiness: "planned" },
-  { id: "renewable-energy", title: "Renewable Energy Advisory", path: "/app/renewable-energy", readiness: "planned" },
-  { id: "energy-auditing", title: "Energy Efficiency & Auditing", path: "/app/energy-auditing", readiness: "planned" },
-  { id: "battery-flexibility", title: "Battery Storage & Flexibility", path: "/app/battery-flexibility", readiness: "planned" },
-  { id: "digital-energy", title: "AI & Digital Energy Solutions", path: "/app/digital-energy", readiness: "planned" },
-  { id: "carbon-footprint", title: "Carbon Footprint", path: "/app/carbon-footprint", readiness: "planned" },
+  { id: "energy-management", title: "Energy Management", path: "/app/energy-management", readiness: "available" },
+  { id: "energy-consulting", title: "Energy Consulting", path: "/app/energy-consulting", readiness: "available" },
+  { id: "renewable-energy", title: "Renewable Energy Advisory", path: "/app/renewable-energy", readiness: "available" },
+  { id: "energy-auditing", title: "Energy Efficiency & Auditing", path: "/app/energy-auditing", readiness: "available" },
+  { id: "battery-flexibility", title: "Battery Storage & Flexibility", path: "/app/battery-flexibility", readiness: "available" },
+  { id: "digital-energy", title: "AI & Digital Energy Solutions", path: "/app/digital-energy", readiness: "available" },
+  { id: "carbon-footprint", title: "Carbon Footprint", path: "/app/carbon-footprint", readiness: "available" },
   { id: "projects-reports", title: "Projects and Reports", path: "/app/projects-reports", readiness: "planned" },
   { id: "organisation-settings", title: "Organisation Settings", path: "/app/organisation-settings", readiness: "available" },
 ] as const;

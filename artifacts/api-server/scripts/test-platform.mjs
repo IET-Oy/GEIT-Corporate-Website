@@ -2,6 +2,11 @@ import assert from "node:assert/strict";
 import { randomUUID, randomBytes } from "node:crypto";
 import { writeFile, readFile, unlink } from "node:fs/promises";
 import { connectSupabase } from "./supabase-connection.mjs";
+import { createClient } from "@supabase/supabase-js";
+import { PRIVATE_DOCUMENT_BUCKET, privateDocumentKey } from "../src/lib/private-storage.ts";
+import { runEnergyIntegration } from "./test-energy-integration.mjs";
+import { runEngineeringIntegration } from "./test-engineering-integration.mjs";
+import { runSustainabilityIntegration } from "./test-sustainability-integration.mjs";
 
 // Isolated, synthetic development fixtures. Never print credentials or reuse customer data.
 const fixturePath = "/tmp/geit-platform-test-fixtures.json";
@@ -9,8 +14,30 @@ const origin = process.env.PLATFORM_ORIGIN || `https://${process.env.REPLIT_DEV_
 const base = `${origin}/api/platform`;
 let db;
 let fixtures;
+function scopedClient(token) {
+  return createClient(process.env.SUPABASE_URL, process.env.SUPABASE_PUBLISHABLE_KEY, {
+    ...(token ? { global: { headers: { Authorization: `Bearer ${token}` } } } : {}),
+    auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+  });
+}
 async function cleanup() {
   if (!fixtures) return;
+  // Delete bytes through the Storage API before tenant deletion revokes access.
+  // Deleting storage.objects with SQL would leave physical bytes orphaned.
+  for (let i = 0; i < (fixtures.orgIds || []).length; i++) {
+    const account = fixtures.accounts[i];
+    const auth = scopedClient();
+    const signed = await auth.auth.signInWithPassword({ email: account.email, password: account.password });
+    if (signed.error || !signed.data.session) throw new Error("Cannot authenticate synthetic fixture cleanup.");
+    const store = scopedClient(signed.data.session.access_token).storage.from(PRIVATE_DOCUMENT_BUCKET);
+    const files = await store.list(fixtures.orgIds[i]);
+    if (files.error) throw new Error("Cannot list synthetic storage cleanup.");
+    if (files.data.length) {
+      const deleted = await store.remove(files.data.map((file) => `${fixtures.orgIds[i]}/${file.name}`));
+      if (deleted.error || deleted.data.length !== files.data.length) throw new Error("Synthetic storage cleanup failed.");
+    }
+    await auth.auth.signOut();
+  }
   const ids = fixtures.accounts.map((a) => a.id);
   await db.query("delete from public.geit_organisations where id in (select organisation_id from public.geit_memberships where user_id=any($1::uuid[]))", [ids]);
   await db.query("delete from auth.users where id=any($1::uuid[])", [ids]);
@@ -40,6 +67,7 @@ async function request(path, method = "GET", data, jar = new Map(), extra = {}) 
 let count = 0;
 function passed(name) { console.log(`PASS ${++count}: ${name}`); }
 try {
+  if (process.env.NODE_ENV === "production") throw new Error("Development fixtures must not run in production.");
   db = await connectSupabase();
   if (process.argv.includes("--cleanup")) {
     fixtures = JSON.parse(await readFile(fixturePath, "utf8"));
@@ -108,6 +136,73 @@ try {
     });
     assert.ok([401, 403].includes(denyWrite.status));
     passed("Direct Supabase REST RLS isolates tenants and denies membership insertion");
+    async function rowsFor(table, token) {
+      const response = await fetch(`${process.env.SUPABASE_URL}/rest/v1/${table}?select=*`, {
+        headers: { apikey: process.env.SUPABASE_PUBLISHABLE_KEY, Authorization: `Bearer ${token}` },
+      });
+      assert.equal(response.status, 200);
+      return response.json();
+    }
+    for (const table of ["geit_memberships", "geit_audit_events"]) {
+      const rows = await rowsFor(table, rlsToken);
+      assert.ok(rows.length > 0);
+      assert.ok(rows.every((row) => row.organisation_id === orgIds[0]));
+    }
+    const profiles = await rowsFor("geit_profiles", rlsToken);
+    assert.ok(profiles.some((p) => p.user_id === fixtures.accounts[0].id));
+    assert.ok(!profiles.some((p) => p.user_id === fixtures.accounts[1].id));
+    passed("Membership, audit and profile records are tenant-isolated through direct REST");
+
+    const clients = jars.map((jar) => scopedClient(decodeURIComponent(jar.get("geit-access"))));
+    const stores = clients.map((client) => client.storage.from(PRIVATE_DOCUMENT_BUCKET));
+    const keys = orgIds.map((org) => privateDocumentKey(org, "pdf"));
+    const bytes = new TextEncoder().encode("%PDF-1.4\n% Synthetic GEIT isolation fixture\n%%EOF\n");
+    for (let i = 0; i < 2; i++) {
+      const upload = await stores[i].upload(keys[i], bytes, { contentType: "application/pdf", upsert: false });
+      assert.equal(upload.error, null, "Tenant owner must be able to upload a private file");
+      const own = await stores[i].download(keys[i]);
+      assert.equal(own.error, null); assert.ok(own.data);
+      assert.equal(await own.data.text(), new TextDecoder().decode(bytes));
+    }
+    passed("Owners can upload and download real bytes inside their own tenant folders");
+    for (let i = 0; i < 2; i++) {
+      const foreign = await stores[i].download(keys[1 - i]);
+      assert.ok(foreign.error, "Cross-tenant download must fail");
+      const list = await stores[i].list(orgIds[1 - i]);
+      assert.ok(list.error || list.data.length === 0, "Cross-tenant listing must be empty or denied");
+      const signedUrl = await stores[i].createSignedUrl(keys[1 - i], 60);
+      assert.ok(signedUrl.error, "Cross-tenant signed URL issuance must fail");
+    }
+    passed("Both tenants are denied foreign file downloads, listing and signed URLs");
+    const publicUrl = stores[0].getPublicUrl(keys[0]).data.publicUrl;
+    const publicFetch = await fetch(publicUrl);
+    assert.notEqual(publicFetch.status, 200);
+    const anonymous = scopedClient().storage.from(PRIVATE_DOCUMENT_BUCKET);
+    assert.ok((await anonymous.download(keys[0])).error);
+    passed("Public URLs and anonymous access cannot disclose private bytes");
+    const badUpload = await stores[0].upload(privateDocumentKey(orgIds[1], "pdf"), bytes, { contentType: "application/pdf" });
+    assert.ok(badUpload.error);
+    const overwrite = await stores[0].upload(keys[1], bytes, { contentType: "application/pdf", upsert: true });
+    assert.ok(overwrite.error);
+    const foreignDelete = await stores[0].remove([keys[1]]);
+    assert.ok(foreignDelete.error || foreignDelete.data.length === 0);
+    assert.equal((await stores[1].download(keys[1])).error, null, "Denied mutation must leave foreign bytes intact");
+    passed("Cross-tenant upload, overwrite and deletion attempts leave foreign files intact");
+    assert.equal((await stores[2].download(keys[0])).error, null, "Reader must be able to read its own tenant");
+    const readerWrite = await stores[2].upload(privateDocumentKey(orgIds[0], "pdf"), bytes, { contentType: "application/pdf" });
+    assert.ok(readerWrite.error);
+    const readerDelete = await stores[2].remove([keys[0]]);
+    assert.ok(readerDelete.error || readerDelete.data.length === 0);
+    assert.equal((await stores[0].download(keys[0])).error, null);
+    passed("Reader role can read tenant files but cannot upload or delete them");
+    const traversal = await stores[0].upload(`outside/${randomUUID()}.pdf`, bytes, { contentType: "application/pdf" });
+    assert.ok(traversal.error);
+    const html = await stores[0].upload(privateDocumentKey(orgIds[0], "pdf"), bytes, { contentType: "text/html" });
+    assert.ok(html.error);
+    passed("Malformed namespaces and disallowed MIME types are rejected");
+    if (process.argv.includes("--energy")) await runEnergyIntegration({ request, jars, orgIds, clients, fixtures, passed, origin });
+    if (process.argv.includes("--engineering")) await runEngineeringIntegration({ request, jars, orgIds, clients, fixtures, passed, origin });
+    if (process.argv.includes("--sustainability")) await runSustainabilityIntegration({ request, jars, orgIds, clients, fixtures, passed, origin });
     const refreshJar = new Map(jars[0]); refreshJar.set("geit-access", "invalid-expired-access");
     const refreshed = await request("/session", "GET", undefined, refreshJar);
     assert.equal(refreshed.body.user.id, fixtures.accounts[0].id);

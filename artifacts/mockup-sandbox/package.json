@@ -4,6 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
+    "test:discovery": "node --test tests/discovery.test.mjs",
     "dev": "vite dev",
     "build": "vite build",
     "preview": "vite preview",
@@ -51,7 +52,6 @@
     "cmdk": "^1.1.1",
     "date-fns": "^3.6.0",
     "embla-carousel-react": "^8.6.0",
-    "fast-glob": "^3.3.3",
     "framer-motion": "catalog:",
     "input-otp": "^1.5.0",
     "lucide-react": "catalog:",

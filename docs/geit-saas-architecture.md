@@ -2,15 +2,22 @@
 
 ## Current status
 
+For the current request's Phase 1 foundation scope (including private storage),
+see `docs/geit-foundation-setup.md`. The phase labels below reflect the earlier
+eight-phase plan, not a requirement to rebuild the existing foundation.
+
 Phase 1 is complete. Phase 2's account/organisation foundation is implemented
 against the configured development Supabase project: server-held sessions,
 registration and recovery endpoints, protected workspace, organisation creation/
 selection/editing, owner-managed memberships, roles, RLS and audit events.
 Corporate navigation is preserved with a separate workspace entry bar.
-Eight service modules remain honestly marked Planned; no engineering data or
-analysis tools are operational.
+Energy Management is now implemented with persisted sites/meters, validated
+CSV/Excel imports, interval storage, tariffs, KPIs/charts, rules/alerts, saved
+snapshots and CSV/Excel/PDF exports. See `docs/geit-energy-management.md` for its
+workflow, assumptions, tests and limits. Seven other service modules remain
+honestly marked Planned. The corporate site is unchanged.
 
-Verification: 15 API/security checks, one offline PKCE cookie regression, three
+Foundation verification: 22 live API/security/storage checks, one offline PKCE cookie regression, three
 manifest tests, full workspace typecheck, production builds and 22 corporate
 routes in all four locales pass. A browser pass confirmed sign-in, persistence,
 organisation creation/switching, member visibility, sign-out, tenant tampering,
@@ -21,7 +28,7 @@ corrected, with the DELETE path confirmed by the API suite.
 **Open Phase 2 gate:** actual inbox verification/recovery and Supabase redirect
 allowlist validation have not been completed. Synthetic accounts bypass email
 delivery only in isolated development tests; they are removed after testing.
-Do not call the platform production-ready or proceed to Phase 3 until this gate
+Do not call the platform production-ready until this gate
 is addressed. Account/privacy terms also require review before production.
 
 ## Inspection findings and preservation boundaries
@@ -226,6 +233,7 @@ defaults only to the runtime development domain. Confirm the public domain
 separately before publication. Workspace screens and the additional legal notice
 are currently English-only, and app pages are noindex.
 
-Engineering correctness, uploads/private storage, imports, saved analysis and
-reporting remain later phases. The original legacy database remains untouched;
+Private storage is now configured by a separate additive migration and covered
+by real tenant-isolation tests. Engineering correctness, upload UI/processing,
+imports, saved analysis and reporting remain later phases. The original legacy database remains untouched;
 the public consultation form is still validation-only.

@@ -1,5 +1,8 @@
 import app from "./app";
 import { logger } from "./lib/logger";
+import { checkProductionConfiguration } from "./lib/production-config";
+
+checkProductionConfiguration(process.env);
 
 const rawPort = process.env["PORT"];
 

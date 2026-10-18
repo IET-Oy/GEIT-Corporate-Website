@@ -1,4 +1,5 @@
 - [GEIT scope and identity](geit-scope.md) — logo-only header, single-row corporate nav, global Home; phased SaaS extension approved.
 - [WebGL verification](webgl-verification.md) — browser automation could verify fallback only; GPU visuals require WebGL-capable evidence.
 - [GEIT language review](geit-language-review.md) — complete translation drafts are allowed, but must be labelled as awaiting human review.
-- [Supabase preview trust](supabase-preview.md) — verified database CA, preview cookie rewriting, and real email-link verification boundaries.
+- [Supabase preview trust](supabase-preview.md) — database CA, preview cookies, real email-link boundaries and isolated test-session cleanup.
+- [Engineering result provenance](engineering-result-provenance.md) — exposed Supabase RPCs require output authenticity checks, not just tenant isolation and input hashes.

@@ -1,12 +1,18 @@
-import { mkdirSync, writeFileSync } from "fs";
+import { globSync, mkdirSync, statSync, writeFileSync } from "node:fs";
 import path from "path";
-import glob from "fast-glob";
 import chokidar from "chokidar";
 import type { FSWatcher } from "chokidar";
 import type { Plugin } from "vite";
 
 const MOCKUPS_DIR = "src/components/mockups";
 const GENERATED_MODULE = "src/.generated/mockup-components.ts";
+
+export function discoverMockupFiles(root: string): string[] {
+  return globSync(`${MOCKUPS_DIR}/**/*.tsx`, {
+    cwd: root,
+    exclude: ["**/_*/**", "**/_*.tsx", "**/.*", "**/.*/**"],
+  }).filter((file) => statSync(path.join(root, file)).isFile()).sort();
+}
 
 interface DiscoveredComponent {
   globKey: string;
@@ -40,10 +46,7 @@ export function mockupPreviewPlugin(): Plugin {
   }
 
   async function discoverComponents(): Promise<Array<DiscoveredComponent>> {
-    const files = await glob(`${MOCKUPS_DIR}/**/*.tsx`, {
-      cwd: root,
-      ignore: ["**/_*/**", "**/_*.tsx"],
-    });
+    const files = discoverMockupFiles(root);
 
     return files.map((f) => ({
       globKey: "./" + f.slice("src/".length),

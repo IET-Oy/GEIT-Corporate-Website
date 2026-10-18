@@ -8,6 +8,1710 @@
 import * as zod from 'zod';
 
 
+export const GetEmissionFactorsParams = zod.object({
+  "orgId": zod.coerce.string().uuid()
+})
+
+export const getEmissionFactorsResponseOneCodeRegExp = new RegExp('^[A-Z0-9_-]{2,64}$');
+export const getEmissionFactorsResponseOneNameMin = 2;
+export const getEmissionFactorsResponseOneNameMax = 160;
+
+export const getEmissionFactorsResponseOneSourceMin = 10;
+export const getEmissionFactorsResponseOneSourceMax = 1000;
+
+export const getEmissionFactorsResponseOneSourceUrlMax = 1000;
+
+
+export const getEmissionFactorsResponseOneSourceUrlRegExp = new RegExp('^https:/');
+export const getEmissionFactorsResponseOneGeographyMin = 2;
+export const getEmissionFactorsResponseOneGeographyMax = 120;
+
+export const getEmissionFactorsResponseOneValueMin = 0;
+export const getEmissionFactorsResponseOneValueMax = 1000000000;
+
+export const getEmissionFactorsResponseOneValidFromRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const getEmissionFactorsResponseOneValidUntilRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const getEmissionFactorsResponseOneGwpBasisMin = 5;
+export const getEmissionFactorsResponseOneGwpBasisMax = 160;
+
+
+
+
+export const GetEmissionFactorsResponseItem = zod.object({
+  "code": zod.string().regex(getEmissionFactorsResponseOneCodeRegExp),
+  "name": zod.string().min(getEmissionFactorsResponseOneNameMin).max(getEmissionFactorsResponseOneNameMax),
+  "source": zod.string().min(getEmissionFactorsResponseOneSourceMin).max(getEmissionFactorsResponseOneSourceMax),
+  "sourceUrl": zod.string().max(getEmissionFactorsResponseOneSourceUrlMax).regex(getEmissionFactorsResponseOneSourceUrlRegExp),
+  "geography": zod.string().min(getEmissionFactorsResponseOneGeographyMin).max(getEmissionFactorsResponseOneGeographyMax),
+  "activityUnit": zod.enum(['kWh', 'MWh', 'GJ', 'L', 'm3', 'kg', 'km', 'passenger_km', 'tonne_km']),
+  "emissionUnit": zod.enum(['kgCO2e', 'tCO2e']),
+  "value": zod.number().min(getEmissionFactorsResponseOneValueMin).max(getEmissionFactorsResponseOneValueMax),
+  "validFrom": zod.string().regex(getEmissionFactorsResponseOneValidFromRegExp),
+  "validUntil": zod.string().regex(getEmissionFactorsResponseOneValidUntilRegExp),
+  "scope": zod.enum(['scope1', 'scope2', 'scope3']),
+  "category": zod.enum(['stationary_combustion', 'mobile_combustion', 'fugitive', 'process', 'purchased_electricity', 'purchased_heat', 'purchased_goods', 'upstream_fuel_energy', 'waste', 'business_travel', 'employee_commuting', 'upstream_transport', 'downstream_transport']),
+  "scope2Method": zod.union([zod.literal('location_based'),zod.literal('market_based'),zod.literal(null)]).nullable(),
+  "gwpBasis": zod.string().min(getEmissionFactorsResponseOneGwpBasisMin).max(getEmissionFactorsResponseOneGwpBasisMax)
+}).and(zod.object({
+  "id": zod.string().uuid(),
+  "version": zod.number().int().min(1),
+  "created_at": zod.string()
+}))
+export const GetEmissionFactorsResponse = zod.array(GetEmissionFactorsResponseItem)
+
+
+export const CreateEmissionFactorParams = zod.object({
+  "orgId": zod.coerce.string().uuid()
+})
+
+export const createEmissionFactorBodyCodeRegExp = new RegExp('^[A-Z0-9_-]{2,64}$');
+export const createEmissionFactorBodyNameMin = 2;
+export const createEmissionFactorBodyNameMax = 160;
+
+export const createEmissionFactorBodySourceMin = 10;
+export const createEmissionFactorBodySourceMax = 1000;
+
+export const createEmissionFactorBodySourceUrlMax = 1000;
+
+
+export const createEmissionFactorBodySourceUrlRegExp = new RegExp('^https:/');
+export const createEmissionFactorBodyGeographyMin = 2;
+export const createEmissionFactorBodyGeographyMax = 120;
+
+export const createEmissionFactorBodyValueMin = 0;
+export const createEmissionFactorBodyValueMax = 1000000000;
+
+export const createEmissionFactorBodyValidFromRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const createEmissionFactorBodyValidUntilRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const createEmissionFactorBodyGwpBasisMin = 5;
+export const createEmissionFactorBodyGwpBasisMax = 160;
+
+
+
+export const CreateEmissionFactorBody = zod.object({
+  "code": zod.string().regex(createEmissionFactorBodyCodeRegExp),
+  "name": zod.string().min(createEmissionFactorBodyNameMin).max(createEmissionFactorBodyNameMax),
+  "source": zod.string().min(createEmissionFactorBodySourceMin).max(createEmissionFactorBodySourceMax),
+  "sourceUrl": zod.string().max(createEmissionFactorBodySourceUrlMax).regex(createEmissionFactorBodySourceUrlRegExp),
+  "geography": zod.string().min(createEmissionFactorBodyGeographyMin).max(createEmissionFactorBodyGeographyMax),
+  "activityUnit": zod.enum(['kWh', 'MWh', 'GJ', 'L', 'm3', 'kg', 'km', 'passenger_km', 'tonne_km']),
+  "emissionUnit": zod.enum(['kgCO2e', 'tCO2e']),
+  "value": zod.number().min(createEmissionFactorBodyValueMin).max(createEmissionFactorBodyValueMax),
+  "validFrom": zod.string().regex(createEmissionFactorBodyValidFromRegExp),
+  "validUntil": zod.string().regex(createEmissionFactorBodyValidUntilRegExp),
+  "scope": zod.enum(['scope1', 'scope2', 'scope3']),
+  "category": zod.enum(['stationary_combustion', 'mobile_combustion', 'fugitive', 'process', 'purchased_electricity', 'purchased_heat', 'purchased_goods', 'upstream_fuel_energy', 'waste', 'business_travel', 'employee_commuting', 'upstream_transport', 'downstream_transport']),
+  "scope2Method": zod.union([zod.literal('location_based'),zod.literal('market_based'),zod.literal(null)]).nullable(),
+  "gwpBasis": zod.string().min(createEmissionFactorBodyGwpBasisMin).max(createEmissionFactorBodyGwpBasisMax)
+})
+
+export const createEmissionFactorResponseOneCodeRegExp = new RegExp('^[A-Z0-9_-]{2,64}$');
+export const createEmissionFactorResponseOneNameMin = 2;
+export const createEmissionFactorResponseOneNameMax = 160;
+
+export const createEmissionFactorResponseOneSourceMin = 10;
+export const createEmissionFactorResponseOneSourceMax = 1000;
+
+export const createEmissionFactorResponseOneSourceUrlMax = 1000;
+
+
+export const createEmissionFactorResponseOneSourceUrlRegExp = new RegExp('^https:/');
+export const createEmissionFactorResponseOneGeographyMin = 2;
+export const createEmissionFactorResponseOneGeographyMax = 120;
+
+export const createEmissionFactorResponseOneValueMin = 0;
+export const createEmissionFactorResponseOneValueMax = 1000000000;
+
+export const createEmissionFactorResponseOneValidFromRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const createEmissionFactorResponseOneValidUntilRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const createEmissionFactorResponseOneGwpBasisMin = 5;
+export const createEmissionFactorResponseOneGwpBasisMax = 160;
+
+
+
+
+export const CreateEmissionFactorResponse = zod.object({
+  "code": zod.string().regex(createEmissionFactorResponseOneCodeRegExp),
+  "name": zod.string().min(createEmissionFactorResponseOneNameMin).max(createEmissionFactorResponseOneNameMax),
+  "source": zod.string().min(createEmissionFactorResponseOneSourceMin).max(createEmissionFactorResponseOneSourceMax),
+  "sourceUrl": zod.string().max(createEmissionFactorResponseOneSourceUrlMax).regex(createEmissionFactorResponseOneSourceUrlRegExp),
+  "geography": zod.string().min(createEmissionFactorResponseOneGeographyMin).max(createEmissionFactorResponseOneGeographyMax),
+  "activityUnit": zod.enum(['kWh', 'MWh', 'GJ', 'L', 'm3', 'kg', 'km', 'passenger_km', 'tonne_km']),
+  "emissionUnit": zod.enum(['kgCO2e', 'tCO2e']),
+  "value": zod.number().min(createEmissionFactorResponseOneValueMin).max(createEmissionFactorResponseOneValueMax),
+  "validFrom": zod.string().regex(createEmissionFactorResponseOneValidFromRegExp),
+  "validUntil": zod.string().regex(createEmissionFactorResponseOneValidUntilRegExp),
+  "scope": zod.enum(['scope1', 'scope2', 'scope3']),
+  "category": zod.enum(['stationary_combustion', 'mobile_combustion', 'fugitive', 'process', 'purchased_electricity', 'purchased_heat', 'purchased_goods', 'upstream_fuel_energy', 'waste', 'business_travel', 'employee_commuting', 'upstream_transport', 'downstream_transport']),
+  "scope2Method": zod.union([zod.literal('location_based'),zod.literal('market_based'),zod.literal(null)]).nullable(),
+  "gwpBasis": zod.string().min(createEmissionFactorResponseOneGwpBasisMin).max(createEmissionFactorResponseOneGwpBasisMax)
+}).and(zod.object({
+  "id": zod.string().uuid(),
+  "version": zod.number().int().min(1),
+  "created_at": zod.string()
+}))
+
+
+export const GetDigitalTwinSourcesParams = zod.object({
+  "orgId": zod.coerce.string().uuid()
+})
+
+export const GetDigitalTwinSourcesResponse = zod.object({
+  "meters": zod.array(zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "site_id": zod.string(),
+  "unit": zod.enum(['Wh', 'kWh', 'MWh', 'MJ', 'GJ', 'W', 'kW', 'MW']),
+  "is_demo": zod.boolean(),
+  "archived": zod.boolean()
+})),
+  "sites": zod.array(zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "timezone": zod.string(),
+  "area_m2": zod.number().nullable(),
+  "is_demo": zod.boolean(),
+  "archived": zod.boolean()
+})),
+  "connectedProviderStatus": zod.enum(['not_configured']),
+  "readingLimit": zod.number().int()
+})
+
+
+export const ExplainEngineeringScenarioParams = zod.object({
+  "orgId": zod.coerce.string().uuid(),
+  "module": zod.enum(['energy-consulting', 'energy-auditing', 'renewable-energy', 'battery-flexibility', 'carbon-footprint', 'digital-energy']),
+  "id": zod.coerce.string().uuid()
+})
+
+export const explainEngineeringScenarioBodyQuestionMin = 5;
+export const explainEngineeringScenarioBodyQuestionMax = 1000;
+
+
+
+export const ExplainEngineeringScenarioBody = zod.object({
+  "question": zod.string().min(explainEngineeringScenarioBodyQuestionMin).max(explainEngineeringScenarioBodyQuestionMax),
+  "consent": zod.literal(true)
+})
+
+export const ExplainEngineeringScenarioResponse = zod.object({
+  "provider": zod.string(),
+  "model": zod.string(),
+  "scenarioId": zod.string(),
+  "inputHash": zod.string(),
+  "evidence": zod.array(zod.object({
+  "id": zod.string(),
+  "text": zod.string()
+})),
+  "limitation": zod.string()
+})
+
+
+export const GetEngineeringWorkspaceParams = zod.object({
+  "orgId": zod.coerce.string().uuid(),
+  "module": zod.enum(['energy-consulting', 'energy-auditing', 'renewable-energy', 'battery-flexibility', 'carbon-footprint', 'digital-energy'])
+})
+
+export const GetEngineeringWorkspaceResponse = zod.object({
+  "aiStatus": zod.enum(['disabled', 'configured']).optional(),
+  "projects": zod.array(zod.object({
+  "id": zod.string(),
+  "module": zod.enum(['energy-consulting', 'energy-auditing', 'renewable-energy', 'battery-flexibility', 'carbon-footprint', 'digital-energy']),
+  "name": zod.string(),
+  "facility": zod.string(),
+  "brief": zod.string(),
+  "currency": zod.string(),
+  "status": zod.enum(['draft', 'active', 'completed']),
+  "archived": zod.boolean(),
+  "created_at": zod.string()
+})),
+  "scenarios": zod.array(zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "project_id": zod.string(),
+  "module": zod.enum(['energy-consulting', 'energy-auditing', 'renewable-energy', 'battery-flexibility', 'carbon-footprint', 'digital-energy']),
+  "created_at": zod.string()
+})),
+  "externalDataStatus": zod.enum(['not_configured'])
+})
+
+
+export const SaveEngineeringProjectParams = zod.object({
+  "orgId": zod.coerce.string().uuid(),
+  "module": zod.enum(['energy-consulting', 'energy-auditing', 'renewable-energy', 'battery-flexibility', 'carbon-footprint', 'digital-energy'])
+})
+
+export const saveEngineeringProjectBodyNameMin = 2;
+export const saveEngineeringProjectBodyNameMax = 120;
+
+export const saveEngineeringProjectBodyFacilityMin = 2;
+export const saveEngineeringProjectBodyFacilityMax = 160;
+
+export const saveEngineeringProjectBodyBriefMin = 10;
+export const saveEngineeringProjectBodyBriefMax = 4000;
+
+export const saveEngineeringProjectBodyCurrencyRegExp = new RegExp('^[A-Z]{3}$');
+
+
+export const SaveEngineeringProjectBody = zod.object({
+  "id": zod.string().uuid().optional(),
+  "name": zod.string().min(saveEngineeringProjectBodyNameMin).max(saveEngineeringProjectBodyNameMax),
+  "facility": zod.string().min(saveEngineeringProjectBodyFacilityMin).max(saveEngineeringProjectBodyFacilityMax),
+  "brief": zod.string().min(saveEngineeringProjectBodyBriefMin).max(saveEngineeringProjectBodyBriefMax),
+  "currency": zod.string().regex(saveEngineeringProjectBodyCurrencyRegExp),
+  "status": zod.enum(['draft', 'active', 'completed']),
+  "archived": zod.boolean().optional()
+})
+
+export const SaveEngineeringProjectResponse = zod.object({
+  "id": zod.string(),
+  "module": zod.enum(['energy-consulting', 'energy-auditing', 'renewable-energy', 'battery-flexibility', 'carbon-footprint', 'digital-energy']),
+  "name": zod.string(),
+  "facility": zod.string(),
+  "brief": zod.string(),
+  "currency": zod.string(),
+  "status": zod.enum(['draft', 'active', 'completed']),
+  "archived": zod.boolean(),
+  "created_at": zod.string()
+})
+
+
+export const CreateEngineeringScenarioParams = zod.object({
+  "orgId": zod.coerce.string().uuid(),
+  "module": zod.enum(['energy-consulting', 'energy-auditing', 'renewable-energy', 'battery-flexibility', 'carbon-footprint', 'digital-energy'])
+})
+
+export const createEngineeringScenarioBodyNameMin = 2;
+export const createEngineeringScenarioBodyNameMax = 120;
+
+export const createEngineeringScenarioBodyInputsOneSourceNotesMin = 10;
+export const createEngineeringScenarioBodyInputsOneSourceNotesMax = 2000;
+
+export const createEngineeringScenarioBodyInputsOneBaselineEnergyMin = 0;
+export const createEngineeringScenarioBodyInputsOneBaselineEnergyMax = 1000000000;
+
+export const createEngineeringScenarioBodyInputsOneProposedEnergyMin = 0;
+export const createEngineeringScenarioBodyInputsOneProposedEnergyMax = 1000000000;
+
+export const createEngineeringScenarioBodyInputsOneTariffPerKwhMin = 0;
+export const createEngineeringScenarioBodyInputsOneTariffPerKwhMax = 1000000;
+
+export const createEngineeringScenarioBodyInputsOneCapexMin = 0;
+export const createEngineeringScenarioBodyInputsOneCapexMax = 1000000000000;
+
+export const createEngineeringScenarioBodyInputsOneAnnualOpexDeltaMin = -1000000000;
+export const createEngineeringScenarioBodyInputsOneAnnualOpexDeltaMax = 1000000000;
+
+export const createEngineeringScenarioBodyInputsOneDiscountRatePercentMin = 0;
+export const createEngineeringScenarioBodyInputsOneDiscountRatePercentMax = 100;
+
+export const createEngineeringScenarioBodyInputsOneYearsMax = 50;
+
+export const createEngineeringScenarioBodyInputsTwoSourceNotesMin = 10;
+export const createEngineeringScenarioBodyInputsTwoSourceNotesMax = 2000;
+
+export const createEngineeringScenarioBodyInputsTwoTariffPerKwhMin = 0;
+export const createEngineeringScenarioBodyInputsTwoTariffPerKwhMax = 1000000;
+
+export const createEngineeringScenarioBodyInputsTwoDiscountRatePercentMin = 0;
+export const createEngineeringScenarioBodyInputsTwoDiscountRatePercentMax = 100;
+
+export const createEngineeringScenarioBodyInputsTwoYearsMax = 50;
+
+export const createEngineeringScenarioBodyInputsTwoFacilityBaselineKwhExclusiveMin = 0;
+export const createEngineeringScenarioBodyInputsTwoFacilityBaselineKwhMax = 1000000000000;
+
+export const createEngineeringScenarioBodyInputsTwoMeasuresItemNameMin = 2;
+export const createEngineeringScenarioBodyInputsTwoMeasuresItemNameMax = 120;
+
+export const createEngineeringScenarioBodyInputsTwoMeasuresItemQuantityMax = 1000000;
+
+export const createEngineeringScenarioBodyInputsTwoMeasuresItemBaselinePowerMin = 0;
+export const createEngineeringScenarioBodyInputsTwoMeasuresItemBaselinePowerMax = 1000000;
+
+export const createEngineeringScenarioBodyInputsTwoMeasuresItemProposedPowerMin = 0;
+export const createEngineeringScenarioBodyInputsTwoMeasuresItemProposedPowerMax = 1000000;
+
+export const createEngineeringScenarioBodyInputsTwoMeasuresItemHoursPerYearMin = 0;
+export const createEngineeringScenarioBodyInputsTwoMeasuresItemHoursPerYearMax = 8784;
+
+export const createEngineeringScenarioBodyInputsTwoMeasuresItemCapexMin = 0;
+export const createEngineeringScenarioBodyInputsTwoMeasuresItemCapexMax = 1000000000000;
+
+export const createEngineeringScenarioBodyInputsTwoMeasuresItemAnnualOpexDeltaMin = -1000000000;
+export const createEngineeringScenarioBodyInputsTwoMeasuresItemAnnualOpexDeltaMax = 1000000000;
+
+export const createEngineeringScenarioBodyInputsTwoMeasuresMax = 30;
+
+export const createEngineeringScenarioBodyInputsThreeSourceNotesMin = 10;
+export const createEngineeringScenarioBodyInputsThreeSourceNotesMax = 2000;
+
+export const createEngineeringScenarioBodyInputsThreeCapacityKwpExclusiveMin = 0;
+export const createEngineeringScenarioBodyInputsThreeCapacityKwpMax = 1000000;
+
+export const createEngineeringScenarioBodyInputsThreePerformanceRatioExclusiveMin = 0;
+export const createEngineeringScenarioBodyInputsThreePerformanceRatioMax = 1;
+
+export const createEngineeringScenarioBodyInputsThreeCoincidenceFactorMin = 0;
+export const createEngineeringScenarioBodyInputsThreeCoincidenceFactorMax = 1;
+
+export const createEngineeringScenarioBodyInputsThreeImportRatePerKwhMin = 0;
+export const createEngineeringScenarioBodyInputsThreeImportRatePerKwhMax = 1000000;
+
+export const createEngineeringScenarioBodyInputsThreeExportRatePerKwhMin = 0;
+export const createEngineeringScenarioBodyInputsThreeExportRatePerKwhMax = 1000000;
+
+export const createEngineeringScenarioBodyInputsThreeCapexMin = 0;
+export const createEngineeringScenarioBodyInputsThreeCapexMax = 1000000000000;
+
+export const createEngineeringScenarioBodyInputsThreeAnnualOpexMin = 0;
+export const createEngineeringScenarioBodyInputsThreeAnnualOpexMax = 1000000000;
+
+export const createEngineeringScenarioBodyInputsThreeDiscountRatePercentMin = 0;
+export const createEngineeringScenarioBodyInputsThreeDiscountRatePercentMax = 100;
+
+export const createEngineeringScenarioBodyInputsThreeYearsMax = 50;
+
+export const createEngineeringScenarioBodyInputsThreeMonthsItemMonthMax = 12;
+
+export const createEngineeringScenarioBodyInputsThreeMonthsItemIrradiationKwhM2Min = 0;
+export const createEngineeringScenarioBodyInputsThreeMonthsItemIrradiationKwhM2Max = 500;
+
+export const createEngineeringScenarioBodyInputsThreeMonthsItemDemandKwhMin = 0;
+export const createEngineeringScenarioBodyInputsThreeMonthsItemDemandKwhMax = 1000000000;
+
+export const createEngineeringScenarioBodyInputsThreeMonthsMin = 12;
+export const createEngineeringScenarioBodyInputsThreeMonthsMax = 12;
+
+export const createEngineeringScenarioBodyInputsFourSourceNotesMin = 10;
+export const createEngineeringScenarioBodyInputsFourSourceNotesMax = 2000;
+
+export const createEngineeringScenarioBodyInputsFourCapacityKwhExclusiveMin = 0;
+export const createEngineeringScenarioBodyInputsFourCapacityKwhMax = 10000000;
+
+export const createEngineeringScenarioBodyInputsFourMinSocPercentMin = 0;
+export const createEngineeringScenarioBodyInputsFourMinSocPercentMax = 100;
+
+export const createEngineeringScenarioBodyInputsFourMaxSocPercentMin = 0;
+export const createEngineeringScenarioBodyInputsFourMaxSocPercentMax = 100;
+
+export const createEngineeringScenarioBodyInputsFourInitialSocPercentMin = 0;
+export const createEngineeringScenarioBodyInputsFourInitialSocPercentMax = 100;
+
+export const createEngineeringScenarioBodyInputsFourMaxChargeKwExclusiveMin = 0;
+export const createEngineeringScenarioBodyInputsFourMaxChargeKwMax = 10000000;
+
+export const createEngineeringScenarioBodyInputsFourMaxDischargeKwExclusiveMin = 0;
+export const createEngineeringScenarioBodyInputsFourMaxDischargeKwMax = 10000000;
+
+export const createEngineeringScenarioBodyInputsFourChargeEfficiencyMin = 0.01;
+export const createEngineeringScenarioBodyInputsFourChargeEfficiencyMax = 1;
+
+export const createEngineeringScenarioBodyInputsFourDischargeEfficiencyMin = 0.01;
+export const createEngineeringScenarioBodyInputsFourDischargeEfficiencyMax = 1;
+
+export const createEngineeringScenarioBodyInputsFourGridTargetKwMin = 0;
+export const createEngineeringScenarioBodyInputsFourGridTargetKwMax = 10000000;
+
+export const createEngineeringScenarioBodyInputsFourIntervalsItemStartMax = 40;
+
+export const createEngineeringScenarioBodyInputsFourIntervalsItemEndMax = 40;
+
+export const createEngineeringScenarioBodyInputsFourIntervalsItemLoadKwhMin = 0;
+export const createEngineeringScenarioBodyInputsFourIntervalsItemLoadKwhMax = 1000000000;
+
+export const createEngineeringScenarioBodyInputsFourIntervalsItemSolarKwhMin = 0;
+export const createEngineeringScenarioBodyInputsFourIntervalsItemSolarKwhMax = 1000000000;
+
+export const createEngineeringScenarioBodyInputsFourIntervalsItemImportRatePerKwhMin = 0;
+export const createEngineeringScenarioBodyInputsFourIntervalsItemImportRatePerKwhMax = 1000000;
+
+export const createEngineeringScenarioBodyInputsFourIntervalsItemExportRatePerKwhMin = 0;
+export const createEngineeringScenarioBodyInputsFourIntervalsItemExportRatePerKwhMax = 1000000;
+
+export const createEngineeringScenarioBodyInputsFourIntervalsMax = 1000;
+
+export const createEngineeringScenarioBodyInputsFiveSourceNotesMin = 10;
+export const createEngineeringScenarioBodyInputsFiveSourceNotesMax = 2000;
+
+export const createEngineeringScenarioBodyInputsFivePeriodStartRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const createEngineeringScenarioBodyInputsFivePeriodEndRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const createEngineeringScenarioBodyInputsFiveBoundaryMin = 10;
+export const createEngineeringScenarioBodyInputsFiveBoundaryMax = 2000;
+
+export const createEngineeringScenarioBodyInputsFiveActivitiesItemNameMin = 2;
+export const createEngineeringScenarioBodyInputsFiveActivitiesItemNameMax = 160;
+
+export const createEngineeringScenarioBodyInputsFiveActivitiesItemQuantityMin = 0;
+export const createEngineeringScenarioBodyInputsFiveActivitiesItemQuantityMax = 1000000000000;
+
+export const createEngineeringScenarioBodyInputsFiveActivitiesItemGeographyMin = 2;
+export const createEngineeringScenarioBodyInputsFiveActivitiesItemGeographyMax = 120;
+
+export const createEngineeringScenarioBodyInputsFiveActivitiesMax = 100;
+
+export const createEngineeringScenarioBodyInputsFiveReductionsItemActivityIndexMin = 0;
+export const createEngineeringScenarioBodyInputsFiveReductionsItemActivityIndexMax = 99;
+
+export const createEngineeringScenarioBodyInputsFiveReductionsItemLabelMin = 2;
+export const createEngineeringScenarioBodyInputsFiveReductionsItemLabelMax = 160;
+
+export const createEngineeringScenarioBodyInputsFiveReductionsItemReductionPercentMin = 0;
+export const createEngineeringScenarioBodyInputsFiveReductionsItemReductionPercentMax = 100;
+
+export const createEngineeringScenarioBodyInputsFiveReductionsMax = 100;
+
+export const createEngineeringScenarioBodyInputsSixSourceNotesMin = 10;
+export const createEngineeringScenarioBodyInputsSixSourceNotesMax = 2000;
+
+export const createEngineeringScenarioBodyInputsSixStartMax = 40;
+
+export const createEngineeringScenarioBodyInputsSixEndMax = 40;
+
+export const createEngineeringScenarioBodyInputsSixBatteryOneCapacityKwhExclusiveMin = 0;
+export const createEngineeringScenarioBodyInputsSixBatteryOneCapacityKwhMax = 10000000;
+
+export const createEngineeringScenarioBodyInputsSixBatteryOneMinSocPercentMin = 0;
+export const createEngineeringScenarioBodyInputsSixBatteryOneMinSocPercentMax = 100;
+
+export const createEngineeringScenarioBodyInputsSixBatteryOneMaxSocPercentMin = 0;
+export const createEngineeringScenarioBodyInputsSixBatteryOneMaxSocPercentMax = 100;
+
+export const createEngineeringScenarioBodyInputsSixBatteryOneInitialSocPercentMin = 0;
+export const createEngineeringScenarioBodyInputsSixBatteryOneInitialSocPercentMax = 100;
+
+export const createEngineeringScenarioBodyInputsSixBatteryOneMaxChargeKwExclusiveMin = 0;
+export const createEngineeringScenarioBodyInputsSixBatteryOneMaxChargeKwMax = 10000000;
+
+export const createEngineeringScenarioBodyInputsSixBatteryOneMaxDischargeKwExclusiveMin = 0;
+export const createEngineeringScenarioBodyInputsSixBatteryOneMaxDischargeKwMax = 10000000;
+
+export const createEngineeringScenarioBodyInputsSixBatteryOneChargeEfficiencyMin = 0.01;
+export const createEngineeringScenarioBodyInputsSixBatteryOneChargeEfficiencyMax = 1;
+
+export const createEngineeringScenarioBodyInputsSixBatteryOneDischargeEfficiencyMin = 0.01;
+export const createEngineeringScenarioBodyInputsSixBatteryOneDischargeEfficiencyMax = 1;
+
+export const createEngineeringScenarioBodyInputsSixBatteryOneGridTargetKwMin = 0;
+export const createEngineeringScenarioBodyInputsSixBatteryOneGridTargetKwMax = 10000000;
+
+export const createEngineeringScenarioBodyInputsSixForecastHorizonHoursMax = 168;
+
+export const createEngineeringScenarioBodyInputsSixAnomalyThresholdMin = 2;
+export const createEngineeringScenarioBodyInputsSixAnomalyThresholdMax = 10;
+
+
+
+export const CreateEngineeringScenarioBody = zod.object({
+  "projectId": zod.string().uuid(),
+  "name": zod.string().min(createEngineeringScenarioBodyNameMin).max(createEngineeringScenarioBodyNameMax),
+  "inputs": zod.union([zod.object({
+  "model": zod.enum(['consulting']),
+  "sourceNotes": zod.string().min(createEngineeringScenarioBodyInputsOneSourceNotesMin).max(createEngineeringScenarioBodyInputsOneSourceNotesMax),
+  "energyUnit": zod.enum(['kWh', 'MWh', 'GJ']),
+  "baselineEnergy": zod.number().min(createEngineeringScenarioBodyInputsOneBaselineEnergyMin).max(createEngineeringScenarioBodyInputsOneBaselineEnergyMax),
+  "proposedEnergy": zod.number().min(createEngineeringScenarioBodyInputsOneProposedEnergyMin).max(createEngineeringScenarioBodyInputsOneProposedEnergyMax),
+  "tariffPerKwh": zod.number().min(createEngineeringScenarioBodyInputsOneTariffPerKwhMin).max(createEngineeringScenarioBodyInputsOneTariffPerKwhMax),
+  "capex": zod.number().min(createEngineeringScenarioBodyInputsOneCapexMin).max(createEngineeringScenarioBodyInputsOneCapexMax),
+  "annualOpexDelta": zod.number().min(createEngineeringScenarioBodyInputsOneAnnualOpexDeltaMin).max(createEngineeringScenarioBodyInputsOneAnnualOpexDeltaMax),
+  "discountRatePercent": zod.number().min(createEngineeringScenarioBodyInputsOneDiscountRatePercentMin).max(createEngineeringScenarioBodyInputsOneDiscountRatePercentMax),
+  "years": zod.number().int().min(1).max(createEngineeringScenarioBodyInputsOneYearsMax)
+}),zod.object({
+  "model": zod.enum(['auditing']),
+  "sourceNotes": zod.string().min(createEngineeringScenarioBodyInputsTwoSourceNotesMin).max(createEngineeringScenarioBodyInputsTwoSourceNotesMax),
+  "tariffPerKwh": zod.number().min(createEngineeringScenarioBodyInputsTwoTariffPerKwhMin).max(createEngineeringScenarioBodyInputsTwoTariffPerKwhMax),
+  "discountRatePercent": zod.number().min(createEngineeringScenarioBodyInputsTwoDiscountRatePercentMin).max(createEngineeringScenarioBodyInputsTwoDiscountRatePercentMax),
+  "years": zod.number().int().min(1).max(createEngineeringScenarioBodyInputsTwoYearsMax),
+  "facilityBaselineKwh": zod.number().gt(createEngineeringScenarioBodyInputsTwoFacilityBaselineKwhExclusiveMin).max(createEngineeringScenarioBodyInputsTwoFacilityBaselineKwhMax).nullish(),
+  "measures": zod.array(zod.object({
+  "name": zod.string().min(createEngineeringScenarioBodyInputsTwoMeasuresItemNameMin).max(createEngineeringScenarioBodyInputsTwoMeasuresItemNameMax),
+  "quantity": zod.number().int().min(1).max(createEngineeringScenarioBodyInputsTwoMeasuresItemQuantityMax),
+  "powerUnit": zod.enum(['W', 'kW']),
+  "baselinePower": zod.number().min(createEngineeringScenarioBodyInputsTwoMeasuresItemBaselinePowerMin).max(createEngineeringScenarioBodyInputsTwoMeasuresItemBaselinePowerMax),
+  "proposedPower": zod.number().min(createEngineeringScenarioBodyInputsTwoMeasuresItemProposedPowerMin).max(createEngineeringScenarioBodyInputsTwoMeasuresItemProposedPowerMax),
+  "hoursPerYear": zod.number().min(createEngineeringScenarioBodyInputsTwoMeasuresItemHoursPerYearMin).max(createEngineeringScenarioBodyInputsTwoMeasuresItemHoursPerYearMax),
+  "capex": zod.number().min(createEngineeringScenarioBodyInputsTwoMeasuresItemCapexMin).max(createEngineeringScenarioBodyInputsTwoMeasuresItemCapexMax),
+  "annualOpexDelta": zod.number().min(createEngineeringScenarioBodyInputsTwoMeasuresItemAnnualOpexDeltaMin).max(createEngineeringScenarioBodyInputsTwoMeasuresItemAnnualOpexDeltaMax)
+})).min(1).max(createEngineeringScenarioBodyInputsTwoMeasuresMax)
+}),zod.object({
+  "model": zod.enum(['solar']),
+  "sourceNotes": zod.string().min(createEngineeringScenarioBodyInputsThreeSourceNotesMin).max(createEngineeringScenarioBodyInputsThreeSourceNotesMax),
+  "irradiationUnit": zod.enum(['kWh/m2/month']),
+  "capacityKwp": zod.number().gt(createEngineeringScenarioBodyInputsThreeCapacityKwpExclusiveMin).max(createEngineeringScenarioBodyInputsThreeCapacityKwpMax),
+  "performanceRatio": zod.number().gt(createEngineeringScenarioBodyInputsThreePerformanceRatioExclusiveMin).max(createEngineeringScenarioBodyInputsThreePerformanceRatioMax),
+  "coincidenceFactor": zod.number().min(createEngineeringScenarioBodyInputsThreeCoincidenceFactorMin).max(createEngineeringScenarioBodyInputsThreeCoincidenceFactorMax),
+  "importRatePerKwh": zod.number().min(createEngineeringScenarioBodyInputsThreeImportRatePerKwhMin).max(createEngineeringScenarioBodyInputsThreeImportRatePerKwhMax),
+  "exportRatePerKwh": zod.number().min(createEngineeringScenarioBodyInputsThreeExportRatePerKwhMin).max(createEngineeringScenarioBodyInputsThreeExportRatePerKwhMax),
+  "capex": zod.number().min(createEngineeringScenarioBodyInputsThreeCapexMin).max(createEngineeringScenarioBodyInputsThreeCapexMax),
+  "annualOpex": zod.number().min(createEngineeringScenarioBodyInputsThreeAnnualOpexMin).max(createEngineeringScenarioBodyInputsThreeAnnualOpexMax),
+  "discountRatePercent": zod.number().min(createEngineeringScenarioBodyInputsThreeDiscountRatePercentMin).max(createEngineeringScenarioBodyInputsThreeDiscountRatePercentMax),
+  "years": zod.number().int().min(1).max(createEngineeringScenarioBodyInputsThreeYearsMax),
+  "months": zod.array(zod.object({
+  "month": zod.number().int().min(1).max(createEngineeringScenarioBodyInputsThreeMonthsItemMonthMax),
+  "irradiationKwhM2": zod.number().min(createEngineeringScenarioBodyInputsThreeMonthsItemIrradiationKwhM2Min).max(createEngineeringScenarioBodyInputsThreeMonthsItemIrradiationKwhM2Max),
+  "demandKwh": zod.number().min(createEngineeringScenarioBodyInputsThreeMonthsItemDemandKwhMin).max(createEngineeringScenarioBodyInputsThreeMonthsItemDemandKwhMax)
+})).min(createEngineeringScenarioBodyInputsThreeMonthsMin).max(createEngineeringScenarioBodyInputsThreeMonthsMax)
+}),zod.object({
+  "model": zod.enum(['battery']),
+  "sourceNotes": zod.string().min(createEngineeringScenarioBodyInputsFourSourceNotesMin).max(createEngineeringScenarioBodyInputsFourSourceNotesMax),
+  "energyUnit": zod.enum(['kWh']),
+  "powerUnit": zod.enum(['kW']),
+  "capacityKwh": zod.number().gt(createEngineeringScenarioBodyInputsFourCapacityKwhExclusiveMin).max(createEngineeringScenarioBodyInputsFourCapacityKwhMax),
+  "minSocPercent": zod.number().min(createEngineeringScenarioBodyInputsFourMinSocPercentMin).max(createEngineeringScenarioBodyInputsFourMinSocPercentMax),
+  "maxSocPercent": zod.number().min(createEngineeringScenarioBodyInputsFourMaxSocPercentMin).max(createEngineeringScenarioBodyInputsFourMaxSocPercentMax),
+  "initialSocPercent": zod.number().min(createEngineeringScenarioBodyInputsFourInitialSocPercentMin).max(createEngineeringScenarioBodyInputsFourInitialSocPercentMax),
+  "maxChargeKw": zod.number().gt(createEngineeringScenarioBodyInputsFourMaxChargeKwExclusiveMin).max(createEngineeringScenarioBodyInputsFourMaxChargeKwMax),
+  "maxDischargeKw": zod.number().gt(createEngineeringScenarioBodyInputsFourMaxDischargeKwExclusiveMin).max(createEngineeringScenarioBodyInputsFourMaxDischargeKwMax),
+  "chargeEfficiency": zod.number().min(createEngineeringScenarioBodyInputsFourChargeEfficiencyMin).max(createEngineeringScenarioBodyInputsFourChargeEfficiencyMax),
+  "dischargeEfficiency": zod.number().min(createEngineeringScenarioBodyInputsFourDischargeEfficiencyMin).max(createEngineeringScenarioBodyInputsFourDischargeEfficiencyMax),
+  "dispatchMode": zod.enum(['self_consumption', 'peak_shaving']),
+  "gridTargetKw": zod.number().min(createEngineeringScenarioBodyInputsFourGridTargetKwMin).max(createEngineeringScenarioBodyInputsFourGridTargetKwMax).nullish(),
+  "intervals": zod.array(zod.object({
+  "start": zod.string().max(createEngineeringScenarioBodyInputsFourIntervalsItemStartMax),
+  "end": zod.string().max(createEngineeringScenarioBodyInputsFourIntervalsItemEndMax),
+  "loadKwh": zod.number().min(createEngineeringScenarioBodyInputsFourIntervalsItemLoadKwhMin).max(createEngineeringScenarioBodyInputsFourIntervalsItemLoadKwhMax),
+  "solarKwh": zod.number().min(createEngineeringScenarioBodyInputsFourIntervalsItemSolarKwhMin).max(createEngineeringScenarioBodyInputsFourIntervalsItemSolarKwhMax),
+  "importRatePerKwh": zod.number().min(createEngineeringScenarioBodyInputsFourIntervalsItemImportRatePerKwhMin).max(createEngineeringScenarioBodyInputsFourIntervalsItemImportRatePerKwhMax),
+  "exportRatePerKwh": zod.number().min(createEngineeringScenarioBodyInputsFourIntervalsItemExportRatePerKwhMin).max(createEngineeringScenarioBodyInputsFourIntervalsItemExportRatePerKwhMax)
+})).min(1).max(createEngineeringScenarioBodyInputsFourIntervalsMax)
+}),zod.object({
+  "model": zod.enum(['carbon']),
+  "sourceNotes": zod.string().min(createEngineeringScenarioBodyInputsFiveSourceNotesMin).max(createEngineeringScenarioBodyInputsFiveSourceNotesMax),
+  "periodStart": zod.string().regex(createEngineeringScenarioBodyInputsFivePeriodStartRegExp),
+  "periodEnd": zod.string().regex(createEngineeringScenarioBodyInputsFivePeriodEndRegExp),
+  "boundary": zod.string().min(createEngineeringScenarioBodyInputsFiveBoundaryMin).max(createEngineeringScenarioBodyInputsFiveBoundaryMax),
+  "scope2Method": zod.enum(['location_based', 'market_based']),
+  "activities": zod.array(zod.object({
+  "name": zod.string().min(createEngineeringScenarioBodyInputsFiveActivitiesItemNameMin).max(createEngineeringScenarioBodyInputsFiveActivitiesItemNameMax),
+  "factorId": zod.string().uuid(),
+  "quantity": zod.number().min(createEngineeringScenarioBodyInputsFiveActivitiesItemQuantityMin).max(createEngineeringScenarioBodyInputsFiveActivitiesItemQuantityMax),
+  "unit": zod.enum(['kWh', 'MWh', 'GJ', 'L', 'm3', 'kg', 'km', 'passenger_km', 'tonne_km']),
+  "geography": zod.string().min(createEngineeringScenarioBodyInputsFiveActivitiesItemGeographyMin).max(createEngineeringScenarioBodyInputsFiveActivitiesItemGeographyMax),
+  "scope": zod.enum(['scope1', 'scope2', 'scope3']),
+  "category": zod.enum(['stationary_combustion', 'mobile_combustion', 'fugitive', 'process', 'purchased_electricity', 'purchased_heat', 'purchased_goods', 'upstream_fuel_energy', 'waste', 'business_travel', 'employee_commuting', 'upstream_transport', 'downstream_transport'])
+})).min(1).max(createEngineeringScenarioBodyInputsFiveActivitiesMax),
+  "reductions": zod.array(zod.object({
+  "activityIndex": zod.number().int().min(createEngineeringScenarioBodyInputsFiveReductionsItemActivityIndexMin).max(createEngineeringScenarioBodyInputsFiveReductionsItemActivityIndexMax),
+  "label": zod.string().min(createEngineeringScenarioBodyInputsFiveReductionsItemLabelMin).max(createEngineeringScenarioBodyInputsFiveReductionsItemLabelMax),
+  "reductionPercent": zod.number().min(createEngineeringScenarioBodyInputsFiveReductionsItemReductionPercentMin).max(createEngineeringScenarioBodyInputsFiveReductionsItemReductionPercentMax)
+})).max(createEngineeringScenarioBodyInputsFiveReductionsMax)
+}),zod.object({
+  "model": zod.enum(['twin']),
+  "sourceNotes": zod.string().min(createEngineeringScenarioBodyInputsSixSourceNotesMin).max(createEngineeringScenarioBodyInputsSixSourceNotesMax),
+  "buildingMeterId": zod.string().uuid(),
+  "solarMeterId": zod.string().uuid().nullable(),
+  "start": zod.string().max(createEngineeringScenarioBodyInputsSixStartMax),
+  "end": zod.string().max(createEngineeringScenarioBodyInputsSixEndMax),
+  "loadBasis": zod.enum(['gross_building_load']),
+  "battery": zod.union([zod.object({
+  "capacityKwh": zod.number().gt(createEngineeringScenarioBodyInputsSixBatteryOneCapacityKwhExclusiveMin).max(createEngineeringScenarioBodyInputsSixBatteryOneCapacityKwhMax),
+  "minSocPercent": zod.number().min(createEngineeringScenarioBodyInputsSixBatteryOneMinSocPercentMin).max(createEngineeringScenarioBodyInputsSixBatteryOneMinSocPercentMax),
+  "maxSocPercent": zod.number().min(createEngineeringScenarioBodyInputsSixBatteryOneMaxSocPercentMin).max(createEngineeringScenarioBodyInputsSixBatteryOneMaxSocPercentMax),
+  "initialSocPercent": zod.number().min(createEngineeringScenarioBodyInputsSixBatteryOneInitialSocPercentMin).max(createEngineeringScenarioBodyInputsSixBatteryOneInitialSocPercentMax),
+  "maxChargeKw": zod.number().gt(createEngineeringScenarioBodyInputsSixBatteryOneMaxChargeKwExclusiveMin).max(createEngineeringScenarioBodyInputsSixBatteryOneMaxChargeKwMax),
+  "maxDischargeKw": zod.number().gt(createEngineeringScenarioBodyInputsSixBatteryOneMaxDischargeKwExclusiveMin).max(createEngineeringScenarioBodyInputsSixBatteryOneMaxDischargeKwMax),
+  "chargeEfficiency": zod.number().min(createEngineeringScenarioBodyInputsSixBatteryOneChargeEfficiencyMin).max(createEngineeringScenarioBodyInputsSixBatteryOneChargeEfficiencyMax),
+  "dischargeEfficiency": zod.number().min(createEngineeringScenarioBodyInputsSixBatteryOneDischargeEfficiencyMin).max(createEngineeringScenarioBodyInputsSixBatteryOneDischargeEfficiencyMax),
+  "dispatchMode": zod.enum(['self_consumption', 'peak_shaving']),
+  "gridTargetKw": zod.number().min(createEngineeringScenarioBodyInputsSixBatteryOneGridTargetKwMin).max(createEngineeringScenarioBodyInputsSixBatteryOneGridTargetKwMax).nullish()
+}),zod.null()]),
+  "forecastHorizonHours": zod.number().int().min(1).max(createEngineeringScenarioBodyInputsSixForecastHorizonHoursMax),
+  "anomalyThreshold": zod.number().min(createEngineeringScenarioBodyInputsSixAnomalyThresholdMin).max(createEngineeringScenarioBodyInputsSixAnomalyThresholdMax)
+})])
+})
+
+export const createEngineeringScenarioResponseTwoInputsOneSourceNotesMin = 10;
+export const createEngineeringScenarioResponseTwoInputsOneSourceNotesMax = 2000;
+
+export const createEngineeringScenarioResponseTwoInputsOneBaselineEnergyMin = 0;
+export const createEngineeringScenarioResponseTwoInputsOneBaselineEnergyMax = 1000000000;
+
+export const createEngineeringScenarioResponseTwoInputsOneProposedEnergyMin = 0;
+export const createEngineeringScenarioResponseTwoInputsOneProposedEnergyMax = 1000000000;
+
+export const createEngineeringScenarioResponseTwoInputsOneTariffPerKwhMin = 0;
+export const createEngineeringScenarioResponseTwoInputsOneTariffPerKwhMax = 1000000;
+
+export const createEngineeringScenarioResponseTwoInputsOneCapexMin = 0;
+export const createEngineeringScenarioResponseTwoInputsOneCapexMax = 1000000000000;
+
+export const createEngineeringScenarioResponseTwoInputsOneAnnualOpexDeltaMin = -1000000000;
+export const createEngineeringScenarioResponseTwoInputsOneAnnualOpexDeltaMax = 1000000000;
+
+export const createEngineeringScenarioResponseTwoInputsOneDiscountRatePercentMin = 0;
+export const createEngineeringScenarioResponseTwoInputsOneDiscountRatePercentMax = 100;
+
+export const createEngineeringScenarioResponseTwoInputsOneYearsMax = 50;
+
+export const createEngineeringScenarioResponseTwoInputsTwoSourceNotesMin = 10;
+export const createEngineeringScenarioResponseTwoInputsTwoSourceNotesMax = 2000;
+
+export const createEngineeringScenarioResponseTwoInputsTwoTariffPerKwhMin = 0;
+export const createEngineeringScenarioResponseTwoInputsTwoTariffPerKwhMax = 1000000;
+
+export const createEngineeringScenarioResponseTwoInputsTwoDiscountRatePercentMin = 0;
+export const createEngineeringScenarioResponseTwoInputsTwoDiscountRatePercentMax = 100;
+
+export const createEngineeringScenarioResponseTwoInputsTwoYearsMax = 50;
+
+export const createEngineeringScenarioResponseTwoInputsTwoFacilityBaselineKwhExclusiveMin = 0;
+export const createEngineeringScenarioResponseTwoInputsTwoFacilityBaselineKwhMax = 1000000000000;
+
+export const createEngineeringScenarioResponseTwoInputsTwoMeasuresItemNameMin = 2;
+export const createEngineeringScenarioResponseTwoInputsTwoMeasuresItemNameMax = 120;
+
+export const createEngineeringScenarioResponseTwoInputsTwoMeasuresItemQuantityMax = 1000000;
+
+export const createEngineeringScenarioResponseTwoInputsTwoMeasuresItemBaselinePowerMin = 0;
+export const createEngineeringScenarioResponseTwoInputsTwoMeasuresItemBaselinePowerMax = 1000000;
+
+export const createEngineeringScenarioResponseTwoInputsTwoMeasuresItemProposedPowerMin = 0;
+export const createEngineeringScenarioResponseTwoInputsTwoMeasuresItemProposedPowerMax = 1000000;
+
+export const createEngineeringScenarioResponseTwoInputsTwoMeasuresItemHoursPerYearMin = 0;
+export const createEngineeringScenarioResponseTwoInputsTwoMeasuresItemHoursPerYearMax = 8784;
+
+export const createEngineeringScenarioResponseTwoInputsTwoMeasuresItemCapexMin = 0;
+export const createEngineeringScenarioResponseTwoInputsTwoMeasuresItemCapexMax = 1000000000000;
+
+export const createEngineeringScenarioResponseTwoInputsTwoMeasuresItemAnnualOpexDeltaMin = -1000000000;
+export const createEngineeringScenarioResponseTwoInputsTwoMeasuresItemAnnualOpexDeltaMax = 1000000000;
+
+export const createEngineeringScenarioResponseTwoInputsTwoMeasuresMax = 30;
+
+export const createEngineeringScenarioResponseTwoInputsThreeSourceNotesMin = 10;
+export const createEngineeringScenarioResponseTwoInputsThreeSourceNotesMax = 2000;
+
+export const createEngineeringScenarioResponseTwoInputsThreeCapacityKwpExclusiveMin = 0;
+export const createEngineeringScenarioResponseTwoInputsThreeCapacityKwpMax = 1000000;
+
+export const createEngineeringScenarioResponseTwoInputsThreePerformanceRatioExclusiveMin = 0;
+export const createEngineeringScenarioResponseTwoInputsThreePerformanceRatioMax = 1;
+
+export const createEngineeringScenarioResponseTwoInputsThreeCoincidenceFactorMin = 0;
+export const createEngineeringScenarioResponseTwoInputsThreeCoincidenceFactorMax = 1;
+
+export const createEngineeringScenarioResponseTwoInputsThreeImportRatePerKwhMin = 0;
+export const createEngineeringScenarioResponseTwoInputsThreeImportRatePerKwhMax = 1000000;
+
+export const createEngineeringScenarioResponseTwoInputsThreeExportRatePerKwhMin = 0;
+export const createEngineeringScenarioResponseTwoInputsThreeExportRatePerKwhMax = 1000000;
+
+export const createEngineeringScenarioResponseTwoInputsThreeCapexMin = 0;
+export const createEngineeringScenarioResponseTwoInputsThreeCapexMax = 1000000000000;
+
+export const createEngineeringScenarioResponseTwoInputsThreeAnnualOpexMin = 0;
+export const createEngineeringScenarioResponseTwoInputsThreeAnnualOpexMax = 1000000000;
+
+export const createEngineeringScenarioResponseTwoInputsThreeDiscountRatePercentMin = 0;
+export const createEngineeringScenarioResponseTwoInputsThreeDiscountRatePercentMax = 100;
+
+export const createEngineeringScenarioResponseTwoInputsThreeYearsMax = 50;
+
+export const createEngineeringScenarioResponseTwoInputsThreeMonthsItemMonthMax = 12;
+
+export const createEngineeringScenarioResponseTwoInputsThreeMonthsItemIrradiationKwhM2Min = 0;
+export const createEngineeringScenarioResponseTwoInputsThreeMonthsItemIrradiationKwhM2Max = 500;
+
+export const createEngineeringScenarioResponseTwoInputsThreeMonthsItemDemandKwhMin = 0;
+export const createEngineeringScenarioResponseTwoInputsThreeMonthsItemDemandKwhMax = 1000000000;
+
+export const createEngineeringScenarioResponseTwoInputsThreeMonthsMin = 12;
+export const createEngineeringScenarioResponseTwoInputsThreeMonthsMax = 12;
+
+export const createEngineeringScenarioResponseTwoInputsFourSourceNotesMin = 10;
+export const createEngineeringScenarioResponseTwoInputsFourSourceNotesMax = 2000;
+
+export const createEngineeringScenarioResponseTwoInputsFourCapacityKwhExclusiveMin = 0;
+export const createEngineeringScenarioResponseTwoInputsFourCapacityKwhMax = 10000000;
+
+export const createEngineeringScenarioResponseTwoInputsFourMinSocPercentMin = 0;
+export const createEngineeringScenarioResponseTwoInputsFourMinSocPercentMax = 100;
+
+export const createEngineeringScenarioResponseTwoInputsFourMaxSocPercentMin = 0;
+export const createEngineeringScenarioResponseTwoInputsFourMaxSocPercentMax = 100;
+
+export const createEngineeringScenarioResponseTwoInputsFourInitialSocPercentMin = 0;
+export const createEngineeringScenarioResponseTwoInputsFourInitialSocPercentMax = 100;
+
+export const createEngineeringScenarioResponseTwoInputsFourMaxChargeKwExclusiveMin = 0;
+export const createEngineeringScenarioResponseTwoInputsFourMaxChargeKwMax = 10000000;
+
+export const createEngineeringScenarioResponseTwoInputsFourMaxDischargeKwExclusiveMin = 0;
+export const createEngineeringScenarioResponseTwoInputsFourMaxDischargeKwMax = 10000000;
+
+export const createEngineeringScenarioResponseTwoInputsFourChargeEfficiencyMin = 0.01;
+export const createEngineeringScenarioResponseTwoInputsFourChargeEfficiencyMax = 1;
+
+export const createEngineeringScenarioResponseTwoInputsFourDischargeEfficiencyMin = 0.01;
+export const createEngineeringScenarioResponseTwoInputsFourDischargeEfficiencyMax = 1;
+
+export const createEngineeringScenarioResponseTwoInputsFourGridTargetKwMin = 0;
+export const createEngineeringScenarioResponseTwoInputsFourGridTargetKwMax = 10000000;
+
+export const createEngineeringScenarioResponseTwoInputsFourIntervalsItemStartMax = 40;
+
+export const createEngineeringScenarioResponseTwoInputsFourIntervalsItemEndMax = 40;
+
+export const createEngineeringScenarioResponseTwoInputsFourIntervalsItemLoadKwhMin = 0;
+export const createEngineeringScenarioResponseTwoInputsFourIntervalsItemLoadKwhMax = 1000000000;
+
+export const createEngineeringScenarioResponseTwoInputsFourIntervalsItemSolarKwhMin = 0;
+export const createEngineeringScenarioResponseTwoInputsFourIntervalsItemSolarKwhMax = 1000000000;
+
+export const createEngineeringScenarioResponseTwoInputsFourIntervalsItemImportRatePerKwhMin = 0;
+export const createEngineeringScenarioResponseTwoInputsFourIntervalsItemImportRatePerKwhMax = 1000000;
+
+export const createEngineeringScenarioResponseTwoInputsFourIntervalsItemExportRatePerKwhMin = 0;
+export const createEngineeringScenarioResponseTwoInputsFourIntervalsItemExportRatePerKwhMax = 1000000;
+
+export const createEngineeringScenarioResponseTwoInputsFourIntervalsMax = 1000;
+
+export const createEngineeringScenarioResponseTwoInputsFiveSourceNotesMin = 10;
+export const createEngineeringScenarioResponseTwoInputsFiveSourceNotesMax = 2000;
+
+export const createEngineeringScenarioResponseTwoInputsFivePeriodStartRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const createEngineeringScenarioResponseTwoInputsFivePeriodEndRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const createEngineeringScenarioResponseTwoInputsFiveBoundaryMin = 10;
+export const createEngineeringScenarioResponseTwoInputsFiveBoundaryMax = 2000;
+
+export const createEngineeringScenarioResponseTwoInputsFiveActivitiesItemNameMin = 2;
+export const createEngineeringScenarioResponseTwoInputsFiveActivitiesItemNameMax = 160;
+
+export const createEngineeringScenarioResponseTwoInputsFiveActivitiesItemQuantityMin = 0;
+export const createEngineeringScenarioResponseTwoInputsFiveActivitiesItemQuantityMax = 1000000000000;
+
+export const createEngineeringScenarioResponseTwoInputsFiveActivitiesItemGeographyMin = 2;
+export const createEngineeringScenarioResponseTwoInputsFiveActivitiesItemGeographyMax = 120;
+
+export const createEngineeringScenarioResponseTwoInputsFiveActivitiesMax = 100;
+
+export const createEngineeringScenarioResponseTwoInputsFiveReductionsItemActivityIndexMin = 0;
+export const createEngineeringScenarioResponseTwoInputsFiveReductionsItemActivityIndexMax = 99;
+
+export const createEngineeringScenarioResponseTwoInputsFiveReductionsItemLabelMin = 2;
+export const createEngineeringScenarioResponseTwoInputsFiveReductionsItemLabelMax = 160;
+
+export const createEngineeringScenarioResponseTwoInputsFiveReductionsItemReductionPercentMin = 0;
+export const createEngineeringScenarioResponseTwoInputsFiveReductionsItemReductionPercentMax = 100;
+
+export const createEngineeringScenarioResponseTwoInputsFiveReductionsMax = 100;
+
+export const createEngineeringScenarioResponseTwoInputsSixSourceNotesMin = 10;
+export const createEngineeringScenarioResponseTwoInputsSixSourceNotesMax = 2000;
+
+export const createEngineeringScenarioResponseTwoInputsSixStartMax = 40;
+
+export const createEngineeringScenarioResponseTwoInputsSixEndMax = 40;
+
+export const createEngineeringScenarioResponseTwoInputsSixBatteryOneCapacityKwhExclusiveMin = 0;
+export const createEngineeringScenarioResponseTwoInputsSixBatteryOneCapacityKwhMax = 10000000;
+
+export const createEngineeringScenarioResponseTwoInputsSixBatteryOneMinSocPercentMin = 0;
+export const createEngineeringScenarioResponseTwoInputsSixBatteryOneMinSocPercentMax = 100;
+
+export const createEngineeringScenarioResponseTwoInputsSixBatteryOneMaxSocPercentMin = 0;
+export const createEngineeringScenarioResponseTwoInputsSixBatteryOneMaxSocPercentMax = 100;
+
+export const createEngineeringScenarioResponseTwoInputsSixBatteryOneInitialSocPercentMin = 0;
+export const createEngineeringScenarioResponseTwoInputsSixBatteryOneInitialSocPercentMax = 100;
+
+export const createEngineeringScenarioResponseTwoInputsSixBatteryOneMaxChargeKwExclusiveMin = 0;
+export const createEngineeringScenarioResponseTwoInputsSixBatteryOneMaxChargeKwMax = 10000000;
+
+export const createEngineeringScenarioResponseTwoInputsSixBatteryOneMaxDischargeKwExclusiveMin = 0;
+export const createEngineeringScenarioResponseTwoInputsSixBatteryOneMaxDischargeKwMax = 10000000;
+
+export const createEngineeringScenarioResponseTwoInputsSixBatteryOneChargeEfficiencyMin = 0.01;
+export const createEngineeringScenarioResponseTwoInputsSixBatteryOneChargeEfficiencyMax = 1;
+
+export const createEngineeringScenarioResponseTwoInputsSixBatteryOneDischargeEfficiencyMin = 0.01;
+export const createEngineeringScenarioResponseTwoInputsSixBatteryOneDischargeEfficiencyMax = 1;
+
+export const createEngineeringScenarioResponseTwoInputsSixBatteryOneGridTargetKwMin = 0;
+export const createEngineeringScenarioResponseTwoInputsSixBatteryOneGridTargetKwMax = 10000000;
+
+export const createEngineeringScenarioResponseTwoInputsSixForecastHorizonHoursMax = 168;
+
+export const createEngineeringScenarioResponseTwoInputsSixAnomalyThresholdMin = 2;
+export const createEngineeringScenarioResponseTwoInputsSixAnomalyThresholdMax = 10;
+
+
+
+export const CreateEngineeringScenarioResponse = zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "project_id": zod.string(),
+  "module": zod.enum(['energy-consulting', 'energy-auditing', 'renewable-energy', 'battery-flexibility', 'carbon-footprint', 'digital-energy']),
+  "created_at": zod.string()
+}).and(zod.object({
+  "inputs": zod.union([zod.object({
+  "model": zod.enum(['consulting']),
+  "sourceNotes": zod.string().min(createEngineeringScenarioResponseTwoInputsOneSourceNotesMin).max(createEngineeringScenarioResponseTwoInputsOneSourceNotesMax),
+  "energyUnit": zod.enum(['kWh', 'MWh', 'GJ']),
+  "baselineEnergy": zod.number().min(createEngineeringScenarioResponseTwoInputsOneBaselineEnergyMin).max(createEngineeringScenarioResponseTwoInputsOneBaselineEnergyMax),
+  "proposedEnergy": zod.number().min(createEngineeringScenarioResponseTwoInputsOneProposedEnergyMin).max(createEngineeringScenarioResponseTwoInputsOneProposedEnergyMax),
+  "tariffPerKwh": zod.number().min(createEngineeringScenarioResponseTwoInputsOneTariffPerKwhMin).max(createEngineeringScenarioResponseTwoInputsOneTariffPerKwhMax),
+  "capex": zod.number().min(createEngineeringScenarioResponseTwoInputsOneCapexMin).max(createEngineeringScenarioResponseTwoInputsOneCapexMax),
+  "annualOpexDelta": zod.number().min(createEngineeringScenarioResponseTwoInputsOneAnnualOpexDeltaMin).max(createEngineeringScenarioResponseTwoInputsOneAnnualOpexDeltaMax),
+  "discountRatePercent": zod.number().min(createEngineeringScenarioResponseTwoInputsOneDiscountRatePercentMin).max(createEngineeringScenarioResponseTwoInputsOneDiscountRatePercentMax),
+  "years": zod.number().int().min(1).max(createEngineeringScenarioResponseTwoInputsOneYearsMax)
+}),zod.object({
+  "model": zod.enum(['auditing']),
+  "sourceNotes": zod.string().min(createEngineeringScenarioResponseTwoInputsTwoSourceNotesMin).max(createEngineeringScenarioResponseTwoInputsTwoSourceNotesMax),
+  "tariffPerKwh": zod.number().min(createEngineeringScenarioResponseTwoInputsTwoTariffPerKwhMin).max(createEngineeringScenarioResponseTwoInputsTwoTariffPerKwhMax),
+  "discountRatePercent": zod.number().min(createEngineeringScenarioResponseTwoInputsTwoDiscountRatePercentMin).max(createEngineeringScenarioResponseTwoInputsTwoDiscountRatePercentMax),
+  "years": zod.number().int().min(1).max(createEngineeringScenarioResponseTwoInputsTwoYearsMax),
+  "facilityBaselineKwh": zod.number().gt(createEngineeringScenarioResponseTwoInputsTwoFacilityBaselineKwhExclusiveMin).max(createEngineeringScenarioResponseTwoInputsTwoFacilityBaselineKwhMax).nullish(),
+  "measures": zod.array(zod.object({
+  "name": zod.string().min(createEngineeringScenarioResponseTwoInputsTwoMeasuresItemNameMin).max(createEngineeringScenarioResponseTwoInputsTwoMeasuresItemNameMax),
+  "quantity": zod.number().int().min(1).max(createEngineeringScenarioResponseTwoInputsTwoMeasuresItemQuantityMax),
+  "powerUnit": zod.enum(['W', 'kW']),
+  "baselinePower": zod.number().min(createEngineeringScenarioResponseTwoInputsTwoMeasuresItemBaselinePowerMin).max(createEngineeringScenarioResponseTwoInputsTwoMeasuresItemBaselinePowerMax),
+  "proposedPower": zod.number().min(createEngineeringScenarioResponseTwoInputsTwoMeasuresItemProposedPowerMin).max(createEngineeringScenarioResponseTwoInputsTwoMeasuresItemProposedPowerMax),
+  "hoursPerYear": zod.number().min(createEngineeringScenarioResponseTwoInputsTwoMeasuresItemHoursPerYearMin).max(createEngineeringScenarioResponseTwoInputsTwoMeasuresItemHoursPerYearMax),
+  "capex": zod.number().min(createEngineeringScenarioResponseTwoInputsTwoMeasuresItemCapexMin).max(createEngineeringScenarioResponseTwoInputsTwoMeasuresItemCapexMax),
+  "annualOpexDelta": zod.number().min(createEngineeringScenarioResponseTwoInputsTwoMeasuresItemAnnualOpexDeltaMin).max(createEngineeringScenarioResponseTwoInputsTwoMeasuresItemAnnualOpexDeltaMax)
+})).min(1).max(createEngineeringScenarioResponseTwoInputsTwoMeasuresMax)
+}),zod.object({
+  "model": zod.enum(['solar']),
+  "sourceNotes": zod.string().min(createEngineeringScenarioResponseTwoInputsThreeSourceNotesMin).max(createEngineeringScenarioResponseTwoInputsThreeSourceNotesMax),
+  "irradiationUnit": zod.enum(['kWh/m2/month']),
+  "capacityKwp": zod.number().gt(createEngineeringScenarioResponseTwoInputsThreeCapacityKwpExclusiveMin).max(createEngineeringScenarioResponseTwoInputsThreeCapacityKwpMax),
+  "performanceRatio": zod.number().gt(createEngineeringScenarioResponseTwoInputsThreePerformanceRatioExclusiveMin).max(createEngineeringScenarioResponseTwoInputsThreePerformanceRatioMax),
+  "coincidenceFactor": zod.number().min(createEngineeringScenarioResponseTwoInputsThreeCoincidenceFactorMin).max(createEngineeringScenarioResponseTwoInputsThreeCoincidenceFactorMax),
+  "importRatePerKwh": zod.number().min(createEngineeringScenarioResponseTwoInputsThreeImportRatePerKwhMin).max(createEngineeringScenarioResponseTwoInputsThreeImportRatePerKwhMax),
+  "exportRatePerKwh": zod.number().min(createEngineeringScenarioResponseTwoInputsThreeExportRatePerKwhMin).max(createEngineeringScenarioResponseTwoInputsThreeExportRatePerKwhMax),
+  "capex": zod.number().min(createEngineeringScenarioResponseTwoInputsThreeCapexMin).max(createEngineeringScenarioResponseTwoInputsThreeCapexMax),
+  "annualOpex": zod.number().min(createEngineeringScenarioResponseTwoInputsThreeAnnualOpexMin).max(createEngineeringScenarioResponseTwoInputsThreeAnnualOpexMax),
+  "discountRatePercent": zod.number().min(createEngineeringScenarioResponseTwoInputsThreeDiscountRatePercentMin).max(createEngineeringScenarioResponseTwoInputsThreeDiscountRatePercentMax),
+  "years": zod.number().int().min(1).max(createEngineeringScenarioResponseTwoInputsThreeYearsMax),
+  "months": zod.array(zod.object({
+  "month": zod.number().int().min(1).max(createEngineeringScenarioResponseTwoInputsThreeMonthsItemMonthMax),
+  "irradiationKwhM2": zod.number().min(createEngineeringScenarioResponseTwoInputsThreeMonthsItemIrradiationKwhM2Min).max(createEngineeringScenarioResponseTwoInputsThreeMonthsItemIrradiationKwhM2Max),
+  "demandKwh": zod.number().min(createEngineeringScenarioResponseTwoInputsThreeMonthsItemDemandKwhMin).max(createEngineeringScenarioResponseTwoInputsThreeMonthsItemDemandKwhMax)
+})).min(createEngineeringScenarioResponseTwoInputsThreeMonthsMin).max(createEngineeringScenarioResponseTwoInputsThreeMonthsMax)
+}),zod.object({
+  "model": zod.enum(['battery']),
+  "sourceNotes": zod.string().min(createEngineeringScenarioResponseTwoInputsFourSourceNotesMin).max(createEngineeringScenarioResponseTwoInputsFourSourceNotesMax),
+  "energyUnit": zod.enum(['kWh']),
+  "powerUnit": zod.enum(['kW']),
+  "capacityKwh": zod.number().gt(createEngineeringScenarioResponseTwoInputsFourCapacityKwhExclusiveMin).max(createEngineeringScenarioResponseTwoInputsFourCapacityKwhMax),
+  "minSocPercent": zod.number().min(createEngineeringScenarioResponseTwoInputsFourMinSocPercentMin).max(createEngineeringScenarioResponseTwoInputsFourMinSocPercentMax),
+  "maxSocPercent": zod.number().min(createEngineeringScenarioResponseTwoInputsFourMaxSocPercentMin).max(createEngineeringScenarioResponseTwoInputsFourMaxSocPercentMax),
+  "initialSocPercent": zod.number().min(createEngineeringScenarioResponseTwoInputsFourInitialSocPercentMin).max(createEngineeringScenarioResponseTwoInputsFourInitialSocPercentMax),
+  "maxChargeKw": zod.number().gt(createEngineeringScenarioResponseTwoInputsFourMaxChargeKwExclusiveMin).max(createEngineeringScenarioResponseTwoInputsFourMaxChargeKwMax),
+  "maxDischargeKw": zod.number().gt(createEngineeringScenarioResponseTwoInputsFourMaxDischargeKwExclusiveMin).max(createEngineeringScenarioResponseTwoInputsFourMaxDischargeKwMax),
+  "chargeEfficiency": zod.number().min(createEngineeringScenarioResponseTwoInputsFourChargeEfficiencyMin).max(createEngineeringScenarioResponseTwoInputsFourChargeEfficiencyMax),
+  "dischargeEfficiency": zod.number().min(createEngineeringScenarioResponseTwoInputsFourDischargeEfficiencyMin).max(createEngineeringScenarioResponseTwoInputsFourDischargeEfficiencyMax),
+  "dispatchMode": zod.enum(['self_consumption', 'peak_shaving']),
+  "gridTargetKw": zod.number().min(createEngineeringScenarioResponseTwoInputsFourGridTargetKwMin).max(createEngineeringScenarioResponseTwoInputsFourGridTargetKwMax).nullish(),
+  "intervals": zod.array(zod.object({
+  "start": zod.string().max(createEngineeringScenarioResponseTwoInputsFourIntervalsItemStartMax),
+  "end": zod.string().max(createEngineeringScenarioResponseTwoInputsFourIntervalsItemEndMax),
+  "loadKwh": zod.number().min(createEngineeringScenarioResponseTwoInputsFourIntervalsItemLoadKwhMin).max(createEngineeringScenarioResponseTwoInputsFourIntervalsItemLoadKwhMax),
+  "solarKwh": zod.number().min(createEngineeringScenarioResponseTwoInputsFourIntervalsItemSolarKwhMin).max(createEngineeringScenarioResponseTwoInputsFourIntervalsItemSolarKwhMax),
+  "importRatePerKwh": zod.number().min(createEngineeringScenarioResponseTwoInputsFourIntervalsItemImportRatePerKwhMin).max(createEngineeringScenarioResponseTwoInputsFourIntervalsItemImportRatePerKwhMax),
+  "exportRatePerKwh": zod.number().min(createEngineeringScenarioResponseTwoInputsFourIntervalsItemExportRatePerKwhMin).max(createEngineeringScenarioResponseTwoInputsFourIntervalsItemExportRatePerKwhMax)
+})).min(1).max(createEngineeringScenarioResponseTwoInputsFourIntervalsMax)
+}),zod.object({
+  "model": zod.enum(['carbon']),
+  "sourceNotes": zod.string().min(createEngineeringScenarioResponseTwoInputsFiveSourceNotesMin).max(createEngineeringScenarioResponseTwoInputsFiveSourceNotesMax),
+  "periodStart": zod.string().regex(createEngineeringScenarioResponseTwoInputsFivePeriodStartRegExp),
+  "periodEnd": zod.string().regex(createEngineeringScenarioResponseTwoInputsFivePeriodEndRegExp),
+  "boundary": zod.string().min(createEngineeringScenarioResponseTwoInputsFiveBoundaryMin).max(createEngineeringScenarioResponseTwoInputsFiveBoundaryMax),
+  "scope2Method": zod.enum(['location_based', 'market_based']),
+  "activities": zod.array(zod.object({
+  "name": zod.string().min(createEngineeringScenarioResponseTwoInputsFiveActivitiesItemNameMin).max(createEngineeringScenarioResponseTwoInputsFiveActivitiesItemNameMax),
+  "factorId": zod.string().uuid(),
+  "quantity": zod.number().min(createEngineeringScenarioResponseTwoInputsFiveActivitiesItemQuantityMin).max(createEngineeringScenarioResponseTwoInputsFiveActivitiesItemQuantityMax),
+  "unit": zod.enum(['kWh', 'MWh', 'GJ', 'L', 'm3', 'kg', 'km', 'passenger_km', 'tonne_km']),
+  "geography": zod.string().min(createEngineeringScenarioResponseTwoInputsFiveActivitiesItemGeographyMin).max(createEngineeringScenarioResponseTwoInputsFiveActivitiesItemGeographyMax),
+  "scope": zod.enum(['scope1', 'scope2', 'scope3']),
+  "category": zod.enum(['stationary_combustion', 'mobile_combustion', 'fugitive', 'process', 'purchased_electricity', 'purchased_heat', 'purchased_goods', 'upstream_fuel_energy', 'waste', 'business_travel', 'employee_commuting', 'upstream_transport', 'downstream_transport'])
+})).min(1).max(createEngineeringScenarioResponseTwoInputsFiveActivitiesMax),
+  "reductions": zod.array(zod.object({
+  "activityIndex": zod.number().int().min(createEngineeringScenarioResponseTwoInputsFiveReductionsItemActivityIndexMin).max(createEngineeringScenarioResponseTwoInputsFiveReductionsItemActivityIndexMax),
+  "label": zod.string().min(createEngineeringScenarioResponseTwoInputsFiveReductionsItemLabelMin).max(createEngineeringScenarioResponseTwoInputsFiveReductionsItemLabelMax),
+  "reductionPercent": zod.number().min(createEngineeringScenarioResponseTwoInputsFiveReductionsItemReductionPercentMin).max(createEngineeringScenarioResponseTwoInputsFiveReductionsItemReductionPercentMax)
+})).max(createEngineeringScenarioResponseTwoInputsFiveReductionsMax)
+}),zod.object({
+  "model": zod.enum(['twin']),
+  "sourceNotes": zod.string().min(createEngineeringScenarioResponseTwoInputsSixSourceNotesMin).max(createEngineeringScenarioResponseTwoInputsSixSourceNotesMax),
+  "buildingMeterId": zod.string().uuid(),
+  "solarMeterId": zod.string().uuid().nullable(),
+  "start": zod.string().max(createEngineeringScenarioResponseTwoInputsSixStartMax),
+  "end": zod.string().max(createEngineeringScenarioResponseTwoInputsSixEndMax),
+  "loadBasis": zod.enum(['gross_building_load']),
+  "battery": zod.union([zod.object({
+  "capacityKwh": zod.number().gt(createEngineeringScenarioResponseTwoInputsSixBatteryOneCapacityKwhExclusiveMin).max(createEngineeringScenarioResponseTwoInputsSixBatteryOneCapacityKwhMax),
+  "minSocPercent": zod.number().min(createEngineeringScenarioResponseTwoInputsSixBatteryOneMinSocPercentMin).max(createEngineeringScenarioResponseTwoInputsSixBatteryOneMinSocPercentMax),
+  "maxSocPercent": zod.number().min(createEngineeringScenarioResponseTwoInputsSixBatteryOneMaxSocPercentMin).max(createEngineeringScenarioResponseTwoInputsSixBatteryOneMaxSocPercentMax),
+  "initialSocPercent": zod.number().min(createEngineeringScenarioResponseTwoInputsSixBatteryOneInitialSocPercentMin).max(createEngineeringScenarioResponseTwoInputsSixBatteryOneInitialSocPercentMax),
+  "maxChargeKw": zod.number().gt(createEngineeringScenarioResponseTwoInputsSixBatteryOneMaxChargeKwExclusiveMin).max(createEngineeringScenarioResponseTwoInputsSixBatteryOneMaxChargeKwMax),
+  "maxDischargeKw": zod.number().gt(createEngineeringScenarioResponseTwoInputsSixBatteryOneMaxDischargeKwExclusiveMin).max(createEngineeringScenarioResponseTwoInputsSixBatteryOneMaxDischargeKwMax),
+  "chargeEfficiency": zod.number().min(createEngineeringScenarioResponseTwoInputsSixBatteryOneChargeEfficiencyMin).max(createEngineeringScenarioResponseTwoInputsSixBatteryOneChargeEfficiencyMax),
+  "dischargeEfficiency": zod.number().min(createEngineeringScenarioResponseTwoInputsSixBatteryOneDischargeEfficiencyMin).max(createEngineeringScenarioResponseTwoInputsSixBatteryOneDischargeEfficiencyMax),
+  "dispatchMode": zod.enum(['self_consumption', 'peak_shaving']),
+  "gridTargetKw": zod.number().min(createEngineeringScenarioResponseTwoInputsSixBatteryOneGridTargetKwMin).max(createEngineeringScenarioResponseTwoInputsSixBatteryOneGridTargetKwMax).nullish()
+}),zod.null()]),
+  "forecastHorizonHours": zod.number().int().min(1).max(createEngineeringScenarioResponseTwoInputsSixForecastHorizonHoursMax),
+  "anomalyThreshold": zod.number().min(createEngineeringScenarioResponseTwoInputsSixAnomalyThresholdMin).max(createEngineeringScenarioResponseTwoInputsSixAnomalyThresholdMax)
+})]),
+  "result": zod.object({
+  "provenance": zod.record(zod.string(), zod.unknown()).optional(),
+  "version": zod.string(),
+  "metrics": zod.array(zod.object({
+  "key": zod.string(),
+  "label": zod.string(),
+  "value": zod.number().nullable(),
+  "unit": zod.string(),
+  "description": zod.string()
+})),
+  "tables": zod.array(zod.object({
+  "title": zod.string(),
+  "columns": zod.array(zod.object({
+  "key": zod.string(),
+  "label": zod.string(),
+  "unit": zod.string()
+})),
+  "rows": zod.array(zod.record(zod.string(), zod.union([zod.string(),zod.number()]).nullable()))
+})),
+  "assumptions": zod.array(zod.string()),
+  "warnings": zod.array(zod.string()),
+  "formulas": zod.array(zod.string())
+}),
+  "projectSnapshot": zod.object({
+  "id": zod.string(),
+  "module": zod.enum(['energy-consulting', 'energy-auditing', 'renewable-energy', 'battery-flexibility', 'carbon-footprint', 'digital-energy']),
+  "name": zod.string(),
+  "facility": zod.string(),
+  "brief": zod.string(),
+  "currency": zod.string(),
+  "status": zod.enum(['draft', 'active', 'completed']),
+  "archived": zod.boolean(),
+  "created_at": zod.string()
+}),
+  "inputHash": zod.string()
+}))
+
+
+export const GetEngineeringScenarioParams = zod.object({
+  "orgId": zod.coerce.string().uuid(),
+  "module": zod.enum(['energy-consulting', 'energy-auditing', 'renewable-energy', 'battery-flexibility', 'carbon-footprint', 'digital-energy']),
+  "id": zod.coerce.string().uuid()
+})
+
+export const getEngineeringScenarioResponseTwoInputsOneSourceNotesMin = 10;
+export const getEngineeringScenarioResponseTwoInputsOneSourceNotesMax = 2000;
+
+export const getEngineeringScenarioResponseTwoInputsOneBaselineEnergyMin = 0;
+export const getEngineeringScenarioResponseTwoInputsOneBaselineEnergyMax = 1000000000;
+
+export const getEngineeringScenarioResponseTwoInputsOneProposedEnergyMin = 0;
+export const getEngineeringScenarioResponseTwoInputsOneProposedEnergyMax = 1000000000;
+
+export const getEngineeringScenarioResponseTwoInputsOneTariffPerKwhMin = 0;
+export const getEngineeringScenarioResponseTwoInputsOneTariffPerKwhMax = 1000000;
+
+export const getEngineeringScenarioResponseTwoInputsOneCapexMin = 0;
+export const getEngineeringScenarioResponseTwoInputsOneCapexMax = 1000000000000;
+
+export const getEngineeringScenarioResponseTwoInputsOneAnnualOpexDeltaMin = -1000000000;
+export const getEngineeringScenarioResponseTwoInputsOneAnnualOpexDeltaMax = 1000000000;
+
+export const getEngineeringScenarioResponseTwoInputsOneDiscountRatePercentMin = 0;
+export const getEngineeringScenarioResponseTwoInputsOneDiscountRatePercentMax = 100;
+
+export const getEngineeringScenarioResponseTwoInputsOneYearsMax = 50;
+
+export const getEngineeringScenarioResponseTwoInputsTwoSourceNotesMin = 10;
+export const getEngineeringScenarioResponseTwoInputsTwoSourceNotesMax = 2000;
+
+export const getEngineeringScenarioResponseTwoInputsTwoTariffPerKwhMin = 0;
+export const getEngineeringScenarioResponseTwoInputsTwoTariffPerKwhMax = 1000000;
+
+export const getEngineeringScenarioResponseTwoInputsTwoDiscountRatePercentMin = 0;
+export const getEngineeringScenarioResponseTwoInputsTwoDiscountRatePercentMax = 100;
+
+export const getEngineeringScenarioResponseTwoInputsTwoYearsMax = 50;
+
+export const getEngineeringScenarioResponseTwoInputsTwoFacilityBaselineKwhExclusiveMin = 0;
+export const getEngineeringScenarioResponseTwoInputsTwoFacilityBaselineKwhMax = 1000000000000;
+
+export const getEngineeringScenarioResponseTwoInputsTwoMeasuresItemNameMin = 2;
+export const getEngineeringScenarioResponseTwoInputsTwoMeasuresItemNameMax = 120;
+
+export const getEngineeringScenarioResponseTwoInputsTwoMeasuresItemQuantityMax = 1000000;
+
+export const getEngineeringScenarioResponseTwoInputsTwoMeasuresItemBaselinePowerMin = 0;
+export const getEngineeringScenarioResponseTwoInputsTwoMeasuresItemBaselinePowerMax = 1000000;
+
+export const getEngineeringScenarioResponseTwoInputsTwoMeasuresItemProposedPowerMin = 0;
+export const getEngineeringScenarioResponseTwoInputsTwoMeasuresItemProposedPowerMax = 1000000;
+
+export const getEngineeringScenarioResponseTwoInputsTwoMeasuresItemHoursPerYearMin = 0;
+export const getEngineeringScenarioResponseTwoInputsTwoMeasuresItemHoursPerYearMax = 8784;
+
+export const getEngineeringScenarioResponseTwoInputsTwoMeasuresItemCapexMin = 0;
+export const getEngineeringScenarioResponseTwoInputsTwoMeasuresItemCapexMax = 1000000000000;
+
+export const getEngineeringScenarioResponseTwoInputsTwoMeasuresItemAnnualOpexDeltaMin = -1000000000;
+export const getEngineeringScenarioResponseTwoInputsTwoMeasuresItemAnnualOpexDeltaMax = 1000000000;
+
+export const getEngineeringScenarioResponseTwoInputsTwoMeasuresMax = 30;
+
+export const getEngineeringScenarioResponseTwoInputsThreeSourceNotesMin = 10;
+export const getEngineeringScenarioResponseTwoInputsThreeSourceNotesMax = 2000;
+
+export const getEngineeringScenarioResponseTwoInputsThreeCapacityKwpExclusiveMin = 0;
+export const getEngineeringScenarioResponseTwoInputsThreeCapacityKwpMax = 1000000;
+
+export const getEngineeringScenarioResponseTwoInputsThreePerformanceRatioExclusiveMin = 0;
+export const getEngineeringScenarioResponseTwoInputsThreePerformanceRatioMax = 1;
+
+export const getEngineeringScenarioResponseTwoInputsThreeCoincidenceFactorMin = 0;
+export const getEngineeringScenarioResponseTwoInputsThreeCoincidenceFactorMax = 1;
+
+export const getEngineeringScenarioResponseTwoInputsThreeImportRatePerKwhMin = 0;
+export const getEngineeringScenarioResponseTwoInputsThreeImportRatePerKwhMax = 1000000;
+
+export const getEngineeringScenarioResponseTwoInputsThreeExportRatePerKwhMin = 0;
+export const getEngineeringScenarioResponseTwoInputsThreeExportRatePerKwhMax = 1000000;
+
+export const getEngineeringScenarioResponseTwoInputsThreeCapexMin = 0;
+export const getEngineeringScenarioResponseTwoInputsThreeCapexMax = 1000000000000;
+
+export const getEngineeringScenarioResponseTwoInputsThreeAnnualOpexMin = 0;
+export const getEngineeringScenarioResponseTwoInputsThreeAnnualOpexMax = 1000000000;
+
+export const getEngineeringScenarioResponseTwoInputsThreeDiscountRatePercentMin = 0;
+export const getEngineeringScenarioResponseTwoInputsThreeDiscountRatePercentMax = 100;
+
+export const getEngineeringScenarioResponseTwoInputsThreeYearsMax = 50;
+
+export const getEngineeringScenarioResponseTwoInputsThreeMonthsItemMonthMax = 12;
+
+export const getEngineeringScenarioResponseTwoInputsThreeMonthsItemIrradiationKwhM2Min = 0;
+export const getEngineeringScenarioResponseTwoInputsThreeMonthsItemIrradiationKwhM2Max = 500;
+
+export const getEngineeringScenarioResponseTwoInputsThreeMonthsItemDemandKwhMin = 0;
+export const getEngineeringScenarioResponseTwoInputsThreeMonthsItemDemandKwhMax = 1000000000;
+
+export const getEngineeringScenarioResponseTwoInputsThreeMonthsMin = 12;
+export const getEngineeringScenarioResponseTwoInputsThreeMonthsMax = 12;
+
+export const getEngineeringScenarioResponseTwoInputsFourSourceNotesMin = 10;
+export const getEngineeringScenarioResponseTwoInputsFourSourceNotesMax = 2000;
+
+export const getEngineeringScenarioResponseTwoInputsFourCapacityKwhExclusiveMin = 0;
+export const getEngineeringScenarioResponseTwoInputsFourCapacityKwhMax = 10000000;
+
+export const getEngineeringScenarioResponseTwoInputsFourMinSocPercentMin = 0;
+export const getEngineeringScenarioResponseTwoInputsFourMinSocPercentMax = 100;
+
+export const getEngineeringScenarioResponseTwoInputsFourMaxSocPercentMin = 0;
+export const getEngineeringScenarioResponseTwoInputsFourMaxSocPercentMax = 100;
+
+export const getEngineeringScenarioResponseTwoInputsFourInitialSocPercentMin = 0;
+export const getEngineeringScenarioResponseTwoInputsFourInitialSocPercentMax = 100;
+
+export const getEngineeringScenarioResponseTwoInputsFourMaxChargeKwExclusiveMin = 0;
+export const getEngineeringScenarioResponseTwoInputsFourMaxChargeKwMax = 10000000;
+
+export const getEngineeringScenarioResponseTwoInputsFourMaxDischargeKwExclusiveMin = 0;
+export const getEngineeringScenarioResponseTwoInputsFourMaxDischargeKwMax = 10000000;
+
+export const getEngineeringScenarioResponseTwoInputsFourChargeEfficiencyMin = 0.01;
+export const getEngineeringScenarioResponseTwoInputsFourChargeEfficiencyMax = 1;
+
+export const getEngineeringScenarioResponseTwoInputsFourDischargeEfficiencyMin = 0.01;
+export const getEngineeringScenarioResponseTwoInputsFourDischargeEfficiencyMax = 1;
+
+export const getEngineeringScenarioResponseTwoInputsFourGridTargetKwMin = 0;
+export const getEngineeringScenarioResponseTwoInputsFourGridTargetKwMax = 10000000;
+
+export const getEngineeringScenarioResponseTwoInputsFourIntervalsItemStartMax = 40;
+
+export const getEngineeringScenarioResponseTwoInputsFourIntervalsItemEndMax = 40;
+
+export const getEngineeringScenarioResponseTwoInputsFourIntervalsItemLoadKwhMin = 0;
+export const getEngineeringScenarioResponseTwoInputsFourIntervalsItemLoadKwhMax = 1000000000;
+
+export const getEngineeringScenarioResponseTwoInputsFourIntervalsItemSolarKwhMin = 0;
+export const getEngineeringScenarioResponseTwoInputsFourIntervalsItemSolarKwhMax = 1000000000;
+
+export const getEngineeringScenarioResponseTwoInputsFourIntervalsItemImportRatePerKwhMin = 0;
+export const getEngineeringScenarioResponseTwoInputsFourIntervalsItemImportRatePerKwhMax = 1000000;
+
+export const getEngineeringScenarioResponseTwoInputsFourIntervalsItemExportRatePerKwhMin = 0;
+export const getEngineeringScenarioResponseTwoInputsFourIntervalsItemExportRatePerKwhMax = 1000000;
+
+export const getEngineeringScenarioResponseTwoInputsFourIntervalsMax = 1000;
+
+export const getEngineeringScenarioResponseTwoInputsFiveSourceNotesMin = 10;
+export const getEngineeringScenarioResponseTwoInputsFiveSourceNotesMax = 2000;
+
+export const getEngineeringScenarioResponseTwoInputsFivePeriodStartRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const getEngineeringScenarioResponseTwoInputsFivePeriodEndRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const getEngineeringScenarioResponseTwoInputsFiveBoundaryMin = 10;
+export const getEngineeringScenarioResponseTwoInputsFiveBoundaryMax = 2000;
+
+export const getEngineeringScenarioResponseTwoInputsFiveActivitiesItemNameMin = 2;
+export const getEngineeringScenarioResponseTwoInputsFiveActivitiesItemNameMax = 160;
+
+export const getEngineeringScenarioResponseTwoInputsFiveActivitiesItemQuantityMin = 0;
+export const getEngineeringScenarioResponseTwoInputsFiveActivitiesItemQuantityMax = 1000000000000;
+
+export const getEngineeringScenarioResponseTwoInputsFiveActivitiesItemGeographyMin = 2;
+export const getEngineeringScenarioResponseTwoInputsFiveActivitiesItemGeographyMax = 120;
+
+export const getEngineeringScenarioResponseTwoInputsFiveActivitiesMax = 100;
+
+export const getEngineeringScenarioResponseTwoInputsFiveReductionsItemActivityIndexMin = 0;
+export const getEngineeringScenarioResponseTwoInputsFiveReductionsItemActivityIndexMax = 99;
+
+export const getEngineeringScenarioResponseTwoInputsFiveReductionsItemLabelMin = 2;
+export const getEngineeringScenarioResponseTwoInputsFiveReductionsItemLabelMax = 160;
+
+export const getEngineeringScenarioResponseTwoInputsFiveReductionsItemReductionPercentMin = 0;
+export const getEngineeringScenarioResponseTwoInputsFiveReductionsItemReductionPercentMax = 100;
+
+export const getEngineeringScenarioResponseTwoInputsFiveReductionsMax = 100;
+
+export const getEngineeringScenarioResponseTwoInputsSixSourceNotesMin = 10;
+export const getEngineeringScenarioResponseTwoInputsSixSourceNotesMax = 2000;
+
+export const getEngineeringScenarioResponseTwoInputsSixStartMax = 40;
+
+export const getEngineeringScenarioResponseTwoInputsSixEndMax = 40;
+
+export const getEngineeringScenarioResponseTwoInputsSixBatteryOneCapacityKwhExclusiveMin = 0;
+export const getEngineeringScenarioResponseTwoInputsSixBatteryOneCapacityKwhMax = 10000000;
+
+export const getEngineeringScenarioResponseTwoInputsSixBatteryOneMinSocPercentMin = 0;
+export const getEngineeringScenarioResponseTwoInputsSixBatteryOneMinSocPercentMax = 100;
+
+export const getEngineeringScenarioResponseTwoInputsSixBatteryOneMaxSocPercentMin = 0;
+export const getEngineeringScenarioResponseTwoInputsSixBatteryOneMaxSocPercentMax = 100;
+
+export const getEngineeringScenarioResponseTwoInputsSixBatteryOneInitialSocPercentMin = 0;
+export const getEngineeringScenarioResponseTwoInputsSixBatteryOneInitialSocPercentMax = 100;
+
+export const getEngineeringScenarioResponseTwoInputsSixBatteryOneMaxChargeKwExclusiveMin = 0;
+export const getEngineeringScenarioResponseTwoInputsSixBatteryOneMaxChargeKwMax = 10000000;
+
+export const getEngineeringScenarioResponseTwoInputsSixBatteryOneMaxDischargeKwExclusiveMin = 0;
+export const getEngineeringScenarioResponseTwoInputsSixBatteryOneMaxDischargeKwMax = 10000000;
+
+export const getEngineeringScenarioResponseTwoInputsSixBatteryOneChargeEfficiencyMin = 0.01;
+export const getEngineeringScenarioResponseTwoInputsSixBatteryOneChargeEfficiencyMax = 1;
+
+export const getEngineeringScenarioResponseTwoInputsSixBatteryOneDischargeEfficiencyMin = 0.01;
+export const getEngineeringScenarioResponseTwoInputsSixBatteryOneDischargeEfficiencyMax = 1;
+
+export const getEngineeringScenarioResponseTwoInputsSixBatteryOneGridTargetKwMin = 0;
+export const getEngineeringScenarioResponseTwoInputsSixBatteryOneGridTargetKwMax = 10000000;
+
+export const getEngineeringScenarioResponseTwoInputsSixForecastHorizonHoursMax = 168;
+
+export const getEngineeringScenarioResponseTwoInputsSixAnomalyThresholdMin = 2;
+export const getEngineeringScenarioResponseTwoInputsSixAnomalyThresholdMax = 10;
+
+
+
+export const GetEngineeringScenarioResponse = zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "project_id": zod.string(),
+  "module": zod.enum(['energy-consulting', 'energy-auditing', 'renewable-energy', 'battery-flexibility', 'carbon-footprint', 'digital-energy']),
+  "created_at": zod.string()
+}).and(zod.object({
+  "inputs": zod.union([zod.object({
+  "model": zod.enum(['consulting']),
+  "sourceNotes": zod.string().min(getEngineeringScenarioResponseTwoInputsOneSourceNotesMin).max(getEngineeringScenarioResponseTwoInputsOneSourceNotesMax),
+  "energyUnit": zod.enum(['kWh', 'MWh', 'GJ']),
+  "baselineEnergy": zod.number().min(getEngineeringScenarioResponseTwoInputsOneBaselineEnergyMin).max(getEngineeringScenarioResponseTwoInputsOneBaselineEnergyMax),
+  "proposedEnergy": zod.number().min(getEngineeringScenarioResponseTwoInputsOneProposedEnergyMin).max(getEngineeringScenarioResponseTwoInputsOneProposedEnergyMax),
+  "tariffPerKwh": zod.number().min(getEngineeringScenarioResponseTwoInputsOneTariffPerKwhMin).max(getEngineeringScenarioResponseTwoInputsOneTariffPerKwhMax),
+  "capex": zod.number().min(getEngineeringScenarioResponseTwoInputsOneCapexMin).max(getEngineeringScenarioResponseTwoInputsOneCapexMax),
+  "annualOpexDelta": zod.number().min(getEngineeringScenarioResponseTwoInputsOneAnnualOpexDeltaMin).max(getEngineeringScenarioResponseTwoInputsOneAnnualOpexDeltaMax),
+  "discountRatePercent": zod.number().min(getEngineeringScenarioResponseTwoInputsOneDiscountRatePercentMin).max(getEngineeringScenarioResponseTwoInputsOneDiscountRatePercentMax),
+  "years": zod.number().int().min(1).max(getEngineeringScenarioResponseTwoInputsOneYearsMax)
+}),zod.object({
+  "model": zod.enum(['auditing']),
+  "sourceNotes": zod.string().min(getEngineeringScenarioResponseTwoInputsTwoSourceNotesMin).max(getEngineeringScenarioResponseTwoInputsTwoSourceNotesMax),
+  "tariffPerKwh": zod.number().min(getEngineeringScenarioResponseTwoInputsTwoTariffPerKwhMin).max(getEngineeringScenarioResponseTwoInputsTwoTariffPerKwhMax),
+  "discountRatePercent": zod.number().min(getEngineeringScenarioResponseTwoInputsTwoDiscountRatePercentMin).max(getEngineeringScenarioResponseTwoInputsTwoDiscountRatePercentMax),
+  "years": zod.number().int().min(1).max(getEngineeringScenarioResponseTwoInputsTwoYearsMax),
+  "facilityBaselineKwh": zod.number().gt(getEngineeringScenarioResponseTwoInputsTwoFacilityBaselineKwhExclusiveMin).max(getEngineeringScenarioResponseTwoInputsTwoFacilityBaselineKwhMax).nullish(),
+  "measures": zod.array(zod.object({
+  "name": zod.string().min(getEngineeringScenarioResponseTwoInputsTwoMeasuresItemNameMin).max(getEngineeringScenarioResponseTwoInputsTwoMeasuresItemNameMax),
+  "quantity": zod.number().int().min(1).max(getEngineeringScenarioResponseTwoInputsTwoMeasuresItemQuantityMax),
+  "powerUnit": zod.enum(['W', 'kW']),
+  "baselinePower": zod.number().min(getEngineeringScenarioResponseTwoInputsTwoMeasuresItemBaselinePowerMin).max(getEngineeringScenarioResponseTwoInputsTwoMeasuresItemBaselinePowerMax),
+  "proposedPower": zod.number().min(getEngineeringScenarioResponseTwoInputsTwoMeasuresItemProposedPowerMin).max(getEngineeringScenarioResponseTwoInputsTwoMeasuresItemProposedPowerMax),
+  "hoursPerYear": zod.number().min(getEngineeringScenarioResponseTwoInputsTwoMeasuresItemHoursPerYearMin).max(getEngineeringScenarioResponseTwoInputsTwoMeasuresItemHoursPerYearMax),
+  "capex": zod.number().min(getEngineeringScenarioResponseTwoInputsTwoMeasuresItemCapexMin).max(getEngineeringScenarioResponseTwoInputsTwoMeasuresItemCapexMax),
+  "annualOpexDelta": zod.number().min(getEngineeringScenarioResponseTwoInputsTwoMeasuresItemAnnualOpexDeltaMin).max(getEngineeringScenarioResponseTwoInputsTwoMeasuresItemAnnualOpexDeltaMax)
+})).min(1).max(getEngineeringScenarioResponseTwoInputsTwoMeasuresMax)
+}),zod.object({
+  "model": zod.enum(['solar']),
+  "sourceNotes": zod.string().min(getEngineeringScenarioResponseTwoInputsThreeSourceNotesMin).max(getEngineeringScenarioResponseTwoInputsThreeSourceNotesMax),
+  "irradiationUnit": zod.enum(['kWh/m2/month']),
+  "capacityKwp": zod.number().gt(getEngineeringScenarioResponseTwoInputsThreeCapacityKwpExclusiveMin).max(getEngineeringScenarioResponseTwoInputsThreeCapacityKwpMax),
+  "performanceRatio": zod.number().gt(getEngineeringScenarioResponseTwoInputsThreePerformanceRatioExclusiveMin).max(getEngineeringScenarioResponseTwoInputsThreePerformanceRatioMax),
+  "coincidenceFactor": zod.number().min(getEngineeringScenarioResponseTwoInputsThreeCoincidenceFactorMin).max(getEngineeringScenarioResponseTwoInputsThreeCoincidenceFactorMax),
+  "importRatePerKwh": zod.number().min(getEngineeringScenarioResponseTwoInputsThreeImportRatePerKwhMin).max(getEngineeringScenarioResponseTwoInputsThreeImportRatePerKwhMax),
+  "exportRatePerKwh": zod.number().min(getEngineeringScenarioResponseTwoInputsThreeExportRatePerKwhMin).max(getEngineeringScenarioResponseTwoInputsThreeExportRatePerKwhMax),
+  "capex": zod.number().min(getEngineeringScenarioResponseTwoInputsThreeCapexMin).max(getEngineeringScenarioResponseTwoInputsThreeCapexMax),
+  "annualOpex": zod.number().min(getEngineeringScenarioResponseTwoInputsThreeAnnualOpexMin).max(getEngineeringScenarioResponseTwoInputsThreeAnnualOpexMax),
+  "discountRatePercent": zod.number().min(getEngineeringScenarioResponseTwoInputsThreeDiscountRatePercentMin).max(getEngineeringScenarioResponseTwoInputsThreeDiscountRatePercentMax),
+  "years": zod.number().int().min(1).max(getEngineeringScenarioResponseTwoInputsThreeYearsMax),
+  "months": zod.array(zod.object({
+  "month": zod.number().int().min(1).max(getEngineeringScenarioResponseTwoInputsThreeMonthsItemMonthMax),
+  "irradiationKwhM2": zod.number().min(getEngineeringScenarioResponseTwoInputsThreeMonthsItemIrradiationKwhM2Min).max(getEngineeringScenarioResponseTwoInputsThreeMonthsItemIrradiationKwhM2Max),
+  "demandKwh": zod.number().min(getEngineeringScenarioResponseTwoInputsThreeMonthsItemDemandKwhMin).max(getEngineeringScenarioResponseTwoInputsThreeMonthsItemDemandKwhMax)
+})).min(getEngineeringScenarioResponseTwoInputsThreeMonthsMin).max(getEngineeringScenarioResponseTwoInputsThreeMonthsMax)
+}),zod.object({
+  "model": zod.enum(['battery']),
+  "sourceNotes": zod.string().min(getEngineeringScenarioResponseTwoInputsFourSourceNotesMin).max(getEngineeringScenarioResponseTwoInputsFourSourceNotesMax),
+  "energyUnit": zod.enum(['kWh']),
+  "powerUnit": zod.enum(['kW']),
+  "capacityKwh": zod.number().gt(getEngineeringScenarioResponseTwoInputsFourCapacityKwhExclusiveMin).max(getEngineeringScenarioResponseTwoInputsFourCapacityKwhMax),
+  "minSocPercent": zod.number().min(getEngineeringScenarioResponseTwoInputsFourMinSocPercentMin).max(getEngineeringScenarioResponseTwoInputsFourMinSocPercentMax),
+  "maxSocPercent": zod.number().min(getEngineeringScenarioResponseTwoInputsFourMaxSocPercentMin).max(getEngineeringScenarioResponseTwoInputsFourMaxSocPercentMax),
+  "initialSocPercent": zod.number().min(getEngineeringScenarioResponseTwoInputsFourInitialSocPercentMin).max(getEngineeringScenarioResponseTwoInputsFourInitialSocPercentMax),
+  "maxChargeKw": zod.number().gt(getEngineeringScenarioResponseTwoInputsFourMaxChargeKwExclusiveMin).max(getEngineeringScenarioResponseTwoInputsFourMaxChargeKwMax),
+  "maxDischargeKw": zod.number().gt(getEngineeringScenarioResponseTwoInputsFourMaxDischargeKwExclusiveMin).max(getEngineeringScenarioResponseTwoInputsFourMaxDischargeKwMax),
+  "chargeEfficiency": zod.number().min(getEngineeringScenarioResponseTwoInputsFourChargeEfficiencyMin).max(getEngineeringScenarioResponseTwoInputsFourChargeEfficiencyMax),
+  "dischargeEfficiency": zod.number().min(getEngineeringScenarioResponseTwoInputsFourDischargeEfficiencyMin).max(getEngineeringScenarioResponseTwoInputsFourDischargeEfficiencyMax),
+  "dispatchMode": zod.enum(['self_consumption', 'peak_shaving']),
+  "gridTargetKw": zod.number().min(getEngineeringScenarioResponseTwoInputsFourGridTargetKwMin).max(getEngineeringScenarioResponseTwoInputsFourGridTargetKwMax).nullish(),
+  "intervals": zod.array(zod.object({
+  "start": zod.string().max(getEngineeringScenarioResponseTwoInputsFourIntervalsItemStartMax),
+  "end": zod.string().max(getEngineeringScenarioResponseTwoInputsFourIntervalsItemEndMax),
+  "loadKwh": zod.number().min(getEngineeringScenarioResponseTwoInputsFourIntervalsItemLoadKwhMin).max(getEngineeringScenarioResponseTwoInputsFourIntervalsItemLoadKwhMax),
+  "solarKwh": zod.number().min(getEngineeringScenarioResponseTwoInputsFourIntervalsItemSolarKwhMin).max(getEngineeringScenarioResponseTwoInputsFourIntervalsItemSolarKwhMax),
+  "importRatePerKwh": zod.number().min(getEngineeringScenarioResponseTwoInputsFourIntervalsItemImportRatePerKwhMin).max(getEngineeringScenarioResponseTwoInputsFourIntervalsItemImportRatePerKwhMax),
+  "exportRatePerKwh": zod.number().min(getEngineeringScenarioResponseTwoInputsFourIntervalsItemExportRatePerKwhMin).max(getEngineeringScenarioResponseTwoInputsFourIntervalsItemExportRatePerKwhMax)
+})).min(1).max(getEngineeringScenarioResponseTwoInputsFourIntervalsMax)
+}),zod.object({
+  "model": zod.enum(['carbon']),
+  "sourceNotes": zod.string().min(getEngineeringScenarioResponseTwoInputsFiveSourceNotesMin).max(getEngineeringScenarioResponseTwoInputsFiveSourceNotesMax),
+  "periodStart": zod.string().regex(getEngineeringScenarioResponseTwoInputsFivePeriodStartRegExp),
+  "periodEnd": zod.string().regex(getEngineeringScenarioResponseTwoInputsFivePeriodEndRegExp),
+  "boundary": zod.string().min(getEngineeringScenarioResponseTwoInputsFiveBoundaryMin).max(getEngineeringScenarioResponseTwoInputsFiveBoundaryMax),
+  "scope2Method": zod.enum(['location_based', 'market_based']),
+  "activities": zod.array(zod.object({
+  "name": zod.string().min(getEngineeringScenarioResponseTwoInputsFiveActivitiesItemNameMin).max(getEngineeringScenarioResponseTwoInputsFiveActivitiesItemNameMax),
+  "factorId": zod.string().uuid(),
+  "quantity": zod.number().min(getEngineeringScenarioResponseTwoInputsFiveActivitiesItemQuantityMin).max(getEngineeringScenarioResponseTwoInputsFiveActivitiesItemQuantityMax),
+  "unit": zod.enum(['kWh', 'MWh', 'GJ', 'L', 'm3', 'kg', 'km', 'passenger_km', 'tonne_km']),
+  "geography": zod.string().min(getEngineeringScenarioResponseTwoInputsFiveActivitiesItemGeographyMin).max(getEngineeringScenarioResponseTwoInputsFiveActivitiesItemGeographyMax),
+  "scope": zod.enum(['scope1', 'scope2', 'scope3']),
+  "category": zod.enum(['stationary_combustion', 'mobile_combustion', 'fugitive', 'process', 'purchased_electricity', 'purchased_heat', 'purchased_goods', 'upstream_fuel_energy', 'waste', 'business_travel', 'employee_commuting', 'upstream_transport', 'downstream_transport'])
+})).min(1).max(getEngineeringScenarioResponseTwoInputsFiveActivitiesMax),
+  "reductions": zod.array(zod.object({
+  "activityIndex": zod.number().int().min(getEngineeringScenarioResponseTwoInputsFiveReductionsItemActivityIndexMin).max(getEngineeringScenarioResponseTwoInputsFiveReductionsItemActivityIndexMax),
+  "label": zod.string().min(getEngineeringScenarioResponseTwoInputsFiveReductionsItemLabelMin).max(getEngineeringScenarioResponseTwoInputsFiveReductionsItemLabelMax),
+  "reductionPercent": zod.number().min(getEngineeringScenarioResponseTwoInputsFiveReductionsItemReductionPercentMin).max(getEngineeringScenarioResponseTwoInputsFiveReductionsItemReductionPercentMax)
+})).max(getEngineeringScenarioResponseTwoInputsFiveReductionsMax)
+}),zod.object({
+  "model": zod.enum(['twin']),
+  "sourceNotes": zod.string().min(getEngineeringScenarioResponseTwoInputsSixSourceNotesMin).max(getEngineeringScenarioResponseTwoInputsSixSourceNotesMax),
+  "buildingMeterId": zod.string().uuid(),
+  "solarMeterId": zod.string().uuid().nullable(),
+  "start": zod.string().max(getEngineeringScenarioResponseTwoInputsSixStartMax),
+  "end": zod.string().max(getEngineeringScenarioResponseTwoInputsSixEndMax),
+  "loadBasis": zod.enum(['gross_building_load']),
+  "battery": zod.union([zod.object({
+  "capacityKwh": zod.number().gt(getEngineeringScenarioResponseTwoInputsSixBatteryOneCapacityKwhExclusiveMin).max(getEngineeringScenarioResponseTwoInputsSixBatteryOneCapacityKwhMax),
+  "minSocPercent": zod.number().min(getEngineeringScenarioResponseTwoInputsSixBatteryOneMinSocPercentMin).max(getEngineeringScenarioResponseTwoInputsSixBatteryOneMinSocPercentMax),
+  "maxSocPercent": zod.number().min(getEngineeringScenarioResponseTwoInputsSixBatteryOneMaxSocPercentMin).max(getEngineeringScenarioResponseTwoInputsSixBatteryOneMaxSocPercentMax),
+  "initialSocPercent": zod.number().min(getEngineeringScenarioResponseTwoInputsSixBatteryOneInitialSocPercentMin).max(getEngineeringScenarioResponseTwoInputsSixBatteryOneInitialSocPercentMax),
+  "maxChargeKw": zod.number().gt(getEngineeringScenarioResponseTwoInputsSixBatteryOneMaxChargeKwExclusiveMin).max(getEngineeringScenarioResponseTwoInputsSixBatteryOneMaxChargeKwMax),
+  "maxDischargeKw": zod.number().gt(getEngineeringScenarioResponseTwoInputsSixBatteryOneMaxDischargeKwExclusiveMin).max(getEngineeringScenarioResponseTwoInputsSixBatteryOneMaxDischargeKwMax),
+  "chargeEfficiency": zod.number().min(getEngineeringScenarioResponseTwoInputsSixBatteryOneChargeEfficiencyMin).max(getEngineeringScenarioResponseTwoInputsSixBatteryOneChargeEfficiencyMax),
+  "dischargeEfficiency": zod.number().min(getEngineeringScenarioResponseTwoInputsSixBatteryOneDischargeEfficiencyMin).max(getEngineeringScenarioResponseTwoInputsSixBatteryOneDischargeEfficiencyMax),
+  "dispatchMode": zod.enum(['self_consumption', 'peak_shaving']),
+  "gridTargetKw": zod.number().min(getEngineeringScenarioResponseTwoInputsSixBatteryOneGridTargetKwMin).max(getEngineeringScenarioResponseTwoInputsSixBatteryOneGridTargetKwMax).nullish()
+}),zod.null()]),
+  "forecastHorizonHours": zod.number().int().min(1).max(getEngineeringScenarioResponseTwoInputsSixForecastHorizonHoursMax),
+  "anomalyThreshold": zod.number().min(getEngineeringScenarioResponseTwoInputsSixAnomalyThresholdMin).max(getEngineeringScenarioResponseTwoInputsSixAnomalyThresholdMax)
+})]),
+  "result": zod.object({
+  "provenance": zod.record(zod.string(), zod.unknown()).optional(),
+  "version": zod.string(),
+  "metrics": zod.array(zod.object({
+  "key": zod.string(),
+  "label": zod.string(),
+  "value": zod.number().nullable(),
+  "unit": zod.string(),
+  "description": zod.string()
+})),
+  "tables": zod.array(zod.object({
+  "title": zod.string(),
+  "columns": zod.array(zod.object({
+  "key": zod.string(),
+  "label": zod.string(),
+  "unit": zod.string()
+})),
+  "rows": zod.array(zod.record(zod.string(), zod.union([zod.string(),zod.number()]).nullable()))
+})),
+  "assumptions": zod.array(zod.string()),
+  "warnings": zod.array(zod.string()),
+  "formulas": zod.array(zod.string())
+}),
+  "projectSnapshot": zod.object({
+  "id": zod.string(),
+  "module": zod.enum(['energy-consulting', 'energy-auditing', 'renewable-energy', 'battery-flexibility', 'carbon-footprint', 'digital-energy']),
+  "name": zod.string(),
+  "facility": zod.string(),
+  "brief": zod.string(),
+  "currency": zod.string(),
+  "status": zod.enum(['draft', 'active', 'completed']),
+  "archived": zod.boolean(),
+  "created_at": zod.string()
+}),
+  "inputHash": zod.string()
+}))
+
+
+export const ExportEngineeringScenarioParams = zod.object({
+  "orgId": zod.coerce.string().uuid(),
+  "module": zod.enum(['energy-consulting', 'energy-auditing', 'renewable-energy', 'battery-flexibility', 'carbon-footprint', 'digital-energy']),
+  "id": zod.coerce.string().uuid(),
+  "format": zod.enum(['csv', 'xlsx', 'pdf', 'json'])
+})
+
+export const ExportEngineeringScenarioResponse = zod.unknown()
+
+
+export const GetEnergyWorkspaceParams = zod.object({
+  "orgId": zod.coerce.string().uuid()
+})
+
+export const GetEnergyWorkspaceResponse = zod.object({
+  "sites": zod.array(zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "timezone": zod.string(),
+  "area_m2": zod.number().nullable(),
+  "is_demo": zod.boolean(),
+  "archived": zod.boolean()
+})),
+  "meters": zod.array(zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "site_id": zod.string(),
+  "unit": zod.enum(['Wh', 'kWh', 'MWh', 'MJ', 'GJ', 'W', 'kW', 'MW']),
+  "is_demo": zod.boolean(),
+  "archived": zod.boolean()
+})),
+  "tariffs": zod.array(zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "currency": zod.string(),
+  "energy_rate": zod.number(),
+  "daily_charge": zod.number(),
+  "demand_rate": zod.number(),
+  "is_demo": zod.boolean(),
+  "archived": zod.boolean()
+})),
+  "rules": zod.array(zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "meter_id": zod.string(),
+  "metric": zod.enum(['daily_kwh', 'peak_kw']),
+  "threshold": zod.number(),
+  "is_demo": zod.boolean(),
+  "archived": zod.boolean()
+})),
+  "imports": zod.array(zod.object({
+  "id": zod.string(),
+  "meter_id": zod.string(),
+  "filename": zod.string(),
+  "status": zod.enum(['preview', 'committed']),
+  "row_count": zod.number().int(),
+  "valid_count": zod.number().int(),
+  "errors": zod.array(zod.object({
+  "row": zod.number().int(),
+  "message": zod.string()
+})),
+  "created_at": zod.string(),
+  "is_demo": zod.boolean()
+})),
+  "analyses": zod.array(zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "meter_id": zod.string(),
+  "is_demo": zod.boolean(),
+  "created_at": zod.string()
+})),
+  "alerts": zod.array(zod.object({
+  "id": zod.string(),
+  "analysis_id": zod.string(),
+  "message": zod.string(),
+  "acknowledged": zod.boolean(),
+  "created_at": zod.string(),
+  "is_demo": zod.boolean()
+}))
+})
+
+
+export const SaveEnergyRecordParams = zod.object({
+  "orgId": zod.coerce.string().uuid()
+})
+
+export const saveEnergyRecordBodyNameMin = 2;
+export const saveEnergyRecordBodyNameMax = 120;
+
+export const saveEnergyRecordBodyTimezoneMax = 80;
+
+export const saveEnergyRecordBodyAreaM2ExclusiveMin = 0;
+export const saveEnergyRecordBodyAreaM2Max = 1000000000;
+
+export const saveEnergyRecordBodyCurrencyRegExp = new RegExp('^[A-Z]{3}$');
+export const saveEnergyRecordBodyEnergyRateMin = 0;
+export const saveEnergyRecordBodyEnergyRateMax = 1000000;
+
+export const saveEnergyRecordBodyDailyChargeMin = 0;
+export const saveEnergyRecordBodyDailyChargeMax = 1000000;
+
+export const saveEnergyRecordBodyDemandRateMin = 0;
+export const saveEnergyRecordBodyDemandRateMax = 1000000;
+
+export const saveEnergyRecordBodyThresholdExclusiveMin = 0;
+export const saveEnergyRecordBodyThresholdMax = 1000000000000;
+
+
+
+export const SaveEnergyRecordBody = zod.object({
+  "kind": zod.enum(['site', 'meter', 'tariff', 'rule']),
+  "id": zod.string().uuid().optional(),
+  "name": zod.string().min(saveEnergyRecordBodyNameMin).max(saveEnergyRecordBodyNameMax),
+  "siteId": zod.string().uuid().optional(),
+  "meterId": zod.string().uuid().optional(),
+  "timezone": zod.string().max(saveEnergyRecordBodyTimezoneMax).optional(),
+  "areaM2": zod.number().gt(saveEnergyRecordBodyAreaM2ExclusiveMin).max(saveEnergyRecordBodyAreaM2Max).nullish(),
+  "unit": zod.enum(['Wh', 'kWh', 'MWh', 'MJ', 'GJ', 'W', 'kW', 'MW']).optional(),
+  "currency": zod.string().regex(saveEnergyRecordBodyCurrencyRegExp).optional(),
+  "energyRate": zod.number().min(saveEnergyRecordBodyEnergyRateMin).max(saveEnergyRecordBodyEnergyRateMax).optional(),
+  "dailyCharge": zod.number().min(saveEnergyRecordBodyDailyChargeMin).max(saveEnergyRecordBodyDailyChargeMax).optional(),
+  "demandRate": zod.number().min(saveEnergyRecordBodyDemandRateMin).max(saveEnergyRecordBodyDemandRateMax).optional(),
+  "metric": zod.enum(['daily_kwh', 'peak_kw']).optional(),
+  "threshold": zod.number().gt(saveEnergyRecordBodyThresholdExclusiveMin).max(saveEnergyRecordBodyThresholdMax).optional(),
+  "archived": zod.boolean().optional()
+})
+
+export const SaveEnergyRecordResponse = zod.object({
+  "message": zod.string()
+})
+
+
+export const PreviewEnergyImportParams = zod.object({
+  "orgId": zod.coerce.string().uuid()
+})
+
+export const previewEnergyImportBodyFilenameMax = 180;
+
+export const previewEnergyImportBodyFileBase64Max = 2800000;
+
+
+
+export const PreviewEnergyImportBody = zod.object({
+  "meterId": zod.string().uuid(),
+  "filename": zod.string().min(1).max(previewEnergyImportBodyFilenameMax),
+  "fileBase64": zod.string().min(1).max(previewEnergyImportBodyFileBase64Max)
+})
+
+export const PreviewEnergyImportResponse = zod.object({
+  "id": zod.string(),
+  "meter_id": zod.string(),
+  "filename": zod.string(),
+  "status": zod.enum(['preview', 'committed']),
+  "row_count": zod.number().int(),
+  "valid_count": zod.number().int(),
+  "errors": zod.array(zod.object({
+  "row": zod.number().int(),
+  "message": zod.string()
+})),
+  "created_at": zod.string(),
+  "is_demo": zod.boolean()
+})
+
+
+export const CommitEnergyImportParams = zod.object({
+  "orgId": zod.coerce.string().uuid(),
+  "id": zod.coerce.string().uuid()
+})
+
+export const CommitEnergyImportBody = zod.object({
+
+})
+
+export const CommitEnergyImportResponse = zod.object({
+  "message": zod.string()
+})
+
+
+export const CreateEnergyAnalysisParams = zod.object({
+  "orgId": zod.coerce.string().uuid()
+})
+
+export const createEnergyAnalysisBodyNameMin = 2;
+export const createEnergyAnalysisBodyNameMax = 120;
+
+export const createEnergyAnalysisBodyBaselineKwhExclusiveMin = 0;
+
+export const createEnergyAnalysisBodyTargetKwhMin = 0;
+
+
+
+export const CreateEnergyAnalysisBody = zod.object({
+  "name": zod.string().min(createEnergyAnalysisBodyNameMin).max(createEnergyAnalysisBodyNameMax),
+  "meterId": zod.string().uuid(),
+  "tariffId": zod.string().uuid().nullish(),
+  "start": zod.coerce.date(),
+  "end": zod.coerce.date(),
+  "baselineKwh": zod.number().gt(createEnergyAnalysisBodyBaselineKwhExclusiveMin).nullish(),
+  "targetKwh": zod.number().min(createEnergyAnalysisBodyTargetKwhMin).nullish()
+})
+
+export const CreateEnergyAnalysisResponse = zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "meter_id": zod.string(),
+  "is_demo": zod.boolean(),
+  "created_at": zod.string()
+}).and(zod.object({
+  "result": zod.object({
+  "version": zod.string(),
+  "timezone": zod.string(),
+  "kwh": zod.number(),
+  "peakKw": zod.number(),
+  "averageKw": zod.number(),
+  "loadFactorPercent": zod.number().nullable(),
+  "coveragePercent": zod.number(),
+  "coveredHours": zod.number(),
+  "readingCount": zod.number().int(),
+  "cost": zod.number().nullable(),
+  "currency": zod.string().nullable(),
+  "energyCost": zod.number().nullable(),
+  "standingCost": zod.number().nullable(),
+  "demandCost": zod.number().nullable(),
+  "intensityKwhM2": zod.number().nullable(),
+  "baselineChangePercent": zod.number().nullable(),
+  "targetDifferenceKwh": zod.number().nullable(),
+  "daily": zod.array(zod.object({
+  "label": zod.string(),
+  "kwh": zod.number(),
+  "kw": zod.number()
+})),
+  "loadProfile": zod.array(zod.object({
+  "label": zod.string(),
+  "kwh": zod.number(),
+  "kw": zod.number()
+})),
+  "notes": zod.array(zod.string())
+})
+}))
+
+
+export const GetEnergyAnalysisParams = zod.object({
+  "orgId": zod.coerce.string().uuid(),
+  "id": zod.coerce.string().uuid()
+})
+
+export const GetEnergyAnalysisResponse = zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "meter_id": zod.string(),
+  "is_demo": zod.boolean(),
+  "created_at": zod.string()
+}).and(zod.object({
+  "result": zod.object({
+  "version": zod.string(),
+  "timezone": zod.string(),
+  "kwh": zod.number(),
+  "peakKw": zod.number(),
+  "averageKw": zod.number(),
+  "loadFactorPercent": zod.number().nullable(),
+  "coveragePercent": zod.number(),
+  "coveredHours": zod.number(),
+  "readingCount": zod.number().int(),
+  "cost": zod.number().nullable(),
+  "currency": zod.string().nullable(),
+  "energyCost": zod.number().nullable(),
+  "standingCost": zod.number().nullable(),
+  "demandCost": zod.number().nullable(),
+  "intensityKwhM2": zod.number().nullable(),
+  "baselineChangePercent": zod.number().nullable(),
+  "targetDifferenceKwh": zod.number().nullable(),
+  "daily": zod.array(zod.object({
+  "label": zod.string(),
+  "kwh": zod.number(),
+  "kw": zod.number()
+})),
+  "loadProfile": zod.array(zod.object({
+  "label": zod.string(),
+  "kwh": zod.number(),
+  "kw": zod.number()
+})),
+  "notes": zod.array(zod.string())
+})
+}))
+
+
+export const AcknowledgeEnergyAlertParams = zod.object({
+  "orgId": zod.coerce.string().uuid(),
+  "id": zod.coerce.string().uuid()
+})
+
+export const AcknowledgeEnergyAlertBody = zod.object({
+
+})
+
+export const AcknowledgeEnergyAlertResponse = zod.object({
+  "message": zod.string()
+})
+
+
+export const CreateEnergyDemoParams = zod.object({
+  "orgId": zod.coerce.string().uuid()
+})
+
+export const CreateEnergyDemoBody = zod.object({
+
+})
+
+export const CreateEnergyDemoResponse = zod.object({
+  "message": zod.string()
+})
+
+
+export const downloadEnergyTemplatePathFormatDefault = `csv`;
+
+export const DownloadEnergyTemplateParams = zod.object({
+  "orgId": zod.coerce.string().uuid(),
+  "format": zod.enum(['csv', 'xlsx', 'demo-csv']).default(downloadEnergyTemplatePathFormatDefault)
+})
+
+export const DownloadEnergyTemplateResponse = zod.unknown()
+
+
+export const exportEnergyAnalysisPathFormatDefault = `csv`;
+
+export const ExportEnergyAnalysisParams = zod.object({
+  "orgId": zod.coerce.string().uuid(),
+  "id": zod.coerce.string().uuid(),
+  "format": zod.enum(['csv', 'xlsx', 'pdf']).default(exportEnergyAnalysisPathFormatDefault)
+})
+
+export const ExportEnergyAnalysisResponse = zod.unknown()
+
+
 export const GetPlatformSessionResponse = zod.object({
   "user": zod.union([zod.object({
   "id": zod.string(),

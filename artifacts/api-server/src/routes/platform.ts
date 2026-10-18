@@ -6,9 +6,11 @@ import {
   GetPlatformMembersParams, AddPlatformMemberBody, RemovePlatformMemberParams,
 } from "@workspace/api-zod";
 import {
-  identity, supabase, platformOrigin, savePlatformSession, clearPlatformSession, PlatformError,
+  identity, supabase, platformOrigin, savePlatformSession, clearPlatformSession, PlatformError, checkAuthAvailability,
 } from "../lib/platform-session";
 import { logger } from "../lib/logger";
+import energyRouter from "./energy";
+import engineeringRouter from "./engineering";
 
 const router = Router();
 router.use(cookieParser());
@@ -37,6 +39,8 @@ router.use((req, res, next) => {
     next();
   } catch (error) { next(error); }
 });
+router.use("/energy/:orgId", energyRouter);
+router.use("/engineering/:orgId/:module", engineeringRouter);
 
 function checkDatabase(error: { code?: string; message?: string } | null) {
   if (!error) return;
@@ -87,6 +91,7 @@ router.post("/auth/:action", async (req, res) => {
       email: data.email, password: data.password,
       options: { data: { full_name: data.fullName.trim() }, emailRedirectTo: `${origin}/app/auth/callback` },
     });
+    checkAuthAvailability(result.error);
     if (result.error) {
       if (result.error.status === 429) throw new PlatformError(429, "Email rate limit reached. Please try again later.");
       throw new PlatformError(400, "Registration could not be completed. Check your details or try signing in.");
@@ -97,6 +102,7 @@ router.post("/auth/:action", async (req, res) => {
   if (action === "signin") {
     if (!data.email || !data.password) throw new PlatformError(400, "Email and password are required.");
     const result = await auth.auth.signInWithPassword({ email: data.email, password: data.password });
+    checkAuthAvailability(result.error);
     if (result.error || !result.data.session || !result.data.user?.email_confirmed_at) {
       throw new PlatformError(401, "Sign-in failed. Check your credentials and verify your email.");
     }
@@ -114,8 +120,10 @@ router.post("/auth/:action", async (req, res) => {
   if (action === "callback") {
     if (!data.code) throw new PlatformError(400, "The verification link is incomplete. Request a new link in this browser.");
     const result = await auth.auth.exchangeCodeForSession(data.code);
+    checkAuthAvailability(result.error);
     if (result.error || !result.data.session) throw new PlatformError(400, "This link has expired or belongs to another browser. Request a new link.");
     const verified = await auth.auth.getUser(result.data.session.access_token);
+    checkAuthAvailability(verified.error);
     if (!verified.data.user?.email_confirmed_at) throw new PlatformError(401, "Email verification is required.");
     savePlatformSession(res, result.data.session);
     return res.json({ message: "Your account link has been verified." });

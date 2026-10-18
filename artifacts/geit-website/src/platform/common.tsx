@@ -53,7 +53,7 @@ export function Field({ label, hint, error, children }: { label: string; hint?: 
   const hintId = hint ? `${id}-hint` : undefined;
   const errId = error ? `${id}-err` : undefined;
   return (
-    <div>
+    <div className="min-w-0 max-w-full [overflow-wrap:anywhere]">
       <label htmlFor={id} className="mb-2 block text-xs font-bold tracking-[.08em] text-[#34495a]">{label}</label>
       {children({ id, describedBy: [hintId, errId].filter(Boolean).join(" ") || undefined, invalid: !!error })}
       {hint && <p id={hintId} className="mt-1.5 text-xs leading-5 text-[#6b7b87]">{hint}</p>}

@@ -1,19 +1,19 @@
 import { createClient, type Session, type SupabaseClient, type User } from "@supabase/supabase-js";
 import type { Request, Response } from "express";
+import { resolvePlatformOrigin } from "./production-config";
 
 export class PlatformError extends Error {
   status: number;
   constructor(status: number, message: string) { super(message); this.status = status; }
 }
-export function platformOrigin() {
-  const raw = process.env.PLATFORM_ORIGIN ||
-    (process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : "");
-  if (!raw) throw new PlatformError(503, "The application origin is not configured.");
-  const url = new URL(raw);
-  if (url.protocol !== "https:" && url.hostname !== "localhost") {
-    throw new PlatformError(503, "A secure application origin is required.");
+export function checkAuthAvailability(error: { status?: number; name?: string } | null) {
+  if (error && (error.name === "AuthRetryableFetchError" || error.status === 0 || (error.status ?? 0) >= 500)) {
+    throw new PlatformError(503, "Account services are temporarily unavailable. Your session has not been cleared. Please try again.");
   }
-  return url.origin;
+}
+export function platformOrigin() {
+  try { return resolvePlatformOrigin(process.env); }
+  catch { throw new PlatformError(503, "The application origin is not configured correctly."); }
 }
 export function cookieOptions() {
   return {
@@ -70,13 +70,18 @@ export async function identity(req: Request, res: Response): Promise<Identity> {
   let token: string | undefined = req.cookies?.["geit-access"];
   let refresh: string | undefined = req.cookies?.["geit-refresh"];
   const auth = supabase(req, res);
-  let user = token ? (await auth.auth.getUser(token)).data.user : null;
+  const lookup = token ? await auth.auth.getUser(token) : null;
+  checkAuthAvailability(lookup?.error ?? null);
+  let user = lookup?.data.user ?? null;
   if (!user && refresh) {
     const result = await auth.auth.refreshSession({ refresh_token: refresh });
+    checkAuthAvailability(result.error);
     if (result.data.session) {
       token = result.data.session.access_token; refresh = result.data.session.refresh_token;
       savePlatformSession(res, result.data.session);
-      user = (await auth.auth.getUser(token)).data.user;
+      const verified = await auth.auth.getUser(token);
+      checkAuthAvailability(verified.error);
+      user = verified.data.user;
     }
   }
   if (!user || !token || !refresh || !user.email_confirmed_at) {
