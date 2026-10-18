@@ -15,6 +15,12 @@ Keep the approved two-bar navigation: first bar has the existing identity, Home,
 
 **How to apply:** Include each navigation item once per displayed layout; adapt using the existing mobile implementation without overflow. Leave the language component in its exact header slot: do not move, redesign or change its languages, translations, configuration, switching logic or persistence to resolve spacing.
 
+Align the first-bar Home link with the horizontal start of second-bar Industries & Solutions. Increase navigation fonts only modestly, without recentering the groups, changing bar heights/gaps/colours, or redesigning the Energy SaaS highlight.
+
+**Why:** The user's latest minor-adjustment request supersedes the preceding attachment's centering and 17–18px font instructions.
+
+**How to apply:** Shift only the four primary links. Keep the logo and language selector anchored in place; allow responsive alignment to follow translated link widths rather than using a fixed offset.
+
 Preserve the approved homepage visualization and the exact wording of its two statements. Keep the headline box in its existing location; anchor the separate description box to the hero's bottom-right, not the viewport. Stack naturally on smaller screens.
 
 **Why:** The user explicitly approved these placements and asked that unrelated homepage functionality remain unchanged.
