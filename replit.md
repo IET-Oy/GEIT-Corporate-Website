@@ -1,6 +1,6 @@
 # GEIT Ltd Corporate Website
 
-A corporate website for Global Energy Innovation Technologies Ltd (GEIT Ltd), presenting its energy advisory, project development, digital energy, and carbon services to clients in Rwanda and beyond.
+A corporate website for Global Energy Innovation Technologies Ltd (GEIT Ltd), with global energy and technology positioning. The user approved extending it into an Energy Intelligence SaaS in phases without rebuilding the corporate site.
 
 ## Run & Operate
 
@@ -31,12 +31,13 @@ A corporate website for Global Energy Innovation Technologies Ltd (GEIT Ltd), pr
 ## Architecture decisions
 
 - The site uses the platform's React/Vite web artifact scaffold rather than the Next.js stack named in the source brief.
-- Enquiries are validated from the generated OpenAPI/Zod contract and saved in PostgreSQL before the API returns an accepted receipt.
-- The initial site is a public corporate website and lead form, not a client portal or energy SaaS product.
+- The public consultation form is validation-only and does not send or store enquiries. A separate legacy enquiry API has PostgreSQL persistence code; do not implicitly connect the UI or migrate existing records.
+- The SaaS extension uses Supabase Auth, PostgreSQL and private storage, pending secure configuration. Preserve the legacy database; no SaaS migrations have been applied.
+- See `docs/geit-saas-architecture.md` for inspection findings, architecture, eight delivery phases, security gates and configuration requirements. The planned module manifest is not a working SaaS application.
 
 ## Product
 
-GEIT Ltd presents 11 energy consulting and digital service areas, sector solutions, company information, insights, legal pages, and a server-backed consultation enquiry form.
+GEIT Ltd presents 11 energy consulting and digital service areas, sector solutions, company information, insights, legal pages, and a disconnected consultation form. Corporate routes and styling remain intact while the authenticated application is developed separately under `/app`.
 
 ## User preferences
 
