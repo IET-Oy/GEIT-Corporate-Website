@@ -5,6 +5,85 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+export interface PlatformCredentials {
+  /** @maxLength 254 */
+  email?: string;
+  /**
+     * @minLength 12
+     * @maxLength 128
+     */
+  password?: string;
+  /**
+     * @minLength 2
+     * @maxLength 120
+     */
+  fullName?: string;
+  /**
+     * @minLength 1
+     * @maxLength 2048
+     */
+  code?: string;
+}
+
+export interface PlatformMessage {
+  message: string;
+}
+
+export interface PlatformUser {
+  id: string;
+  email: string;
+  fullName: string;
+}
+
+export type PlatformRole = typeof PlatformRole[keyof typeof PlatformRole];
+
+
+export const PlatformRole = {
+  owner: 'owner',
+  admin: 'admin',
+  energy_manager: 'energy_manager',
+  consultant: 'consultant',
+  analyst: 'analyst',
+  reader: 'reader',
+} as const;
+
+export interface PlatformOrganisation {
+  id: string;
+  name: string;
+  timezone: string;
+  role: PlatformRole;
+}
+
+export interface PlatformSession {
+  user: PlatformUser | null;
+  organisations: PlatformOrganisation[];
+}
+
+export interface OrganisationInput {
+  /**
+     * @minLength 2
+     * @maxLength 120
+     */
+  name: string;
+  /**
+     * @minLength 1
+     * @maxLength 80
+     */
+  timezone: string;
+}
+
+export interface MembershipInput {
+  /** @maxLength 254 */
+  email: string;
+  role: PlatformRole;
+}
+
+export interface PlatformMember {
+  userId: string;
+  fullName: string;
+  role: PlatformRole;
+}
+
 export interface HealthStatus {
   status: string;
 }

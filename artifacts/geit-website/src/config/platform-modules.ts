@@ -3,7 +3,7 @@
  * Keep public service links unchanged until a module's authenticated flow ships.
  */
 export const platformModules = [
-  { id: "overview", title: "Overview", path: "/app", readiness: "planned" },
+  { id: "overview", title: "Overview", path: "/app", readiness: "available" },
   { id: "energy-management", title: "Energy Management", path: "/app/energy-management", readiness: "planned" },
   { id: "energy-consulting", title: "Energy Consulting", path: "/app/energy-consulting", readiness: "planned" },
   { id: "renewable-energy", title: "Renewable Energy Advisory", path: "/app/renewable-energy", readiness: "planned" },
@@ -12,7 +12,7 @@ export const platformModules = [
   { id: "digital-energy", title: "AI & Digital Energy Solutions", path: "/app/digital-energy", readiness: "planned" },
   { id: "carbon-footprint", title: "Carbon Footprint", path: "/app/carbon-footprint", readiness: "planned" },
   { id: "projects-reports", title: "Projects and Reports", path: "/app/projects-reports", readiness: "planned" },
-  { id: "organisation-settings", title: "Organisation Settings", path: "/app/organisation-settings", readiness: "planned" },
+  { id: "organisation-settings", title: "Organisation Settings", path: "/app/organisation-settings", readiness: "available" },
 ] as const;
 
 export type PlatformModuleId = (typeof platformModules)[number]["id"];

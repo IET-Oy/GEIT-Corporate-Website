@@ -8,6 +8,133 @@
 import * as zod from 'zod';
 
 
+export const GetPlatformSessionResponse = zod.object({
+  "user": zod.union([zod.object({
+  "id": zod.string(),
+  "email": zod.string(),
+  "fullName": zod.string()
+}),zod.null()]),
+  "organisations": zod.array(zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "timezone": zod.string(),
+  "role": zod.enum(['owner', 'admin', 'energy_manager', 'consultant', 'analyst', 'reader'])
+}))
+})
+
+
+export const PlatformAuthParams = zod.object({
+  "action": zod.enum(['signup', 'signin', 'signout', 'recovery', 'callback', 'password'])
+})
+
+export const platformAuthBodyEmailMax = 254;
+
+export const platformAuthBodyPasswordMin = 12;
+export const platformAuthBodyPasswordMax = 128;
+
+export const platformAuthBodyFullNameMin = 2;
+export const platformAuthBodyFullNameMax = 120;
+
+export const platformAuthBodyCodeMax = 2048;
+
+
+
+export const PlatformAuthBody = zod.object({
+  "email": zod.string().email().max(platformAuthBodyEmailMax).optional(),
+  "password": zod.string().min(platformAuthBodyPasswordMin).max(platformAuthBodyPasswordMax).optional(),
+  "fullName": zod.string().min(platformAuthBodyFullNameMin).max(platformAuthBodyFullNameMax).optional(),
+  "code": zod.string().min(1).max(platformAuthBodyCodeMax).optional()
+})
+
+export const PlatformAuthResponse = zod.object({
+  "message": zod.string()
+})
+
+
+export const createPlatformOrganisationBodyNameMin = 2;
+export const createPlatformOrganisationBodyNameMax = 120;
+
+export const createPlatformOrganisationBodyTimezoneMax = 80;
+
+
+
+export const CreatePlatformOrganisationBody = zod.object({
+  "name": zod.string().min(createPlatformOrganisationBodyNameMin).max(createPlatformOrganisationBodyNameMax),
+  "timezone": zod.string().min(1).max(createPlatformOrganisationBodyTimezoneMax)
+})
+
+export const CreatePlatformOrganisationResponse = zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "timezone": zod.string(),
+  "role": zod.enum(['owner', 'admin', 'energy_manager', 'consultant', 'analyst', 'reader'])
+})
+
+
+export const UpdatePlatformOrganisationParams = zod.object({
+  "id": zod.coerce.string().uuid()
+})
+
+export const updatePlatformOrganisationBodyNameMin = 2;
+export const updatePlatformOrganisationBodyNameMax = 120;
+
+export const updatePlatformOrganisationBodyTimezoneMax = 80;
+
+
+
+export const UpdatePlatformOrganisationBody = zod.object({
+  "name": zod.string().min(updatePlatformOrganisationBodyNameMin).max(updatePlatformOrganisationBodyNameMax),
+  "timezone": zod.string().min(1).max(updatePlatformOrganisationBodyTimezoneMax)
+})
+
+export const UpdatePlatformOrganisationResponse = zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "timezone": zod.string(),
+  "role": zod.enum(['owner', 'admin', 'energy_manager', 'consultant', 'analyst', 'reader'])
+})
+
+
+export const GetPlatformMembersParams = zod.object({
+  "id": zod.coerce.string().uuid()
+})
+
+export const GetPlatformMembersResponseItem = zod.object({
+  "userId": zod.string(),
+  "fullName": zod.string(),
+  "role": zod.enum(['owner', 'admin', 'energy_manager', 'consultant', 'analyst', 'reader'])
+})
+export const GetPlatformMembersResponse = zod.array(GetPlatformMembersResponseItem)
+
+
+export const AddPlatformMemberParams = zod.object({
+  "id": zod.coerce.string().uuid()
+})
+
+export const addPlatformMemberBodyEmailMax = 254;
+
+
+
+export const AddPlatformMemberBody = zod.object({
+  "email": zod.string().email().max(addPlatformMemberBodyEmailMax),
+  "role": zod.enum(['owner', 'admin', 'energy_manager', 'consultant', 'analyst', 'reader'])
+})
+
+export const AddPlatformMemberResponse = zod.object({
+  "message": zod.string()
+})
+
+
+export const RemovePlatformMemberParams = zod.object({
+  "id": zod.coerce.string().uuid(),
+  "userId": zod.coerce.string().uuid()
+})
+
+export const RemovePlatformMemberResponse = zod.object({
+  "message": zod.string()
+})
+
+
 /**
  * Returns server health status
  * @summary Health check

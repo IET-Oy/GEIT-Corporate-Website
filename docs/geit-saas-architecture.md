@@ -2,10 +2,27 @@
 
 ## Current status
 
-Phase 1: inspected the existing project and defined the implementation contract.
-No SaaS authentication, tenant tables, module tools or new application routes are
-operational yet. The module manifest is a route contract, not a working dashboard.
-Phase 2 depends on configuring a development Supabase project.
+Phase 1 is complete. Phase 2's account/organisation foundation is implemented
+against the configured development Supabase project: server-held sessions,
+registration and recovery endpoints, protected workspace, organisation creation/
+selection/editing, owner-managed memberships, roles, RLS and audit events.
+Corporate navigation is preserved with a separate workspace entry bar.
+Eight service modules remain honestly marked Planned; no engineering data or
+analysis tools are operational.
+
+Verification: 15 API/security checks, one offline PKCE cookie regression, three
+manifest tests, full workspace typecheck, production builds and 22 corporate
+routes in all four locales pass. A browser pass confirmed sign-in, persistence,
+organisation creation/switching, member visibility, sign-out, tenant tampering,
+form validation and desktop/tablet/mobile layouts. It found a bodyless DELETE
+content-type mismatch and an unclear read-only field appearance; both were
+corrected, with the DELETE path confirmed by the API suite.
+
+**Open Phase 2 gate:** actual inbox verification/recovery and Supabase redirect
+allowlist validation have not been completed. Synthetic accounts bypass email
+delivery only in isolated development tests; they are removed after testing.
+Do not call the platform production-ready or proceed to Phase 3 until this gate
+is addressed. Account/privacy terms also require review before production.
 
 ## Inspection findings and preservation boundaries
 
@@ -183,6 +200,32 @@ production readiness while any required security or workflow gate remains open.
 - `pnpm --filter @workspace/geit-website run typecheck`
 - `PORT=18414 BASE_PATH=/ pnpm --filter @workspace/geit-website run build`
 
-Phase 1 tests cover the manifest and preservation, not engineering correctness,
-Supabase migrations, authentication or tenant isolation. Those checks require the
-implemented subsequent phases and must be reported separately.
+- `pnpm --filter @workspace/api-server run db:inspect:platform` — read-only
+  inspection, including project-target matching and verified TLS.
+- `pnpm --filter @workspace/api-server run db:migrate:platform` — explicitly apply
+  the additive, checksummed identity migration; never run DDL on app startup.
+- `pnpm --filter @workspace/api-server run test:pkce` — offline SDK-storage
+  regression; does not send email or prove actual delivery.
+- `pnpm --filter @workspace/api-server run test:platform` — isolated, synthetic
+  development accounts, two tenants, API/RLS/permissions/refresh/sign-out checks,
+  followed by fixture cleanup. Never run this against production.
+
+The application uses the verified user's JWT for REST/RPC access. The database
+owner URI is used only by explicit migration/inspection/test scripts. Public
+account registration requires an email confirmation; the test script inserts
+clearly synthetic verified users into the development Auth schema solely for
+repeatable tests, without emailing third parties.
+
+For Supabase Auth URL Configuration, allow the exact application origin's
+`/app/auth/callback` and `/app/auth/callback?flow=recovery` redirect destinations.
+PKCE links must be opened in the same browser that initiated them, before the
+ten-minute verifier cookie expires. An additional confirmation page may be shown
+by Supabase; an application login is not evidence an inbox flow worked.
+`PLATFORM_ORIGIN` must be the explicit HTTPS origin in production; development
+defaults only to the runtime development domain. Confirm the public domain
+separately before publication. Workspace screens and the additional legal notice
+are currently English-only, and app pages are noindex.
+
+Engineering correctness, uploads/private storage, imports, saved analysis and
+reporting remain later phases. The original legacy database remains untouched;
+the public consultation form is still validation-only.

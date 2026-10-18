@@ -26,8 +26,9 @@ app.use(
     },
   }),
 );
-app.use(cors());
-app.use(express.json());
+// Authenticated application requests are same-origin only, without wildcard CORS.
+app.use((req, res, next) => req.path.startsWith("/api/platform") ? next() : cors()(req, res, next));
+app.use(express.json({ limit: "32kb" }));
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api", router);

@@ -17,7 +17,7 @@ test("the platform route contract preserves the ten requested sections in order"
 test("planned application routes do not replace corporate routes or claim readiness", () => {
   for (const module of platformModules) {
     assert.match(module.path, /^\/app(?:\/[a-z-]+)?$/);
-    assert.equal(module.readiness, "planned");
+    assert.equal(module.readiness, ["overview", "organisation-settings"].includes(module.id) ? "available" : "planned");
   }
   const source = readFileSync(new URL("../src/App.tsx", import.meta.url), "utf8");
   for (const route of ["/", "/about", "/services", "/industries", "/digital-energy-solutions", "/insights", "/contact"]) {
