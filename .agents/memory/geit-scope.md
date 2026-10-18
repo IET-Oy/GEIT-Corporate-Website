@@ -9,11 +9,17 @@ Use the official logo alone in the header, without an additional company-name te
 
 **How to apply:** Keep meaningful logo alternative text and a homepage link; do not restore the earlier prompt's adjacent identity text.
 
-Keep all seven desktop navigation links on one horizontal row at the same visual level, in this order: Home, About, Services, Industries & Solutions, Digital Energy Solutions, Insights, Contact.
+Keep the approved two-bar navigation: first bar has the existing identity, Home, About, Services, Insights and the existing language selector; second bar has Industries & Solutions, Digital Energy Solutions, Energy SaaS, Contact in that order. Energy SaaS links to `/energy-saas` and has a distinct branded background.
 
-**Why:** The user explicitly replaced the earlier two-row laptop layout with this requirement.
+**Why:** The user's final approved two-navigation-bar prompt supersedes the earlier single-row seven-link requirement.
 
-**How to apply:** Adjust spacing and sizing for desktop widths rather than moving some links into a secondary row. Retain the mobile menu for smaller screens.
+**How to apply:** Include each navigation item once per displayed layout; adapt using the existing mobile implementation without overflow. Leave the language component in its exact header slot: do not move, redesign or change its languages, translations, configuration, switching logic or persistence to resolve spacing.
+
+Preserve the approved homepage visualization and the exact wording of its two statements. Keep the headline box in its existing location; anchor the separate description box to the hero's bottom-right, not the viewport. Stack naturally on smaller screens.
+
+**Why:** The user explicitly approved these placements and asked that unrelated homepage functionality remain unchanged.
+
+**How to apply:** Adjust responsive padding and widths without paraphrasing, overlapping calls to action, or replacing the approved hero background.
 
 The user approved the full phased Energy Intelligence SaaS extension, including authentication, persistent tenant data and private storage. This supersedes the earlier corporate-only prohibition on adding authentication or a database. Preserve the existing corporate site and existing data.
 

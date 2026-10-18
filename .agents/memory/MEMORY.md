@@ -1,4 +1,4 @@
-- [GEIT scope and identity](geit-scope.md) — logo-only header, single-row corporate nav, global Home; phased SaaS extension approved.
+- [GEIT scope and identity](geit-scope.md) — approved two-bar nav, protected language selector, hero boxes, global Home; phased SaaS extension approved.
 - [WebGL verification](webgl-verification.md) — browser automation could verify fallback only; GPU visuals require WebGL-capable evidence.
 - [GEIT language review](geit-language-review.md) — complete translation drafts are allowed, but must be labelled as awaiting human review.
 - [Supabase preview trust](supabase-preview.md) — database CA, preview cookies, real email-link boundaries and isolated test-session cleanup.

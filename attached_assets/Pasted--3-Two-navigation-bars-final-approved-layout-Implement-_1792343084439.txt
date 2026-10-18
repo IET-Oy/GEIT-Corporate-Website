@@ -1,0 +1,69 @@
+## 3. Two navigation bars — final approved layout
+
+Implement two horizontal navigation bars on the existing GEIT Ltd website.
+
+### Navigation bar 1 — Company identity, primary links and language selector
+
+Keep the existing company identity and language selector unchanged. Arrange the first bar as follows:
+
+**GEIT Ltd logo and company name | Home | About | Services | Insights | Existing language selector**
+
+Requirements:
+
+- Keep the existing logo and company name on the left.
+- Retain Home, About, Services and Insights in this first bar.
+- Preserve the language dropdown in its exact current position in the header structure.
+- Do not modify the language selector's appearance, supported languages, translations, configuration, switching logic or persistence.
+- Maintain professional spacing and alignment.
+- Preserve existing branding and responsive behaviour.
+- Include each item exactly once.
+
+### Navigation bar 2 — Secondary navigation and platform access
+
+Display the following items in this exact order:
+
+**Industries & Solutions | Digital Energy Solutions | Energy SaaS | Contact**
+
+Requirements:
+
+- Display all four items horizontally on desktop screens wherever the viewport permits.
+- Position Energy SaaS between Digital Energy Solutions and Contact.
+- Give Energy SaaS a distinct background colour consistent with GEIT Ltd branding, sufficient text contrast, subtle rounded corners and appropriate padding. It should stand out as a special platform entry.
+- Keep the other links consistent with the existing website design.
+- Preserve the existing routes and functionality.
+- Link Energy SaaS to `/energy-saas`.
+- Link Contact to the existing Contact page or route.
+- Do not duplicate Home, About, Services or Insights in this bar.
+- Do not add duplicate separators or unnecessary navigation items.
+
+### Responsive behaviour
+
+On smaller screens, adapt the navigation using the existing responsive implementation. Keep Energy SaaS accessible and preserve the language selector without horizontal overflow or overlapping elements.
+
+### Language selector protection
+
+The existing language selector and multilingual implementation must remain untouched. Adapt the navigation layout around them. Do not move, replace, redesign or modify the language component to resolve layout conflicts.
+
+## 4. Homepage text boxes
+
+Preserve the existing homepage hero background image and all approved visual elements.
+
+**Text box 1 — Existing position**
+
+Display the exact statement below inside a professional text box, retaining its current position:
+
+“Make smarter energy decisions. Build a more efficient, resilient and low-carbon future.”
+
+Use suitable padding, readable typography, subtle corner rounding and sufficient contrast against the background. Do not change the wording or move the box to another position.
+
+**Text box 2 — Bottom-right of hero**
+
+Display the following exact statement in a separate text box at the bottom-right corner of the homepage hero section:
+
+“Integrated consulting, project development, digital energy and carbon services—grounded in data, rigorous analysis and sound economics.”
+
+Anchor this box to the hero container rather than the browser viewport. Maintain suitable spacing from the right and bottom edges. Use a controlled width, readable typography and sufficient contrast. Do not overlap the first box, navigation, calls to action or important background imagery.
+
+On mobile and tablet screens, adapt the boxes to the available space and stack them naturally when necessary. Prevent clipping, overlap and horizontal overflow.
+
+Keep both statements unchanged and preserve all unrelated homepage functionality.

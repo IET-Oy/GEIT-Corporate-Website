@@ -9,7 +9,7 @@
     "serve": "vite preview --config vite.config.ts --host 0.0.0.0",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "check:localization": "node scripts/check-localization.mjs",
-    "test:platform": "node --test tests/platform-manifest.test.mjs"
+    "test:platform": "node --test tests/platform-manifest.test.mjs tests/site-navigation.test.mjs"
   },
   "devDependencies": {
     "@hookform/resolvers": "^3.10.0",

@@ -5,16 +5,7 @@ import LanguageSelector from "@/components/language-selector";
 import { useLanguage } from "@/lib/language-context";
 import type { MessageKey } from "@/lib/i18n";
 import { translationReview } from "@/lib/page-copy";
-
-const navigationLinks = [
-  { key: "navHome", href: "/" },
-  { key: "navAbout", href: "/about" },
-  { key: "navServices", href: "/services" },
-  { key: "navIndustries", href: "/industries" },
-  { key: "navDigital", href: "/digital-energy-solutions" },
-  { key: "navInsights", href: "/insights" },
-  { key: "navContact", href: "/contact" },
-] as const;
+import { primaryNavigation } from "@/config/site-navigation";
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
@@ -49,7 +40,7 @@ export function SiteHeader() {
           </Link>
           <div className="ml-auto flex min-w-0 items-center gap-2 sm:gap-3">
             <nav className="hidden shrink-0 flex-nowrap items-center gap-2.5 py-1 lg:flex xl:gap-5" aria-label={t("mainNavigation")}>
-              {navigationLinks.map((link) => item(link))}
+              {primaryNavigation.map((link) => item(link))}
             </nav>
             <LanguageSelector />
             <button type="button" className="grid h-10 w-10 place-items-center rounded-md text-[#10243a] transition hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#168568] lg:hidden" onClick={() => setOpen((v) => !v)} aria-label={open ? t("menuClose") : t("menuOpen")} aria-expanded={open} aria-controls="mobile-navigation" data-testid="button-mobile-menu">
@@ -59,7 +50,7 @@ export function SiteHeader() {
         </div>
         {open && (
           <nav id="mobile-navigation" className="border-t border-[#dce3e8] bg-white px-5 py-3 lg:hidden" aria-label={t("mainNavigation")}>
-            {navigationLinks.map((l) => (
+            {primaryNavigation.map((l) => (
               <Link key={l.href} href={l.href} aria-current={isActive(l.href) ? "page" : undefined} className={`block border-b border-[#edf0f2] py-3 text-sm font-semibold hover:text-[#168568] ${isActive(l.href) ? "text-[#168568]" : "text-[#10243a]"}`}>
                 {t(l.key)}
               </Link>

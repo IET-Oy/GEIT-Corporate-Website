@@ -1,5 +1,6 @@
 import { Link, Route, Switch } from "wouter";
 import { SiteHeader } from "@/components/site-header";
+import { AppNav } from "./app-nav";
 import { platformModules } from "@/config/platform-modules";
 import { CallbackPage, ForgotPasswordPage, RegisterPage, ResetPasswordPage, SignInPage } from "./auth-pages";
 import { OverviewPage, PlannedPage, SettingsPage } from "./workspace";
@@ -16,6 +17,7 @@ export function AppRoutes() {
   return (
     <div className="min-h-[100dvh] bg-[#f2f5f7]">
       <SiteHeader />
+      <AppNav />
       <main id="app-main">
         <Switch>
           <Route path="/app" component={OverviewPage} />
