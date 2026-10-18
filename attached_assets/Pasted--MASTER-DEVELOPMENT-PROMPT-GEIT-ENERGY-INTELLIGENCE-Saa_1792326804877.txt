@@ -1,0 +1,334 @@
+# MASTER DEVELOPMENT PROMPT — GEIT ENERGY INTELLIGENCE SaaS
+
+## 1. Project objective
+
+Continue development of the existing website for **Global Energy Innovation Technologies Ltd (GEIT Ltd)**. The website has already been built in Replit.
+
+Transform the existing corporate website into a professional, secure, full-stack Energy SaaS platform that enables GEIT Ltd to deliver its energy services digitally to customers worldwide.
+
+This is an extension of the existing project, not a request to rebuild the website from scratch.
+
+The platform must provide functional tools, persistent customer data, validated engineering calculations, AI-assisted analysis, project management, and professional report generation.
+
+Do not build a static dashboard, landing-page-only application, or collection of non-functional mock-ups.
+
+## 2. First task: inspect the existing project
+
+Before making changes:
+
+1. Inspect the entire existing codebase, routing structure, components, styling, dependencies, environment configuration, and current functionality.
+2. Identify the existing framework and retain it unless there is a documented technical reason to change it.
+3. Preserve the existing company branding, approved homepage design, navigation, responsive layout, social links, and existing content.
+4. Identify existing service cards and connect them to functional application routes.
+5. Identify reusable components and avoid duplicating existing functionality.
+6. Prepare a concise implementation plan covering the database, authentication, modules, calculations, testing, security, and deployment.
+7. Implement incrementally, verify each phase, and fix regressions before proceeding.
+
+Do not delete working features or replace the existing website with a generic template.
+
+## 3. Six core service modules
+
+Build six fully functional, integrated modules.
+
+### Module A — Energy Management
+
+Implement:
+
+- Create and manage organisations, sites, buildings, facilities, and energy meters.
+- Record electricity, gas, heating, cooling, fuel, and other relevant energy consumption.
+- Import meter readings using CSV and Excel templates.
+- Validate uploaded data, units, timestamps, duplicate records, missing intervals, and abnormal readings.
+- Provide interactive daily, weekly, monthly, and annual consumption charts.
+- Calculate consumption intensity, peak demand, energy costs, and relevant performance indicators.
+- Support energy baselines, budgets, targets, and comparison periods.
+- Provide tariff configuration, including fixed charges, variable rates, and time-of-use periods where applicable.
+- Identify consumption anomalies and potential savings opportunities.
+- Generate monthly energy performance reports.
+- Provide configurable thresholds and notifications.
+
+### Module B — Energy Consulting
+
+Implement a professional consulting workflow:
+
+- Customer enquiries and project intake forms.
+- Client requirements, objectives, technical questionnaires, and document uploads.
+- Project creation, assignment, milestones, deadlines, and status tracking.
+- Technical assessments and findings registers.
+- Recommendations with estimated costs, savings, risks, priorities, and implementation timelines.
+- Financial feasibility and investment calculations.
+- Proposal creation, report generation, and revision history.
+- Customer review and approval workflow.
+- Internal consultant notes and client-visible deliverables.
+
+Include a reusable project template system.
+
+### Module C — Renewable Energy Advisory
+
+Implement a preliminary renewable-energy feasibility engine with:
+
+- Solar PV system sizing.
+- User-defined site location, available installation area, orientation, tilt, shading assumptions, and system losses.
+- Energy-demand profiling and solar self-consumption estimation.
+- Solar generation estimates based on an appropriate weather or irradiance data source when configured.
+- Grid imports, exports, and surplus-energy calculations.
+- Configurable system costs, electricity tariffs, export compensation, maintenance costs, and project lifetime.
+- Financial metrics including simple payback, net present value, and internal rate of return when sufficient inputs exist.
+- Sensitivity analysis for system size, energy prices, generation, and investment costs.
+- Comparison of alternative system configurations.
+- Exportable technical and financial feasibility reports.
+
+Clearly distinguish measured, externally sourced, user-entered, and modelled data. If an external data provider is not configured, provide a transparent manual-input mode rather than fabricating results.
+
+### Module D — Energy Efficiency & Auditing
+
+Implement an auditable energy assessment workflow:
+
+- Building and industrial facility profiles.
+- Equipment inventories, operating schedules, floor areas, and energy-consuming systems.
+- Site inspection checklists and observations.
+- Uploads for bills, meter readings, equipment schedules, and supporting evidence.
+- Energy baselines and relevant performance indicators.
+- Identification of energy conservation measures.
+- Calculation of estimated energy savings, cost savings, investment requirements, and payback.
+- Ranking of recommendations by savings, investment, implementation complexity, and priority.
+- Before-and-after scenario comparisons.
+- Audit findings, supporting evidence, assumptions, and calculation history.
+- Professional audit report generation.
+
+Support configurable audit templates and reporting requirements. Do not claim certification, regulatory compliance, or formal audit accreditation automatically.
+
+### Module E — Battery Storage & Flexibility
+
+Build an engineering-oriented battery modelling tool:
+
+- Define battery power in kW, energy capacity in kWh, usable state-of-charge limits, round-trip efficiency, and degradation assumptions.
+- Import or enter time-series electricity demand and renewable generation.
+- Configure charging and discharging constraints.
+- Model battery state of charge over time.
+- Prevent charging or discharging beyond configured limits.
+- Simulate peak shaving, solar self-consumption, and time-of-use tariff optimisation.
+- Compare different battery capacities, power ratings, and operating strategies.
+- Estimate electricity cost savings, operating costs, and investment economics.
+- Account for relevant tariff rules, grid import/export limits, and efficiency losses.
+- Display dispatch schedules, state-of-charge charts, peak-demand comparisons, and scenario results.
+- Export simulation assumptions and results.
+
+Implement a transparent baseline dispatch algorithm first. Add optimisation algorithms only after validating the baseline. Label simulated outcomes as estimates, not guaranteed operational savings.
+
+### Module F — AI & Digital Energy Solutions
+
+Build the foundation for an Energy Digital Twin SaaS.
+
+Implement:
+
+- Digital twin creation for buildings and solar-plus-battery installations.
+- Asset and equipment models with configurable parameters.
+- Historical time-series data ingestion.
+- Current operating state, historical trends, and modelled scenarios.
+- Forecasting of energy consumption and renewable generation.
+- Anomaly detection and alerts.
+- Comparison between measured and modelled performance.
+- AI-assisted interpretation of energy trends and technical results.
+- Natural-language questions about the authenticated customer's permitted energy data.
+- Recommendation generation based on validated calculations and identified patterns.
+- Data provenance, model versioning, and confidence indicators.
+- Extensible connectors for meters, inverters, battery systems, APIs, and IoT gateways.
+
+Start with useful rule-based analytics and implement forecasting only when sufficient suitable data is available. Provide baseline methods when machine-learning models are unavailable.
+
+Do not present a simulated digital twin as a real-time physical connection unless a genuine data integration exists.
+
+### Separate service — Carbon Footprint Services
+
+Make carbon accounting accessible as its own module, while integrating it with Energy Management and Digital Energy Solutions.
+
+Implement:
+
+- Organisation, reporting period, facility, and activity-data management.
+- Scope 1, Scope 2, and relevant Scope 3 emissions categories.
+- Activity data imports for electricity, fuels, heating, transport, refrigerants, and other supported sources.
+- A versioned emission-factor database with source, geography, unit, validity period, and methodology.
+- Configurable location-based and market-based Scope 2 calculations where applicable.
+- Unit conversion and transparent emissions calculation formulas.
+- Calculation of emissions in kgCO2e and tCO2e.
+- Identification of missing data, estimates, assumptions, and data-quality limitations.
+- Emissions breakdowns by scope, source, facility, and reporting period.
+- Reduction targets, scenario analysis, and progress tracking.
+- Carbon footprint reports with methods, factor sources, assumptions, and calculation records.
+
+Do not invent emission factors or automatically claim compliance with GHG Protocol, ISO standards, or other reporting frameworks. Make applicable methodologies configurable and clearly document their limitations.
+
+## 4. Shared platform functionality
+
+Create a unified customer experience containing:
+
+- Customer dashboard with relevant KPIs and recent activity.
+- Organisation and multi-site management.
+- Project, task, and document management.
+- Shared energy data used by authorised modules.
+- Search, filters, date ranges, interactive charts, and drill-down views.
+- PDF and CSV exports, with Excel support for data imports and exports.
+- Notifications and configurable alerts.
+- Report templates and report history.
+- Customer support requests and contact workflows.
+- User profile, organisation settings, locale, time zone, units, and preferred language.
+- A configurable subscription and feature-entitlement structure.
+- Usage tracking and an administrative overview.
+
+Provide a professional, accessible, responsive interface for desktop, tablet, and mobile.
+
+## 5. Authentication, roles, and security
+
+Use Supabase for authentication, PostgreSQL data storage, and private file storage, unless the existing project already has an appropriate production-ready backend.
+
+Implement:
+
+- Secure registration, sign-in, sign-out, password reset, and email verification.
+- Organisation-based multi-tenancy.
+- Organisation owners, administrators, energy managers, consultants, analysts, and read-only users.
+- Role-based permissions for projects, assets, data, documents, calculations, and reports.
+- PostgreSQL Row Level Security policies for tenant isolation.
+- Server-side authorization for sensitive operations.
+- Private document storage and authorised download access.
+- Secure handling of environment variables and third-party API keys.
+- Input validation, file upload restrictions, rate limiting where appropriate, and safe error handling.
+- Audit logs for important administrative, data, and permission changes.
+
+A customer must never be able to access another organisation's records by changing a URL, request parameter, or database identifier.
+
+Never expose service-role credentials or AI-provider secrets in client-side code.
+
+## 6. AI implementation
+
+Use a provider-independent AI service layer so the model provider can be changed through secure server-side configuration.
+
+AI capabilities should include:
+
+- Energy data interpretation.
+- Technical report drafting based on validated project records.
+- Explanation of model results and calculations.
+- Identification of potential efficiency opportunities.
+- Natural-language data queries restricted by customer permissions.
+- Assistance with project documentation and recommendations.
+
+AI-generated results must reference the underlying data and assumptions when available. Separate AI-generated suggestions from verified calculations.
+
+Do not send customer documents or sensitive operational data to external AI services without an explicitly configured provider and appropriate data-handling controls.
+
+The core platform must continue to work when an AI API key is unavailable. Display a clear setup message and retain non-AI functionality.
+
+## 7. Database design
+
+Create a properly normalised database schema with migrations for entities such as:
+
+- Profiles, organisations, memberships, and roles.
+- Sites, buildings, assets, meters, and energy readings.
+- Tariffs, energy baselines, and targets.
+- Projects, tasks, assessments, recommendations, and documents.
+- Renewable energy systems and simulation scenarios.
+- Batteries, dispatch schedules, and simulation results.
+- Digital twins, model configurations, forecasts, and alerts.
+- Carbon activity records, emission factors, and calculation results.
+- Reports, notifications, audit logs, subscriptions, and usage records.
+
+Use appropriate relationships, indexes, timestamps, units, validation rules, and tenant identifiers.
+
+Avoid storing every module's information in a single unstructured table. Store calculation inputs and results so a report can be reproduced later.
+
+Create versioned calculation records and preserve historical results when assumptions change.
+
+## 8. Engineering and financial calculation requirements
+
+All core engineering and financial calculations must run in validated application code, not be invented by the AI assistant.
+
+For each calculation:
+
+- Define the inputs, units, formulas, assumptions, and outputs.
+- Validate missing values, incompatible units, invalid ranges, and division-by-zero conditions.
+- Handle time zones, interval lengths, and daylight-saving transitions appropriately for time-series data.
+- Identify whether inputs are measured, estimated, user-provided, or externally sourced.
+- Provide test cases with known expected results.
+- Display calculation limitations and uncertainty where relevant.
+- Maintain sufficient calculation history to reproduce results.
+
+Use transparent, documented models before introducing advanced optimisation or machine learning.
+
+## 9. Design and user experience
+
+Preserve the existing GEIT Ltd visual identity and corporate website.
+
+Create a separate authenticated application area with consistent navigation for:
+
+1. Overview
+2. Energy Management
+3. Energy Consulting
+4. Renewable Energy Advisory
+5. Energy Efficiency & Auditing
+6. Battery Storage & Flexibility
+7. AI & Digital Energy Solutions
+8. Carbon Footprint
+9. Projects and Reports
+10. Organisation Settings
+
+Each module should have its own overview, input forms, working data tables, analytical views, calculation actions, saved results, and export functionality where applicable.
+
+Use professional charts, clear KPI cards, accessible forms, contextual help, loading states, empty states, and actionable validation messages.
+
+Do not use decorative charts populated with fictitious production data. If demo data is needed, identify it explicitly as demo data and isolate it from real customer records.
+
+## 10. Testing and deployment
+
+Create automated tests for:
+
+- Core energy, financial, battery, and carbon calculations.
+- Authentication and permissions.
+- Tenant isolation and database access policies.
+- File imports and invalid data.
+- Report generation and exports.
+- API validation and error handling.
+- Critical end-to-end customer workflows.
+
+Include a repeatable database setup process, migration instructions, environment-variable documentation, and a demo-data seeding mechanism separate from production.
+
+Check for build errors, type errors, broken routes, console errors, missing dependencies, and security issues.
+
+Do not mark a feature as complete unless it has been implemented and tested.
+
+## 11. Implementation phases
+
+Deliver the application incrementally:
+
+Phase 1: Inspect the current project, establish the architecture, and preserve the existing corporate website.
+
+Phase 2: Implement the database, authentication, organisation management, permissions, and application shell.
+
+Phase 3: Implement Energy Management, including real data imports and calculations.
+
+Phase 4: Implement Energy Consulting and Energy Efficiency & Auditing.
+
+Phase 5: Implement Renewable Energy Advisory and Battery Storage & Flexibility.
+
+Phase 6: Implement Carbon Footprint Services.
+
+Phase 7: Implement AI & Digital Energy Solutions and the initial Energy Digital Twin functionality.
+
+Phase 8: Complete reports, notifications, subscriptions, security testing, documentation, and deployment preparation.
+
+After each phase, run the relevant tests and resolve regressions before proceeding.
+
+## 12. Delivery criteria
+
+The completed platform must allow a customer to register, create an organisation, add a site, upload energy data, run a relevant analysis, save results, generate a report, and return later to access the saved work.
+
+Demonstrate at least one complete, tested workflow in each of the six service modules and the separate carbon accounting module.
+
+Provide a final implementation summary covering:
+
+- Features actually implemented.
+- Database tables and migrations created.
+- External APIs and credentials still requiring configuration.
+- Automated tests and their results.
+- Security and deployment configuration.
+- Known limitations and the next recommended development steps.
+
+Begin by inspecting the existing project. Then implement the system in the specified phases. Do not replace working code unnecessarily, do not fabricate successful test results, and do not describe unimplemented features as operational.
