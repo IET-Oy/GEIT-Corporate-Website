@@ -67,7 +67,9 @@ try {
     for (const route of routes) {
       const html = renderToStaticMarkup(createElement(LanguageProvider, { initialLanguage: locale },
         createElement(Router, { ssrPath: route }, createElement(SiteRoutes))));
-      assert.doesNotMatch(html, /translation missing/, `${locale} ${route}: missing copy`);
+      const visibleText = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "").replace(/<[^>]+>/g, " ");
+      const missingCopy = [...html.matchAll(/\[English — translation missing\] ([^<]+)/g)].map(match => match[1]);
+      assert.equal(missingCopy.length, 0, `${locale} ${route}: missing copy: ${missingCopy.join("; ")}`);
       assert.equal((html.match(/<h1\b/g) ?? []).length, 1, `${locale} ${route}: page not rendered correctly`);
       assert.equal(html.includes('data-testid="language-coverage-notice"'), locale !== "en", `${locale} ${route}: review disclosure`);
       if (locale !== "en") {
@@ -88,10 +90,18 @@ try {
         assert.ok(html.includes("157099400"), `${locale}: company registration changed`);
       }
       if (route === "/about") {
-        assert.match(html, /(?:50\s*%|asilimia 50)/, `${locale}: ownership percentage changed`);
+        assert.match(visibleText, /\b2026\b/, `${locale}: founding year missing`);
+        assert.equal((html.match(/data-testid="card-founder-/g) ?? []).length, 2, `${locale}: two founder profile cards required`);
+        assert.doesNotMatch(visibleText, /(?:50\s*%|asilimia 50)/, `${locale}: superseded founder text remains`);
         for (const fact of ["Dr. Hyacinthe M. Nshuti", "Mr. Noel Dushimiyimana"]) {
           assert.ok(html.includes(fact), `${locale}: founder facts changed`);
         }
+      }
+      if (route === "/") {
+        assert.doesNotMatch(visibleText, /\b(?:Rwanda|Kigali)\b/i, `${locale}: location-specific homepage content remains`);
+      }
+      if (route !== "/") {
+        assert.ok(html.includes("Kigali, Rwanda"), `${locale} ${route}: shared footer address must remain unchanged outside Home`);
       }
     }
     const validation = createContactFormSchema(locale).safeParse(contactFormDefaultValues);

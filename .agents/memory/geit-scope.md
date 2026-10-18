@@ -20,3 +20,9 @@ Do not add a database, authentication, paid services, or an enquiry-delivery ser
 **Why:** The user explicitly deferred the database and requested honest validation-only behaviour.
 
 **How to apply:** Preserve the disconnected form until an approved delivery mechanism is requested.
+
+Use global energy-and-technology positioning throughout visible homepage content, including the homepage footer. Do not apply this as a site-wide removal of company location facts.
+
+**Why:** The user requested that Home contain no Rwanda or Kigali references and position GEIT for international markets, while explicitly preserving registration details, legal information and contact addresses on other pages.
+
+**How to apply:** Keep homepage copy naturally global-facing across all four languages. Scope shared-footer positioning to Home; retain approved address and legal information elsewhere.

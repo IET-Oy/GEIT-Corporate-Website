@@ -1,5 +1,5 @@
 import { Facebook, Instagram, Linkedin, Youtube, X, type LucideIcon } from "lucide-react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { companyContact, type SocialProfileKey } from "@/config/company-contact";
 import { useLanguage } from "@/lib/language-context";
 import { ContactMethods } from "@/components/contact-methods";
@@ -24,6 +24,8 @@ const socialItems: { key: SocialProfileKey; name: string; Icon: LucideIcon }[] =
 
 export function SiteFooter() {
   const { c, t } = useLanguage();
+  const [location] = useLocation();
+  const isHome = location === "/";
   const configuredSocials = socialItems.filter(({ key }) => companyContact.socialProfiles[key]);
 
   return (
@@ -50,7 +52,7 @@ export function SiteFooter() {
             <p className="mt-2 text-sm text-white/65">{c("Energy Intelligence. Measurable Impact.")}</p>
             <p className="mt-4 max-w-xs text-sm leading-6 text-white/70">{c("Engineering analysis, investment advice and digital tools to help organisations make informed energy and carbon decisions.")}</p>
             <p className="mt-5 text-xs font-semibold tracking-[.12em] text-[#e8b64b]">
-              {companyContact.officeAddress.toUpperCase()}
+              {isHome ? c("GLOBAL ENERGY & TECHNOLOGY") : companyContact.officeAddress.toUpperCase()}
             </p>
           </section>
 
@@ -80,7 +82,7 @@ export function SiteFooter() {
 
           <section>
             <h2 className="text-sm font-bold">{t("footerContact")}</h2>
-            <p className="mt-5 text-sm leading-6 text-white/65">{companyContact.officeAddress}</p>
+            <p className="mt-5 text-sm leading-6 text-white/65">{isHome ? c("Serving international markets") : companyContact.officeAddress}</p>
             <div className="mt-4"><ContactMethods dark /></div>
             <Link href="/contact" className="mt-5 inline-flex items-center text-sm font-bold text-[#e8b64b] hover:text-white">
               {t("footerContactLink")}
