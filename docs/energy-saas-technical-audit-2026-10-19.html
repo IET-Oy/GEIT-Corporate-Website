@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GEIT Energy SaaS — Technical Audit — 19 October 2026</title>
+<style>
+:root{color-scheme:light}*{box-sizing:border-box}body{margin:0;background:#f2f5f7;color:#23394a;font:16px/1.65 system-ui,sans-serif}main{max-width:1100px;margin:auto;padding:40px 24px 70px}header{background:#10243a;color:white;padding:32px;border-top:5px solid #168568}h1{font-size:30px;line-height:1.25;margin:8px 0 16px}h2{color:#10243a;margin-top:40px;border-bottom:2px solid #dce3e8;padding-bottom:8px}h3{color:#10243a}strong{font-weight:700}.decision{background:#fff4d9;border-left:5px solid #d39928;padding:20px;margin:24px 0}section{overflow-wrap:anywhere}table{border-collapse:collapse;width:100%;font-size:14px;background:white}th,td{padding:13px;text-align:left;vertical-align:top;border:1px solid #dce3e8}th{background:#e6edf0;color:#10243a}.table-wrap{overflow-x:auto}code{font:13px/1.6 ui-monospace,monospace;background:#e6edf0;padding:2px 4px}pre{white-space:pre-wrap;background:#10243a;color:white;padding:20px;font:13px/1.7 ui-monospace,monospace}li{margin-bottom:7px}.small{font-size:14px;color:#5b6b76}header .small{color:#dce3e8}@media(max-width:600px){main{padding:16px}header{padding:22px}h1{font-size:25px}table{min-width:680px}}@media print{body{background:white}main{max-width:none;padding:0}header{color:#10243a;background:white}h2{break-after:avoid}tr{break-inside:avoid}pre{color:black;background:#f2f5f7}.table-wrap{overflow:visible}table{min-width:0}}
+</style>
+</head>
+<body><main>
+<header><p class="small">GLOBAL ENERGY INNOVATION TECHNOLOGIES LTD</p><h1>Energy Intelligence SaaS<br>Technical audit</h1><p>19 October 2026 · Existing implementation · Read-only audit</p></header>
+<div class="decision"><strong>Final classification: INTERNAL TESTING.</strong><br>The implementation contains real persistent modules and tested calculation engines. It is not only a visual prototype, but public pilot and production readiness have not been established.</div>
+<p><strong>Scope respected:</strong> No application source, configuration, migrations, authentication accounts, customer records or storage objects were changed. No migrations or database-writing integration scripts were run. Only this report was added. Build/test commands generated their normal local outputs. Supabase inspection used an explicit read-only transaction. No credentials are included here.</p>
+
+<section><h2>A. Current implementation and architecture</h2>
+<ul>
+<li><strong>Frontend:</strong> Existing React, TypeScript, Vite and Tailwind corporate website, with Wouter routing, TanStack Query and Recharts. No new application or Next.js rewrite. The corporate site and approved navigation are preserved.</li>
+<li><strong>Application entry:</strong> <code>/energy-saas</code> redirects to <code>/app</code>. The authenticated shell selects an organisation, checks the current session and presents module links. Signed-out users see an authentication gate, not customer records.</li>
+<li><strong>Account routes:</strong> <code>/app/sign-in</code>, <code>/app/register</code>, <code>/app/forgot-password</code>, <code>/app/auth/callback</code>, <code>/app/reset-password</code>.</li>
+<li><strong>Workspace routes:</strong> <code>/app</code>, <code>/app/organisation-settings</code>, <code>/app/energy-management</code>, <code>/app/energy-consulting</code>, <code>/app/energy-auditing</code>, <code>/app/renewable-energy</code>, <code>/app/battery-flexibility</code>, <code>/app/carbon-footprint</code>, <code>/app/digital-energy</code>. <code>/app/projects-reports</code> is explicitly planned, not an operational report hub.</li>
+<li><strong>Backend:</strong> Express 5/TypeScript, compiled with esbuild. Same-origin API under <code>/api</code>; session/auth/organisation endpoints under <code>/api/platform</code>; energy APIs under <code>/api/platform/energy/:orgId</code>; six engineering/sustainability modules under <code>/api/platform/engineering/:orgId/:module</code>.</li>
+<li><strong>Persistence:</strong> Existing external Supabase PostgreSQL, Auth and private Storage. Request handlers use the authenticated user's JWT and publishable key, not an owner/service-role key. The privileged DB connection is used for migrations and inspection. The API also eagerly imports an existing, separate legacy corporate-enquiries database dependency through <code>@workspace/db</code>; deployment must account for both.</li>
+<li><strong>Existing additional modules:</strong> Persistent consulting, efficiency/auditing, renewable, battery, carbon and digital-twin projects/scenarios use validated inputs and saved calculation snapshots. Public descriptions of services are not separate SaaS engines.</li>
+</ul>
+<p class="small">Primary evidence: <code>src/platform/app-routes.tsx</code>, <code>src/config/platform-modules.ts</code>, <code>src/platform/workspace.tsx</code> in the website; API <code>src/routes/{platform,energy,engineering}.ts</code>; package manifests; artifact service configuration.</p></section>
+
+<section><h2>B. Seven core modules: actual status</h2>
+<p>“Tested” below means the named automated boundary was executed in this audit; it does not imply a fresh signed-in browser workflow or live tenant-permission test.</p>
+<div class="table-wrap"><table><thead><tr><th>Module</th><th>Classification</th><th>Implemented evidence</th><th>Limits / verification boundary</th></tr></thead><tbody>
+<tr><td>1. Energy Dashboard</td><td><strong>Partially implemented</strong></td><td>Workspace overview and organisation selection exist. Saved Energy Management analyses expose calculated KPIs, consumption/load-profile charts and accessible tables backed by persisted source readings.</td><td>The overview is a module/account landing page, not a portfolio-wide operational KPI dashboard. No live telemetry or automatic dashboard refresh pipeline. Calculation tests passed; signed-in chart rendering and post-import updates were not rerun.</td></tr>
+<tr><td>2. Energy Asset Management</td><td><strong>Partially implemented</strong></td><td>Persistent sites, meters, flat tariffs and rules; forms, edits, archive/restore, site time zones and role checks. Tenant/demo composite relationships protect parent linkage.</td><td>Not a general equipment register, maintenance/work-order system or asset topology model. Fresh create/edit/archive journeys were not executed because they write records.</td></tr>
+<tr><td>3. Energy Monitoring and Data Ingestion</td><td><strong>Partially implemented; manual import engine tested</strong></td><td>CSV/XLSX templates, persisted validation previews, explicit commit, interval storage, duplicate/overlap protections and synthetic demo separation. CSV/Excel parser tests passed.</td><td>No configured meter/IoT gateway, scheduled polling or live monitoring connector. File size/row limits apply. Direct database commit, persistence and dashboard update were not freshly exercised.</td></tr>
+<tr><td>4. Energy Analytics and Forecasting</td><td><strong>Implemented and unit-tested for documented baseline scope</strong></td><td>Consumption, observed power, coverage, load factor, flat cost and comparisons; solar/battery screening; imported-data twins; seasonal baseline forecast, backtest and robust anomaly checks. Automated engine tests passed.</td><td>Not advanced optimisation, calibrated thermal/BIM modelling or weather-aware AI forecasting. Forecast requires 35 complete consecutive days; withholding is expected when insufficient. Signed-in saved-scenario workflow not rerun.</td></tr>
+<tr><td>5. Energy Reports and Exports</td><td><strong>Partially implemented overall; module export code exists</strong></td><td>Energy CSV/XLSX/PDF; engineering/sustainability CSV/XLSX/PDF/JSON; saved snapshots, input/source hashes and HMAC verification. Report-related unit assertions passed.</td><td>The consolidated Projects and Reports route is only a planned notice. No fresh authenticated export/download this pass. PDF summaries truncate tables; full records are in other formats.</td></tr>
+<tr><td>6. Alerts and Notifications</td><td><strong>Partially implemented</strong></td><td>Persistent daily-kWh / peak-interval-kW rules, evaluation when saving analyses, triggering-analysis links and acknowledgement UI/API.</td><td>No scheduler, continuous background evaluation, email, SMS or push delivery. A saved rule does not establish active monitoring. Creation/trigger/acknowledgement was not freshly tested.</td></tr>
+<tr><td>7. AI Energy Assistant</td><td><strong>Partially implemented; live integration blocked by configuration</strong></td><td>Server-side optional OpenAI adapter, consent requirement, verified authorised scenario evidence, restricted evidence-ID selection, bounded response validation and per-account limits. Controlled-response tests passed.</td><td>No AI key/model/enable configuration was present. No live provider call was made. This is a constrained scenario-evidence assistant, not general chat, autonomous calculation or control. Provider retention/privacy settings remain unverified.</td></tr>
+</tbody></table></div>
+<p><strong>No complete core module is certified fully end-to-end tested by this audit.</strong> A working interface or a manifest value of “available” is not sufficient evidence of operational readiness. The planned report hub is a UI notice only; missing notification delivery and live ingestion must not be marketed as delivered functionality.</p></section>
+
+<section><h2>C. Database, authentication and authorisation</h2>
+<p><strong>Persistent database connection: verified.</strong> The current read-only metadata audit connected using certificate-verified TLS and reported:</p>
+<ul><li>6 repository migration checksums match the applied ledger.</li><li>15 tenant tables have Row Level Security enabled.</li><li>0 anonymous/PUBLIC grants on GEIT public-schema tables.</li><li>16 security-definer functions have a restricted search path.</li><li>Document bucket is private, with a 10,485,760-byte limit.</li></ul>
+<p>Schema covers profiles, organisations, memberships, audit events, eight energy tables, engineering projects/scenarios and versioned emission factors. Policy/RPC source binds records to organisation membership, constrains role-controlled writes, preserves the final owner and restricts document keys by organisation. Composite foreign keys, interval exclusions and atomic RPCs protect tenant links/import commits. RLS checks inspect metadata; they do not prove every policy's behavioural correctness.</p>
+<p><strong>Authentication:</strong> Actual Supabase password auth, verified-email requirement, token refresh, sign-out, registration and PKCE recovery/callback implementation. Tokens and PKCE verifier use HttpOnly cookies rather than browser local/session storage. Mutations enforce exact origin and a custom request header. Roles are owner, administrator, energy manager, consultant, analyst and reader; permissions differ by operation.</p>
+<p><strong>Freshly verified:</strong> unauthenticated energy and engineering requests return 401; signed-out session returns no identity or organisations. PKCE cookie and transient provider failure regressions pass. These controlled tests are not a real-inbox account activation or password-recovery test.</p>
+<p><strong>Not freshly verified:</strong> successful customer login, cross-organisation positive/negative record access, direct REST/RPC bypass, role mutation permissions, storage upload/download isolation and writes surviving reload. The existing live harness creates/deletes synthetic accounts and records; it was deliberately not run against this unconfirmed database target. Metadata flags alone cannot establish complete tenant isolation.</p>
+<p class="small">Evidence: <code>scripts/audit-database.mjs</code>, <code>migrations/001–006</code>, <code>src/lib/platform-session.ts</code>, <code>src/lib/private-storage.ts</code>, API route guards. Historical live evidence is separately recorded in the 18 October audit; it is not counted as a new test result.</p></section>
+
+<section><h2>D. Calculations and data quality</h2>
+<ul>
+<li><strong>Units:</strong> Wh/kWh/MWh/MJ/GJ normalise to kWh; W/kW/MW mean interval-average power multiplied by elapsed hours. Cumulative meter registers and instantaneous power samples are not accepted as interval energy.</li>
+<li><strong>Time:</strong> Explicit UTC offset required; supported years 2000–2100; positive intervals up to 24 hours. UTC durations determine energy; IANA site zones determine local grouping, including DST. UI date inputs use browser-local time.</li>
+<li><strong>Missing data:</strong> Gaps are not filled or silently treated as measured zero. Only full intervals inside the requested window are analysed; coverage and caveats are returned. Twin incomplete hourly buckets remain null.</li>
+<li><strong>Validation:</strong> Non-negative finite bounded values, exact import headers, no spreadsheet formula cells, malformed/duplicate/overlapping rows rejected. Imports allow 1–5,000 rows, 2 MiB files; XLSX expansion is bounded to 16 MiB and 200 ZIP entries. Analysis is bounded to 10,000 intervals and 366 days.</li>
+<li><strong>Energy KPIs/cost:</strong> Sum normalised energy; power = energy/elapsed hours; peak is the highest interval average. Observed average and load factor use measured hours. Flat-rate cost includes energy, observed local-day standing charges and observed monthly peaks, not a complete utility invoice. No tax/TOU/tier modelling or missing-data extrapolation.</li>
+<li><strong>Solar and storage:</strong> Documented baseline yield and AC energy-balance dispatch; capacity/SOC/power and one-way efficiency constraints. No claim of advanced optimisation or measured battery performance.</li>
+<li><strong>Forecast:</strong> At least 35 complete consecutive days; mean of previous four same-hour-of-week observations, held-out weekly MAE/RMSE/WAPE and empirical error bands. Robust median/MAD anomaly screening is not fault diagnosis.</li>
+<li><strong>Carbon:</strong> Source, geography, units and validity/version metadata; frozen factor snapshots; supported Scope 1/2 and limited supported Scope 3 inputs. A complete assured inventory is not established.</li>
+<li><strong>Provenance:</strong> Saved input/source snapshots, versioned engines and server HMAC verification before trusted display/export. Direct authenticated RPC access does not make arbitrary submitted results authentic. Unsigned or changed historical outputs fail closed and must not be silently re-certified.</li>
+</ul>
+<p>No measurements were invented or imported during this audit. Synthetic test examples are not customer operating data. See <code>docs/geit-energy-management.md</code>, <code>docs/engineering-modules.md</code> and <code>docs/carbon-digital-modules.md</code> for assumptions and supported workflows.</p></section>
+
+<section><h2>E. Executed tests and failures</h2>
+<div class="table-wrap"><table><thead><tr><th>Check run on 19 October</th><th>Actual result</th></tr></thead><tbody>
+<tr><td>Energy calculation/import tests</td><td>17 passed, 0 failed</td></tr>
+<tr><td>Consulting/auditing/solar/battery tests</td><td>20 passed, 0 failed</td></tr>
+<tr><td>Carbon/twin/forecast/anomaly/controlled AI tests</td><td>15 passed, 0 failed</td></tr>
+<tr><td>Readiness/integrity/error/config tests</td><td>4 passed, 0 failed</td></tr>
+<tr><td>Auth outage/credential regressions</td><td>3 passed, 0 failed; expected 503 and 401 test responses are not failing assertions</td></tr>
+<tr><td>PKCE cross-request cookie test</td><td>1 passed, 0 failed</td></tr>
+<tr><td>Frontend module/navigation contract tests</td><td>5 passed, 0 failed; source contracts, not a browser click through every route</td></tr>
+<tr><td>Native design-preview discovery</td><td>1 passed, 0 failed</td></tr>
+<tr><td><strong>Total selected automated tests</strong></td><td><strong>66 passed, 0 failed</strong></td></tr>
+<tr><td>Recursive workspace TypeScript check and production build</td><td>Passed. Warnings: existing large chunks, tooltip source-map diagnostic and skipped sitemap because public URL is unset.</td></tr>
+<tr><td>Compiled API local production-mode smoke</td><td>9 checks passed: startup, JSON 400/413/404, 401 protection, foreign-origin denial/CORS behaviour, headers, actual auth rate-limit boundary and missing-origin startup refusal. Not a published-domain test.</td></tr>
+<tr><td>Read-only live Supabase audit</td><td>Passed metadata/checksum checks described above; backups explicitly NOT_VERIFIED.</td></tr>
+<tr><td>Dependency audit</td><td>660 dependencies reported; 0 known critical/high/moderate/low/info vulnerabilities.</td></tr>
+<tr><td>Current source/frontend-output secret-pattern check</td><td>160 files, 0 common private-key literal findings. Not full history, full data-flow scanning or proof no secret can be exposed.</td></tr>
+<tr><td>Corporate localisation</td><td>4 languages × 22 routes; 636 source entries passed catalogue/placeholder/approved-fact checks. Not a linguistic sign-off.</td></tr>
+<tr><td>Running preview/API requests</td><td>Health 200; anonymous session 200 with null user/empty organisations; protected energy 401; protected engineering 401; nonexistent API route JSON 404.</td></tr>
+<tr><td>Visual samples</td><td>Desktop /app at 1440 × 850 and mobile sign-in at 390 × 844 inspected; no obvious overflow or visible runtime errors. Sample browser logs show normal Vite/React messages only.</td></tr>
+<tr><td>Lint</td><td>Not run: no standalone lint script configured. TypeScript is not a substitute for linting.</td></tr>
+<tr><td>Fresh authenticated end-to-end, writes and storage bytes</td><td>Not run: no designated isolated test database or supplied test account. Existing scripts create/delete fixtures. No customer data was used or altered.</td></tr>
+<tr><td>Real email verification/recovery, live AI, physical integrations, published HTTPS, backup restore</td><td>Not tested / missing configuration or access.</td></tr>
+</tbody></table></div>
+<p><strong>No executed test suite failed.</strong> Incomplete checks remain incomplete. No new SAST/privacy scanner was run; the previous audit records two reviewed medium cookie/session heuristics and a privacy scanner failure (<code>HOUNDDOG_SCHEMA_MISMATCH</code>). Neither is reclassified as a pass.</p>
+<p>Authenticated desktop/tablet/mobile modules, every internal browser link, keyboard journeys and full WCAG conformance were not comprehensively retested. Prior screenshots or historical tests are not fresh evidence for this pass.</p>
+<h3>Reproduce the safe checks</h3>
+<pre>pnpm --filter @workspace/api-server run test:energy
+pnpm --filter @workspace/api-server run test:engineering
+pnpm --filter @workspace/api-server run test:sustainability
+pnpm --filter @workspace/api-server run test:readiness
+pnpm --filter @workspace/api-server run test:auth-outages
+pnpm --filter @workspace/api-server run test:pkce
+pnpm --filter @workspace/geit-website run test:platform
+pnpm --filter @workspace/mockup-sandbox run test:discovery
+pnpm --filter @workspace/geit-website run check:localization
+pnpm --filter @workspace/api-server run audit:database
+pnpm --filter @workspace/api-server run audit:source
+PORT=18414 BASE_PATH=/ pnpm run build
+pnpm --filter @workspace/api-server run test:production
+pnpm audit --json</pre>
+<p class="small">Execution evidence in this workspace: <code>/tmp/replit-background-tasks/87b0f714-2801-4a10-8d1b-43330574f6a1.log</code>, <code>/tmp/geit-technical-audit-build.log</code>, <code>/tmp/geit-technical-audit-dependencies.json</code>. Temporary logs are not durable external test attestations. The production smoke was run only after the new build passed.</p></section>
+
+<section><h2>F. Security, deployment and integration gaps</h2>
+<ul>
+<li><strong>Process-local limits:</strong> Auth 20 writes/minute/IP, other platform writes 60/minute/IP, AI an additional 5/account/minute. In-memory counters reset on restart and do not span replicas. A shared/edge limiter is required before public scaling; proxy IP trust needs real-gateway validation.</li>
+<li><strong>Origin/canonical setup:</strong> Production-context configuration inspection found <code>PLATFORM_ORIGIN</code> and <code>VITE_PUBLIC_SITE_URL</code> absent. Production API intentionally refuses startup without a valid explicit HTTPS origin. The local smoke supplies a controlled origin; it does not establish production configuration.</li>
+<li><strong>Secrets present by existence only:</strong> <code>SUPABASE_URL</code>, <code>SUPABASE_PUBLISHABLE_KEY</code>, <code>SUPABASE_DB_URL</code>, <code>SESSION_SECRET</code>. Managed <code>DATABASE_URL</code> also exists. Values were not exposed in this report. Privileged DB URLs belong only in secure server/migration configuration.</li>
+<li><strong>Signing-key continuity:</strong> Preserve the signing key across instances and restores; unplanned rotation invalidates old report authentication. Versioned key rotation/recovery is not demonstrated.</li>
+<li><strong>Email:</strong> Supabase Auth delivery, redirect allowlists, same-browser verification/recovery and intended-domain cookies need a real-inbox test. Adding an existing verified user to an organisation is implemented; invitation email delivery is not.</li>
+<li><strong>Storage:</strong> Private bucket/policy infrastructure exists; no complete customer-facing document library or file-intake/malware-scanning workflow. Privacy, retention and deletion obligations need operational review.</li>
+<li><strong>Backups:</strong> Retention/PITR settings, separate storage-byte backups, RPO/RTO and an isolated restore drill were not available for verification. Database metadata success does not prove recoverability.</li>
+<li><strong>External measurements:</strong> No configured live meter/IoT, weather, grid or market-data connector. Real-time operation would need suitable equipment/protocol access, provider credentials, licensing and operational monitoring.</li>
+<li><strong>AI:</strong> <code>OPENAI_API_KEY</code>, <code>GEIT_AI_MODEL</code> and enabled <code>GEIT_AI_ENABLED</code> are absent. Enable only after consent/privacy and live authorised-evidence tests. Calculations do not require AI.</li>
+<li><strong>Billing:</strong> No configured or verified payment integration/webhooks were established. Paid entitlements are not operational or claimed; provider secrets, signed webhooks and lifecycle/replay tests would be prerequisites.</li>
+<li><strong>Scale:</strong> Bounded lists, synchronous import/calculation/export processing and large frontend chunks limit scale. No load/soak test or guaranteed performance envelope. PDF tables are summaries, not full-data exports.</li>
+<li><strong>Logs/error handling:</strong> Inspected logger excludes request bodies/query strings and redacts auth/cookie fields; API errors are generic JSON. Full operational log access, retention, alert routing and independent privacy/data-flow review remain outstanding.</li>
+<li><strong>Documentation drift:</strong> Earlier foundation documentation still describes older navigation/planned-module scope. Use current source contracts and module guides; update stale foundation statements after this audit rather than interpreting them as current behaviour.</li>
+</ul>
+<p>Existing artifact configuration declares a root static website with SPA rewrites, an API service routed under <code>/api</code> with health checks and a development-only design sandbox. Those declarations were inspected, not a live published deployment. No publishing action was taken.</p></section>
+
+<section><h2>G. Prioritised required fixes and verification</h2>
+<ol>
+<li><strong>P0 — Authorise a separate test/staging Supabase target.</strong> Run the existing fixture-based suites there under real user JWTs, including populated tenant A/B controls, direct REST/RPC bypass, reader denials, private file bytes and cross-tenant export denial. Then test login → site/meter → import preview/commit → analysis/chart update → reload → export in a browser. Do not run the mutating harness against customer production.</li>
+<li><strong>P0 — Complete account and deployment configuration.</strong> Supply the intended HTTPS origin and build-time public URL; verify real inbox activation/recovery, refresh/sign-out, callback allowlists, cookies, SPA deep links and API routing on that domain.</li>
+<li><strong>P0 — Establish recovery.</strong> Confirm retention/PITR, back up object bytes and stable report-signing keys, and complete an isolated restore drill.</li>
+<li><strong>P1 — Harden public operation.</strong> Shared rate limiting, real-gateway proxy checks, production monitoring, privacy scan remediation/re-run and independent tenant/security review.</li>
+<li><strong>P1 — Close product-scope gaps deliberately.</strong> Decide whether a pilot needs an aggregate dashboard, equipment register, consolidated report hub or background notifications. Until built and tested, describe the current product as manual-import analysis and saved scenarios—not continuous monitoring.</li>
+<li><strong>P1 — Enable integrations only when configured.</strong> Test measurement ingestion and optional AI against authorised records; keep unavailable integrations disabled. Add billing only with a selected configured provider and verified webhook lifecycle tests.</li>
+<li><strong>P2 — Performance, documentation and regression coverage.</strong> Profile bounded worst-case datasets, split large bundles, add pagination/background processing when required, address the source-map diagnostic, update stale setup wording and run authenticated responsive/accessibility regression.</li>
+</ol>
+<p>Recommendations only: no fixes were applied during this read-only audit.</p></section>
+
+<section><h2>H. Final readiness decision</h2>
+<p><strong>INTERNAL TESTING</strong> is the evidence-supported classification. Real persistence, authenticated infrastructure and tested baseline calculations mean the system is beyond a UI prototype. Missing fresh tenant/end-to-end verification, real-inbox validation, published configuration, recovery evidence and public-scale controls prevent a pilot-ready or production-ready claim.</p>
+<p>A limited pilot should be reconsidered only after the P0 gates pass in the intended environment and its scope explicitly excludes unfinished live monitoring, notification delivery and unconfigured integrations.</p>
+</section>
+</main></body></html>

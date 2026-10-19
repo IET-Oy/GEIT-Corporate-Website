@@ -1,0 +1,16 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "zmGtVrN05LhbGpJgO8M6y"
+uri = "file://docs/energy-saas-technical-audit-2026-10-19.html"
+type = "html"
+title = "GEIT Energy SaaS — Technical Audit"
+description = "Read-only audit with module status, 66 passing tests, database evidence, verification limits and prioritized release requirements. Final classification: internal testing."
+logical_id = "4b624bc9-a6a5-4e62-beea-11f69db9d48d"
+content_hash = "sha256:3e4f9fd7d8dbda9b0eeb42cb839ecaf11143eea041a5ed7da8bd6d1b3ef3472e"
+size = 26576
+mtime_ms = 1792423755959
+storage_uri = "gcs://replit-rams-assets-archer/rams/assets/repl:fce71e1d-6c2b-4e84-8d15-001075ea3502/4b624bc9-a6a5-4e62-beea-11f69db9d48d/4266e18f-6c24-496d-8ce2-0a3469103641"
+storage_version_token = "1792423774947312"
+content_type = "text/html"

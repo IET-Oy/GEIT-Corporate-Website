@@ -1,0 +1,71 @@
+Conduct a comprehensive technical audit of the Energy SaaS integrated into the Global Energy Innovation Technologies Ltd (GEIT Ltd) website.
+
+IMPORTANT: Audit the existing implementation before making changes. Do not redesign the website, remove existing features, create a new application, or modify the production database.
+
+### 1. Inspect the existing implementation
+Identify all Energy SaaS pages, routes, components, backend services, database integrations, authentication mechanisms, APIs, environment variables, and available modules.
+
+### 2. Audit the seven core modules
+Check the actual implementation and functionality of:
+1. Energy Dashboard
+2. Energy Asset Management
+3. Energy Monitoring and Data Ingestion
+4. Energy Analytics and Forecasting
+5. Energy Reports and Exports
+6. Alerts and Notifications
+7. AI Energy Assistant
+
+For each module, distinguish between:
+- Fully implemented and tested
+- Implemented but not tested
+- Partially implemented
+- UI demonstration only
+- Missing
+- Blocked by missing configuration or external integration
+
+Do not classify a feature as functional merely because its interface exists.
+
+### 3. Audit backend and database
+Determine whether Supabase or another persistent database is connected and working.
+
+Inspect the schema, migrations, authentication, data persistence, error handling, access controls, and authorization policies.
+
+Check whether users and organizations can access only the records they are authorized to access.
+
+Never expose credentials, API keys, database passwords, or private environment variables in the audit report.
+
+### 4. Audit energy calculations
+Inspect energy units, timestamps, missing data, input validation, energy balances, and calculation methods.
+
+Determine which calculations are actually implemented and whether they have automated tests or documented assumptions.
+
+Do not invent energy measurements or present demonstration data as real operating data.
+
+### 5. Audit deployment and integrations
+Verify the build process, application startup, configured routes, production environment requirements, API integrations, and error handling.
+
+Identify external integrations that require credentials, subscriptions, physical equipment, or additional configuration.
+
+### 6. Run tests
+Run the available automated tests and build checks. Test the main user journeys where feasible, including navigation, login, asset creation, data entry, dashboard updates, report generation, and error handling.
+
+Do not delete or alter real customer data. Do not make destructive database changes.
+
+If a test cannot be performed, explain why instead of reporting it as passed.
+
+### 7. Produce a readiness report
+Provide:
+A. Current implementation and architecture.
+B. Feature-by-feature status table.
+C. Database and authentication status.
+D. Test results, including failures.
+E. Security and data-integrity risks.
+F. Missing integrations and configuration.
+G. Prioritized list of required fixes.
+H. Final readiness classification: prototype, internal testing, pilot-ready, or production-ready.
+
+Provide evidence for conclusions wherever possible.
+
+Do not claim the SaaS is production-ready unless the relevant functionality, security controls, integrations, and deployment have been verified.
+
+Do not modify application code during this audit. Report findings and recommended changes first.
