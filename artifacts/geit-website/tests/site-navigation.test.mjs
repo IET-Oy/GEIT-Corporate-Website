@@ -19,6 +19,6 @@ test("language selector keeps its header slot and platform entry opens the exist
   assert.match(workspace, /<SiteHeader \/>\s*<AppNav \/>/);
   const app = readFileSync(new URL("../src/App.tsx", import.meta.url), "utf8");
   assert.ok(app.includes("if(location==='/energy-saas')return <Redirect to=\"/app\"/>"));
-  assert.ok(app.includes("Make smarter energy decisions. Build a more efficient, resilient and low-carbon future."));
+  assert.ok(readFileSync(new URL("../src/components/hero-headline.tsx", import.meta.url), "utf8").includes('c("Make smarter energy decisions.")') && app.includes("<HeroHeadline/>") && !app.includes("Build a more efficient, resilient and low-carbon future."));
   assert.ok(app.includes("Integrated consulting, project development, digital energy and carbon services—grounded in data, rigorous analysis and sound economics."));
 });

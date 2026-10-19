@@ -9,7 +9,7 @@ export function RouteScroll() {
       try { anchor = decodeURIComponent(window.location.hash.slice(1)); } catch { /* Ignore malformed fragments. */ }
       const target = anchor && document.getElementById(anchor);
       if (target) {
-        target.scrollIntoView({ block: "start" });
+        target.scrollIntoView({ block: "start", behavior: "instant" });
         target.focus({ preventScroll: true });
       } else {
         window.scrollTo({ top: 0, left: 0, behavior: "instant" });

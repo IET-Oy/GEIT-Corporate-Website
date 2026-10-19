@@ -21,9 +21,9 @@ Align the first-bar Home link with the horizontal start of second-bar Industries
 
 **How to apply:** Shift only the four primary links. Keep the logo and language selector anchored in place; allow responsive alignment to follow translated link widths rather than using a fixed offset.
 
-Preserve the approved homepage visualization and the exact wording of its two statements. Keep the headline box in its existing location; anchor the separate description box to the hero's bottom-right, not the viewport. Stack naturally on smaller screens.
+Preserve the approved homepage visualization and the description statement. The current approved headline is “Make smarter energy decisions.” in a compact box with subtle continuous appearance animation and a static reduced-motion mode. Anchor the separate description box to the hero's bottom-right, not the viewport. Stack naturally on smaller screens.
 
-**Why:** The user explicitly approved these placements and asked that unrelated homepage functionality remain unchanged.
+**Why:** The user approved the box placements, then explicitly replaced the longer headline in the public support and founder-photo update.
 
 **How to apply:** Adjust responsive padding and widths without paraphrasing, overlapping calls to action, or replacing the approved hero background.
 

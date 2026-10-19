@@ -33,7 +33,7 @@ export default function FloatingConsultation() {
       href="/contact"
       aria-label={c("Request a consultation with GEIT")}
       data-testid="floating-consultation-cta"
-      className="fixed bottom-5 right-5 z-40 inline-flex min-h-12 items-center gap-2 rounded-full bg-[#168568] px-5 py-3 text-sm font-semibold text-white shadow-[0_12px_32px_rgba(16,36,58,.24)] transition hover:-translate-y-0.5 hover:bg-[#116d55] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#e8b64b]"
+      className="fixed bottom-5 right-20 z-40 sm:right-[15rem] inline-flex min-h-12 items-center gap-2 rounded-full bg-[#168568] px-5 py-3 text-sm font-semibold text-white shadow-[0_12px_32px_rgba(16,36,58,.24)] transition hover:-translate-y-0.5 hover:bg-[#116d55] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#e8b64b]"
     >{c("Talk to GEIT")}<ArrowUpRight size={16} aria-hidden="true" />
     </Link>
   );

@@ -8,9 +8,9 @@ function Portrait({ founder }: { founder: FounderProfile }) {
   const [failed, setFailed] = useState(false);
   const showImage = !!founder.portraitSrc && !failed;
   return (
-    <div className="flex aspect-[4/3] w-full items-center justify-center overflow-hidden bg-[#e9eff1]" data-testid={`img-portrait-${founder.id}`}>
+    <div className="mx-auto flex aspect-[4/5] w-full max-w-[320px] items-center justify-center overflow-hidden rounded-sm bg-[#e9eff1]" data-testid={`img-portrait-${founder.id}`}>
       {showImage ? (
-        <img src={founder.portraitSrc!} alt={founder.fullName} onError={() => setFailed(true)} loading="lazy" decoding="async" width="640" height="480" className="h-full w-full object-cover" />
+        <img src={founder.portraitSrc!} alt={founder.fullName} onError={() => setFailed(true)} loading="lazy" decoding="async" width="480" height="600" className="h-full w-full object-cover" />
       ) : (
         <div role="img" aria-label={`${c("Portrait placeholder")}: ${founder.fullName}`} className="flex flex-col items-center gap-2 text-[#647481]">
           <UserRound size={72} strokeWidth={1.25} aria-hidden="true" />
@@ -48,6 +48,7 @@ export function FoundersLeadership() {
             <article key={f.id} aria-labelledby={`founder-${f.id}`} data-testid={`card-founder-${f.id}`} className="border-l-2 border-[#e8b64b] bg-[#f7f9fa] p-5 transition-transform duration-300 hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:translate-y-0 sm:p-6">
               <Portrait founder={f} />
               <h3 id={`founder-${f.id}`} className="mt-6 text-xl font-bold text-[#10243a]">{f.fullName}</h3>
+              <p className="mt-3 min-h-14 text-sm leading-7 text-[#647481]">{c(f.biography)}</p>
               <dl className="mt-4">
                 <Field id={`text-title-${f.id}`} label={c("TITLE")}>
                   {f.officialTitle ? f.officialTitle : <span className="text-[#647481]">{c("Official title pending confirmation")}</span>}
