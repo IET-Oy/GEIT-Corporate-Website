@@ -48,18 +48,22 @@ test("homepage hero combines the supplied photo with the light-field animation",
   assert.equal(image.subarray(8, 12).toString(), "WEBP");
 });
 
-test("hero keeps its heading at the top and both actions and summary in the bottom group without a white wash", () => {
+test("hero aligns positioning labels at the top, anchors the headline below and moves actions and summary outside", () => {
   const app = readFileSync(new URL("../src/App.tsx", import.meta.url), "utf8");
   const hero = app.slice(app.indexOf('<section className=', app.indexOf("function HomePage()")), app.indexOf("</section>", app.indexOf("function HomePage()")));
   const top = hero.indexOf('data-testid="hero-top-content"');
   const bottom = hero.indexOf('data-testid="hero-bottom-content"');
   assert.ok(top > 0 && bottom > top);
-  assert.ok(hero.indexOf("<HeroHeadline/>") < bottom);
+  assert.ok(hero.indexOf("<HeroHeadline/>") > bottom);
   assert.ok(hero.indexOf("GLOBAL ENERGY &amp; TECHNOLOGY") < bottom);
-  assert.ok(hero.indexOf('data-testid="hero-actions"') > bottom);
-  assert.ok(hero.indexOf('href="/contact"') > bottom);
-  assert.ok(hero.indexOf('href="/services"') > bottom);
-  assert.ok(hero.indexOf('data-testid="hero-summary-box"') > bottom);
+  assert.ok(hero.indexOf('data-testid="hero-outlook"') < bottom);
+  assert.ok(hero.indexOf("GLOBAL OUTLOOK") > top && hero.indexOf("GLOBAL OUTLOOK") < bottom);
+  assert.match(hero, /grid-cols-2 items-start.*sm:justify-between/);
+  assert.ok(!hero.includes('data-testid="hero-actions"'));
+  assert.ok(!hero.includes('data-testid="hero-summary-box"'));
+  const introduction = app.slice(app.indexOf('data-testid="home-introduction"'), app.indexOf("</section>", app.indexOf('data-testid="home-introduction"')));
+  assert.ok(introduction.includes('href="/contact"') && introduction.includes('href="/services"'));
+  assert.ok(introduction.includes('data-testid="hero-summary-box"'));
   assert.match(hero, /flex-col justify-between/);
   assert.ok(!hero.includes("hero-veil") && !hero.includes("bg-white"));
   const css = readFileSync(new URL("../src/index.css", import.meta.url), "utf8");

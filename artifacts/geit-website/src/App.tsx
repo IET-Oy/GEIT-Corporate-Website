@@ -86,22 +86,24 @@ return <><Meta title="Energy Intelligence for Better Decisions" description="GEI
 <section className="relative isolate min-h-[650px] overflow-hidden text-white lg:min-h-[690px]" data-testid="home-hero">
   <HeroOrb/>
   <div className="relative mx-auto flex min-h-[650px] max-w-[1320px] flex-col justify-between gap-24 px-5 py-6 sm:py-8 lg:min-h-[690px] lg:px-10 lg:py-10">
-    <div className="hero-heading relative min-w-0 max-w-[790px] page-reveal" data-testid="hero-top-content">
-      <Eyebrow>GLOBAL ENERGY &amp; TECHNOLOGY</Eyebrow>
+    <div className="hero-topbar grid grid-cols-2 items-start gap-3 sm:flex sm:justify-between sm:gap-6" data-testid="hero-top-content">
+      <div className="hero-heading min-w-0 page-reveal"><Eyebrow>GLOBAL ENERGY &amp; TECHNOLOGY</Eyebrow></div>
+      <div className="hero-glass flex min-w-0 items-center gap-3 rounded-lg px-3 py-3 text-[9px] font-semibold tracking-[.1em] sm:px-4 sm:text-xs sm:tracking-[.14em]" data-testid="hero-outlook">
+        <span className="h-px w-5 shrink-0 bg-[#e8b64b] sm:w-10"/>{c("GLOBAL OUTLOOK · BUILT FOR WHAT'S NEXT")}
+      </div>
+    </div>
+    <div className="relative min-w-0 max-w-[790px] page-reveal" data-testid="hero-bottom-content">
       <HeroHeadline/>
     </div>
-    <div className="grid items-end gap-6 lg:grid-cols-[1fr_360px] lg:gap-10" data-testid="hero-bottom-content">
-      <div className="min-w-0">
-        <div className="hero-glass mb-5 flex w-fit items-center gap-4 rounded-lg px-4 py-3 text-xs font-semibold tracking-[.14em]">
-          <span className="h-px w-10 shrink-0 bg-[#e8b64b]"/>{c("GLOBAL OUTLOOK · BUILT FOR WHAT'S NEXT")}
-        </div>
-        <div className="flex flex-col gap-3 sm:flex-row" data-testid="hero-actions">
-          <ButtonLink href="/contact">Request a Consultation</ButtonLink>
-          <ButtonLink href="/services" secondary>Explore Our Services</ButtonLink>
-        </div>
-      </div>
-      <p className="hero-glass w-full max-w-[600px] justify-self-end rounded-lg p-5 text-base leading-7 shadow-lg" data-testid="hero-summary-box">{c("Integrated consulting, project development, digital energy and carbon services—grounded in data, rigorous analysis and sound economics.")}</p>
+  </div>
+</section>
+<section className="border-b border-[#dce3e8] bg-[#f2f5f7]" data-testid="home-introduction">
+  <div className="mx-auto grid max-w-[1320px] items-center gap-6 px-5 py-8 lg:grid-cols-[1fr_1.1fr] lg:gap-10 lg:px-10">
+    <div className="flex flex-col gap-3 sm:flex-row" data-testid="hero-actions">
+      <ButtonLink href="/contact">Request a Consultation</ButtonLink>
+      <ButtonLink href="/services" secondary>Explore Our Services</ButtonLink>
     </div>
+    <p className="rounded-lg border border-[#dce3e8] bg-white p-5 text-base leading-7 text-[#10243a] shadow-sm" data-testid="hero-summary-box">{c("Integrated consulting, project development, digital energy and carbon services—grounded in data, rigorous analysis and sound economics.")}</p>
   </div>
 </section>
 <section className="bg-white"><div className="mx-auto grid max-w-[1320px] gap-8 px-5 py-16 md:grid-cols-[.65fr_1.6fr] md:items-center lg:px-10 lg:py-20"><Eyebrow>THE GEIT APPROACH</Eyebrow><div><p className="max-w-3xl text-2xl font-semibold leading-snug text-[#10243a] sm:text-3xl">{c("Energy decisions should be driven by data, rigorous analysis and sound economics.")}</p><p className="mt-5 max-w-3xl text-sm leading-7 text-[#667782]">{c("We bring technical understanding and commercial thinking together—so organisations can move from fragmented information to a considered next step.")}</p></div></div></section>

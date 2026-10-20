@@ -21,7 +21,7 @@ Align the first-bar Home link with the horizontal start of second-bar Industries
 
 **How to apply:** Shift only the four primary links. Keep the logo and language selector anchored in place; allow responsive alignment to follow translated link widths rather than using a fixed offset.
 
-Preserve the homepage foreground and the description statement. The current approved headline is “Make smarter energy decisions.” in a compact box with subtle continuous appearance animation and a static reduced-motion mode. Anchor the separate description box to the hero's bottom-right, not the viewport. Stack naturally on smaller screens.
+Preserve the homepage foreground and the description statement. The current approved headline is “Make smarter energy decisions.” in a compact box with subtle continuous appearance animation and a static reduced-motion mode. The latest placement request puts this headline at the bottom of the hero and moves the consulting description and both CTA links outside the hero, directly below it.
 
 **Why:** The user approved the box placements, then explicitly replaced the longer headline in the public support and founder-photo update.
 
@@ -31,7 +31,7 @@ Combine the owner's supplied energy-infrastructure office image and the orb → 
 
 **Why:** The owner corrected the placement: “The image and animation should should be the hero, while the dark blue color is removed.” They also required preserving all existing content and navigation.
 
-**How to apply:** Keep both visuals together within the existing hero, retain readable text and all existing copy, CTA links, navigation and page sections. Do not revert to an image-only hero or a separate photograph below the hero. The user confirmed this combined approach, then requested removal of the whitish wash in favour of glass behind text only: keep the animated headline and Global Energy & Technology at the top, with both CTA buttons and the consulting description in the bottom region. Leave the image clear between those groups.
+**How to apply:** Keep both visuals together within the existing hero, retain readable text and all existing copy, CTA links, navigation and page sections. Do not revert to an image-only hero or a separate photograph below the hero. The user confirmed the combined visual and removal of the whitish wash in favour of glass behind text only. Their later positioning request puts Global Energy & Technology at the top left and Global Outlook at the top right on the same level; the animated headline belongs at the bottom. Both CTA links and the consulting summary belong outside the hero. Leave the image clear between the hero's text groups.
 
 The user approved the full phased Energy Intelligence SaaS extension, including authentication, persistent tenant data and private storage. This supersedes the earlier corporate-only prohibition on adding authentication or a database. Preserve the existing corporate site and existing data.
 
