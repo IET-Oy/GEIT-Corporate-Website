@@ -1,6 +1,50 @@
 import { useEffect, useId, useRef } from 'react';
 
 const CYCLE = 26;
+const FRAME_MS = 1000 / 30;
+
+/** Bounded, hysteretic budget: never chase single-frame spikes or oscillate per frame. */
+export class HeroFrameBudget {
+  maxParticles = 900;
+  minParticles = 450;
+  particles = 900;
+  private samples = 0;
+  private cost = 0;
+  private late = 0;
+  private healthyWindows = 0;
+
+  resize(width: number) {
+    const max = width < 768 ? 900 : 1900;
+    if (max !== this.maxParticles) {
+      const ratio = this.particles / this.maxParticles;
+      this.maxParticles = max;
+      this.minParticles = width < 768 ? 450 : 700;
+      this.particles = Math.max(this.minParticles, Math.round(max * ratio));
+    }
+    this.reset();
+  }
+
+  reset() { this.samples = this.cost = this.late = this.healthyWindows = 0; }
+
+  observe(drawMs: number, intervalMs: number) {
+    this.cost += drawMs;
+    if (intervalMs > 50) this.late++;
+    if (++this.samples < 30) return;
+    const average = this.cost / this.samples;
+    if (average > 8 || this.late >= 6) {
+      this.particles = Math.max(this.minParticles, Math.floor(this.particles * 0.8));
+      this.healthyWindows = 0;
+    } else if (average < 4 && this.late === 0) {
+      // Five healthy seconds before a small recovery; at most the responsive ceiling.
+      if (++this.healthyWindows >= 5) {
+        this.particles = Math.min(this.maxParticles, this.particles + 90);
+        this.healthyWindows = 0;
+      }
+    } else this.healthyWindows = 0;
+    this.samples = this.cost = this.late = 0;
+  }
+}
+
 const sm = (a: number, b: number, x: number) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
 /** Weights for orb / galaxy / brain; loops seamlessly. */
 export function heroPhaseWeights(time: number): [number, number, number] {
@@ -79,10 +123,10 @@ export function HeroLightField({ className = '' }: { className?: string }) {
     if (!el || !canvas || !ctx) return;
     const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
     let reduced = motionPreference.matches;
-    const small = window.innerWidth < 768;
-    const N = small ? 900 : 1900;
+    const budget = new HeroFrameBudget();
     seed = 90210;
-    const { orb, gal, br, at } = buildHeroTargets(N);
+    // Allocate once so resize and adaptive quality never regenerate the shapes.
+    const { orb, gal, br, at } = buildHeroTargets(1900);
     const mint = sprite('120,255,205'), vio = sprite('150,110,255'), white = sprite('235,255,248');
     let W = 1, H = 1, dpr = 1;
     const ptr = { x: 0, y: 0, tx: 0, ty: 0, on: 0, onT: 0, px: -9999, py: -9999 };
@@ -91,10 +135,19 @@ export function HeroLightField({ className = '' }: { className?: string }) {
     const fixedT = forced === 'orb' ? 1 : forced === 'galaxy' ? 10 : forced === 'brain' ? 17 : null;
 
     const resize = () => {
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
-      W = Math.max(1, el.clientWidth); H = Math.max(1, el.clientHeight);
+      const width = Math.max(1, el.clientWidth), height = Math.max(1, el.clientHeight);
+      const density = Math.min(window.devicePixelRatio || 1, width < 768 ? 1.5 : 2);
+      if (width === W && height === H && density === dpr) return;
+      W = width; H = height; dpr = density;
+      budget.resize(W);
       canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
-      draw(fixedT ?? (reduced ? 17 : clock));
+      const cx = W * (W >= 1024 ? 0.7 : 0.5), cy = H * (W >= 1024 ? 0.5 : 0.56);
+      const radius = Math.min(W >= 1024 ? W * 0.3 : W * 0.44, H * 0.4) * 1.7;
+      // The broad halo is static decoration: let the browser cache it instead of
+      // rebuilding and rasterizing a full-buffer radial gradient on every frame.
+      canvas.style.backgroundImage = `radial-gradient(circle ${radius}px at ${cx}px ${cy}px, rgba(110,90,230,.19), rgba(40,160,150,.06) 50%, rgba(16,36,58,0))`;
+      // A hidden/offscreen resize updates the buffer, but must not do rendering work.
+      if (inView && !document.hidden) draw(fixedT ?? (reduced ? 17 : clock));
     };
 
     const draw = (t: number) => {
@@ -103,7 +156,8 @@ export function HeroLightField({ className = '' }: { className?: string }) {
       const [wo, wg, wb] = heroPhaseWeights(t);
       const cx = W * (W >= 1024 ? 0.7 : 0.5), cy = H * (W >= 1024 ? 0.5 : 0.56);
       const S = Math.min(W >= 1024 ? W * 0.3 : W * 0.44, H * 0.4);
-      ptr.x += (ptr.tx - ptr.x) * 0.05; ptr.y += (ptr.ty - ptr.y) * 0.05; ptr.on += (ptr.onT - ptr.on) * 0.05;
+      // Same response time as the old 60 Hz loop, independent of display refresh.
+      ptr.x += (ptr.tx - ptr.x) * 0.1; ptr.y += (ptr.ty - ptr.y) * 0.1; ptr.on += (ptr.onT - ptr.on) * 0.1;
       const trans = 4 * (wg * (1 - wg)) + 4 * (wb * (1 - wb)) + 4 * (wo * (1 - wo));
       // per-shape rotation
       const yo = t * 0.25 + ptr.x * 0.5, xo = 0.35 + ptr.y * 0.25;
@@ -112,13 +166,9 @@ export function HeroLightField({ className = '' }: { className?: string }) {
       const co = Math.cos(yo), so = Math.sin(yo), cxo = Math.cos(xo), sxo = Math.sin(xo);
       const cg = Math.cos(yg), sg = Math.sin(yg), cxg = Math.cos(xg), sxg = Math.sin(xg);
       const cb = Math.cos(yb), sb = Math.sin(yb), cxb = Math.cos(xb), sxb = Math.sin(xb);
-      // glow behind
-      const gl = ctx.createRadialGradient(cx, cy, 0, cx, cy, S * 1.7);
-      gl.addColorStop(0, `rgba(110,90,230,${0.16 + wo * 0.06})`); gl.addColorStop(0.5, 'rgba(40,160,150,.06)'); gl.addColorStop(1, 'rgba(16,36,58,0)');
-      ctx.fillStyle = gl; ctx.fillRect(0, 0, W, H);
       ctx.globalCompositeOperation = 'lighter';
       const breathe = 1 + Math.sin(t * 1.1) * 0.02;
-      for (let i = 0; i < N; i++) {
+      for (let i = 0; i < budget.particles; i++) {
         const k = i * 3, a = at[i * 2], sz = at[i * 2 + 1];
         // orb
         let x = orb[k] * breathe, y = orb[k + 1] * breathe, z = orb[k + 2] * breathe;
@@ -163,18 +213,33 @@ export function HeroLightField({ className = '' }: { className?: string }) {
       ctx.globalCompositeOperation = 'source-over';
     };
 
-    let raf = 0, running = false, inView = true, last = 0, clock = 0;
+    let raf = 0, running = false, inView = true, last = 0, clock = 0, nextDraw = 0, lastDraw = 0;
     let touchTimer: number | undefined;
     const frame = (now: number) => {
       raf = 0; if (!running) return;
-      clock += Math.min(0.05, (now - last) / 1000 || 0.016); last = now;
-      draw(clock);
+      clock += Math.max(0, (now - last) / 1000); last = now;
+      if (now >= nextDraw - 0.5) {
+        const began = performance.now();
+        draw(clock);
+        budget.observe(performance.now() - began, now - lastDraw);
+        lastDraw = now;
+        // Keep a 30 Hz deadline without catch-up bursts following a long frame.
+        nextDraw += FRAME_MS * Math.max(1, Math.floor((now - nextDraw) / FRAME_MS) + 1);
+      }
       raf = requestAnimationFrame(frame);
     };
-    const start = () => { if (running || fixedT !== null || reduced || !inView || document.hidden) return; running = true; last = performance.now(); raf = requestAnimationFrame(frame); };
+    const start = () => {
+      if (running || fixedT !== null || reduced || !inView || document.hidden) return;
+      running = true; last = lastDraw = performance.now(); nextDraw = last + FRAME_MS;
+      budget.reset(); raf = requestAnimationFrame(frame);
+    };
     const stop = () => { running = false; if (raf) cancelAnimationFrame(raf); raf = 0; };
-    const onVis = () => (document.hidden ? stop() : start());
-    const io = new IntersectionObserver(([e]) => { inView = e.isIntersecting; inView ? start() : stop(); }, { threshold: 0.02 });
+    const redrawStatic = () => { if (inView && !document.hidden && (reduced || fixedT !== null)) draw(fixedT ?? 17); };
+    const onVis = () => { if (document.hidden) stop(); else { redrawStatic(); start(); } };
+    const io = new IntersectionObserver(([e]) => {
+      inView = e.isIntersecting && e.intersectionRatio >= 0.02;
+      if (inView) { redrawStatic(); start(); } else stop();
+    }, { threshold: 0.02 });
     const ro = new ResizeObserver(resize);
     const onMove = (e: PointerEvent) => {
       if (reduced || fixedT !== null || !inView || document.hidden) return;
@@ -190,12 +255,13 @@ export function HeroLightField({ className = '' }: { className?: string }) {
     const onOut = () => { ptr.onT = 0; ptr.tx = ptr.ty = 0; };
     const onMotion = () => {
       reduced = motionPreference.matches;
-      if (reduced) { stop(); onOut(); ptr.x = ptr.y = ptr.on = 0; draw(fixedT ?? 17); }
+      if (reduced) { stop(); onOut(); ptr.x = ptr.y = ptr.on = 0; redrawStatic(); }
       else start();
     };
     resize();
     if (fallback.current) fallback.current.style.display = 'none';
     ro.observe(el); io.observe(el);
+    window.addEventListener('resize', resize, { passive: true });
     if (fixedT === null) {
       document.addEventListener('visibilitychange', onVis);
       window.addEventListener('pointermove', onMove, { passive: true });
@@ -207,6 +273,7 @@ export function HeroLightField({ className = '' }: { className?: string }) {
     return () => {
       stop(); io.disconnect(); ro.disconnect();
       window.clearTimeout(touchTimer);
+      window.removeEventListener('resize', resize);
       document.removeEventListener('visibilitychange', onVis);
       window.removeEventListener('pointermove', onMove);
       window.removeEventListener('pointerdown', onMove);
