@@ -9,11 +9,11 @@ Do not treat a passing build or a fallback screenshot as evidence that the orb's
 
 **How to apply:** If reintroducing GPU rendering, check WebGL availability first. If it remains unavailable, report that limitation and require evidence from a WebGL-capable browser before claiming the animation is verified. The replacement background deliberately uses Canvas2D so its actual shapes can be captured without WebGL.
 
-Keep homepage background artwork purely decorative, outside the accessibility tree and tab order. The owner subsequently replaced the animated visualization with their supplied photograph.
+Keep homepage background artwork purely decorative, outside the accessibility tree and tab order. The owner clarified that the animation stays and the supplied photograph is separate homepage content.
 
 **Why:** The user explicitly requested an immersive hero background and prohibited visible labels, captions, element names or explanatory text. This overrides the earlier labelled preview presentation.
 
-**How to apply:** Preserve foreground contrast and avoid additional labels, controls or status messages. Follow the current photograph direction in the scope notes; the animation-verification history below applies only if animation is explicitly requested again.
+**How to apply:** Preserve foreground contrast and avoid additional labels, controls or status messages on the animated background. Give the separate content photograph meaningful alternative text.
 
 Do not equate Canvas2D draw-submission time with the complete rendering or energy cost.
 
