@@ -3,6 +3,12 @@ name: Supabase and preview trust boundaries
 description: Environment-specific TLS, cookie and email-link caveats for phased SaaS work.
 ---
 
+Treat process mode and remote database environment as separate trust decisions. Require explicit, project-bound approval before fixture writes or cleanup; default to local adapters and read-only metadata otherwise.
+
+**Why:** A development Node process can still point at a production Supabase project. Synthetic account creation and cleanup are real mutations regardless of fixture naming.
+
+**How to apply:** Verify a disposable non-production target before enabling integration fixtures. Never infer write permission from NODE_ENV, an available connection secret, or historical successful tests.
+
 Keep database certificate verification enabled when inspecting or migrating Supabase.
 The development environment did not trust Supabase's database CA by default.
 

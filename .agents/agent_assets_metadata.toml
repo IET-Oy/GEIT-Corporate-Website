@@ -14,3 +14,17 @@ mtime_ms = 1792423755959
 storage_uri = "gcs://replit-rams-assets-archer/rams/assets/repl:fce71e1d-6c2b-4e84-8d15-001075ea3502/4b624bc9-a6a5-4e62-beea-11f69db9d48d/4266e18f-6c24-496d-8ce2-0a3469103641"
 storage_version_token = "1792423774947312"
 content_type = "text/html"
+
+[[outputs]]
+id = "HSIlZfJVSFGLd8MWkCeF1"
+uri = "file://docs/qa-security-audit-2026-10-20.html"
+type = "html"
+title = "GEIT QA, Security & End-to-End Audit"
+description = "Executed results, verified fixes, synthetic performance measurements, remaining tests and launch blockers. Verdict: internal testing only."
+logical_id = "4c6964fa-22ab-434a-b1ee-0eafe2282cd1"
+content_hash = "sha256:b2efd495bb6fbe391dcf0a461ff22de94eca5e57bcf14a7b22cb290c11f7727a"
+size = 19844
+mtime_ms = 1792490336155
+storage_uri = "gcs://replit-rams-assets-archer/rams/assets/repl:fce71e1d-6c2b-4e84-8d15-001075ea3502/4c6964fa-22ab-434a-b1ee-0eafe2282cd1/14fb77d2-3929-4a06-bdf3-fcddb00e6d1a"
+storage_version_token = "1792490380078423"
+content_type = "text/html"

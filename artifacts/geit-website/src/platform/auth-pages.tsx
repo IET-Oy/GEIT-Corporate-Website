@@ -11,6 +11,9 @@ function pwError(v: string) {
   return null;
 }
 const emailOk = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) && v.length <= 254;
+function focusInvalid(event: FormEvent, field: string) {
+  event.currentTarget.querySelector<HTMLInputElement>(`[data-testid="input-${field}"]`)?.focus();
+}
 
 export function SignInPage() {
   const [, navigate] = useLocation();
@@ -22,7 +25,7 @@ export function SignInPage() {
     e.preventDefault();
     const next = { email: emailOk(email.trim()) ? undefined : "Enter a valid email address.", password: password ? undefined : "Enter your password." };
     setErrs(next);
-    if (next.email || next.password) return;
+    if (next.email || next.password) { focusInvalid(e, next.email ? "email" : "password"); return; }
     auth.mutate({ action: "signin", data: { email: email.trim(), password } }, {
       onSuccess: async () => { await qc.invalidateQueries({ queryKey: getGetPlatformSessionQueryKey() }); navigate("/app"); },
     });
@@ -32,8 +35,8 @@ export function SignInPage() {
       footer={<div className="flex flex-wrap justify-between gap-3"><span>No account? <TextLink href="/app/register" testId="link-register">Create one</TextLink></span><TextLink href="/app/forgot-password" testId="link-forgot">Forgot password</TextLink></div>}>
       <form onSubmit={submit} noValidate className="space-y-5" aria-label="Sign in">
         {auth.isError && <Alert testId="error-signin">{apiMessage(auth.error, "Sign in was not successful.")}</Alert>}
-        <Field label="EMAIL" error={errs.email}>{(p) => <input id={p.id} type="email" autoComplete="email" className="form-input" value={email} onChange={(e) => setEmail(e.target.value)} aria-invalid={p.invalid} aria-describedby={p.describedBy} data-testid="input-email" />}</Field>
-        <Field label="PASSWORD" error={errs.password}>{(p) => <input id={p.id} type="password" autoComplete="current-password" className="form-input" value={password} onChange={(e) => setPassword(e.target.value)} aria-invalid={p.invalid} aria-describedby={p.describedBy} data-testid="input-password" />}</Field>
+        <Field label="EMAIL" error={errs.email}>{(p) => <input id={p.id} required maxLength={254} type="email" autoComplete="email" className="form-input" value={email} onChange={(e) => setEmail(e.target.value)} aria-invalid={p.invalid} aria-describedby={p.describedBy} data-testid="input-email" />}</Field>
+        <Field label="PASSWORD" error={errs.password}>{(p) => <input id={p.id} required maxLength={MAX} type="password" autoComplete="current-password" className="form-input" value={password} onChange={(e) => setPassword(e.target.value)} aria-invalid={p.invalid} aria-describedby={p.describedBy} data-testid="input-password" />}</Field>
         <SubmitButton pending={auth.isPending} testId="button-signin">Sign in</SubmitButton>
       </form>
     </AuthFrame>
@@ -50,7 +53,7 @@ export function RegisterPage() {
     const n = fullName.trim();
     const next = { fullName: n.length >= 2 && n.length <= 120 ? undefined : "Enter your full name (2 to 120 characters).", email: emailOk(email.trim()) ? undefined : "Enter a valid email address.", password: pwError(password) ?? undefined };
     setErrs(next);
-    if (next.fullName || next.email || next.password) return;
+    if (next.fullName || next.email || next.password) { focusInvalid(e, next.fullName ? "fullname" : next.email ? "email" : "password"); return; }
     auth.mutate({ action: "signup", data: { fullName: n, email: email.trim(), password } }, { onSuccess: (r) => { setDone(r.message); setPassword(""); } });
   }
   return (
@@ -64,9 +67,9 @@ export function RegisterPage() {
       ) : (
         <form onSubmit={submit} noValidate className="space-y-5" aria-label="Register">
           {auth.isError && <Alert testId="error-register">{apiMessage(auth.error, "Registration was not successful.")}</Alert>}
-          <Field label="FULL NAME" error={errs.fullName}>{(p) => <input id={p.id} autoComplete="name" className="form-input" value={fullName} onChange={(e) => setName(e.target.value)} aria-invalid={p.invalid} aria-describedby={p.describedBy} data-testid="input-fullname" />}</Field>
-          <Field label="EMAIL" error={errs.email}>{(p) => <input id={p.id} type="email" autoComplete="email" className="form-input" value={email} onChange={(e) => setEmail(e.target.value)} aria-invalid={p.invalid} aria-describedby={p.describedBy} data-testid="input-email" />}</Field>
-          <Field label="PASSWORD" hint={`${MIN} to ${MAX} characters.`} error={errs.password}>{(p) => <input id={p.id} type="password" autoComplete="new-password" className="form-input" value={password} onChange={(e) => setPassword(e.target.value)} aria-invalid={p.invalid} aria-describedby={p.describedBy} data-testid="input-password" />}</Field>
+          <Field label="FULL NAME" error={errs.fullName}>{(p) => <input id={p.id} required minLength={2} maxLength={120} autoComplete="name" className="form-input" value={fullName} onChange={(e) => setName(e.target.value)} aria-invalid={p.invalid} aria-describedby={p.describedBy} data-testid="input-fullname" />}</Field>
+          <Field label="EMAIL" error={errs.email}>{(p) => <input id={p.id} required maxLength={254} type="email" autoComplete="email" className="form-input" value={email} onChange={(e) => setEmail(e.target.value)} aria-invalid={p.invalid} aria-describedby={p.describedBy} data-testid="input-email" />}</Field>
+          <Field label="PASSWORD" hint={`${MIN} to ${MAX} characters.`} error={errs.password}>{(p) => <input id={p.id} required minLength={MIN} maxLength={MAX} type="password" autoComplete="new-password" className="form-input" value={password} onChange={(e) => setPassword(e.target.value)} aria-invalid={p.invalid} aria-describedby={p.describedBy} data-testid="input-password" />}</Field>
           <p className="text-xs leading-5 text-[#6b7b87]">Your name, email and credentials are stored in a Supabase authentication account operated for GEIT. Read the <TextLink href="/privacy-policy" testId="link-privacy">Privacy Policy</TextLink> and <TextLink href="/terms-of-use" testId="link-terms">Terms of Use</TextLink>. Registering means you accept them.</p>
           <SubmitButton pending={auth.isPending} testId="button-register">Create account</SubmitButton>
         </form>
@@ -80,7 +83,7 @@ export function ForgotPasswordPage() {
   const [email, setEmail] = useState(""); const [err, setErr] = useState<string | null>(null); const [done, setDone] = useState<string | null>(null);
   function submit(e: FormEvent) {
     e.preventDefault();
-    if (!emailOk(email.trim())) { setErr("Enter a valid email address."); return; }
+    if (!emailOk(email.trim())) { setErr("Enter a valid email address."); focusInvalid(e, "email"); return; }
     setErr(null);
     auth.mutate({ action: "recovery", data: { email: email.trim() } }, { onSuccess: (r) => setDone(r.message) });
   }
@@ -90,7 +93,7 @@ export function ForgotPasswordPage() {
       {done ? <Alert tone="success"><span data-testid="status-recovery">{done} Check your email.</span></Alert> : (
         <form onSubmit={submit} noValidate className="space-y-5" aria-label="Request password reset">
           {auth.isError && <Alert testId="error-recovery">{apiMessage(auth.error)}</Alert>}
-          <Field label="EMAIL" error={err}>{(p) => <input id={p.id} type="email" autoComplete="email" className="form-input" value={email} onChange={(e) => setEmail(e.target.value)} aria-invalid={p.invalid} aria-describedby={p.describedBy} data-testid="input-email" />}</Field>
+          <Field label="EMAIL" error={err}>{(p) => <input id={p.id} required maxLength={254} type="email" autoComplete="email" className="form-input" value={email} onChange={(e) => setEmail(e.target.value)} aria-invalid={p.invalid} aria-describedby={p.describedBy} data-testid="input-email" />}</Field>
           <SubmitButton pending={auth.isPending} testId="button-recovery">Send reset link</SubmitButton>
         </form>
       )}
@@ -141,7 +144,7 @@ export function ResetPasswordPage() {
     e.preventDefault();
     const next = { password: pwError(password) ?? undefined, confirm: confirm === password ? undefined : "Passwords do not match." };
     setErrs(next);
-    if (next.password || next.confirm) return;
+    if (next.password || next.confirm) { focusInvalid(e, next.password ? "password" : "confirm"); return; }
     auth.mutate({ action: "password", data: { password } }, { onSuccess: (r) => { setDone(r.message); setPassword(""); setConfirm(""); setTimeout(() => navigate("/app"), 1200); } });
   }
   const expired = auth.isError && (auth.error as { status?: number }).status === 401;
@@ -151,8 +154,8 @@ export function ResetPasswordPage() {
       {done ? <Alert tone="success"><span data-testid="status-password">{done}</span></Alert> : (
         <form onSubmit={submit} noValidate className="space-y-5" aria-label="Set new password">
           {auth.isError && <Alert testId="error-password">{expired ? "Your recovery session has expired. Request a new reset link. " : ""}{apiMessage(auth.error)}</Alert>}
-          <Field label="NEW PASSWORD" error={errs.password}>{(p) => <input id={p.id} type="password" autoComplete="new-password" className="form-input" value={password} onChange={(e) => setPassword(e.target.value)} aria-invalid={p.invalid} aria-describedby={p.describedBy} data-testid="input-password" />}</Field>
-          <Field label="CONFIRM PASSWORD" error={errs.confirm}>{(p) => <input id={p.id} type="password" autoComplete="new-password" className="form-input" value={confirm} onChange={(e) => setConfirm(e.target.value)} aria-invalid={p.invalid} aria-describedby={p.describedBy} data-testid="input-confirm" />}</Field>
+          <Field label="NEW PASSWORD" error={errs.password}>{(p) => <input id={p.id} required minLength={MIN} maxLength={MAX} type="password" autoComplete="new-password" className="form-input" value={password} onChange={(e) => setPassword(e.target.value)} aria-invalid={p.invalid} aria-describedby={p.describedBy} data-testid="input-password" />}</Field>
+          <Field label="CONFIRM PASSWORD" error={errs.confirm}>{(p) => <input id={p.id} required minLength={MIN} maxLength={MAX} type="password" autoComplete="new-password" className="form-input" value={confirm} onChange={(e) => setConfirm(e.target.value)} aria-invalid={p.invalid} aria-describedby={p.describedBy} data-testid="input-confirm" />}</Field>
           <SubmitButton pending={auth.isPending} testId="button-password">Update password</SubmitButton>
         </form>
       )}

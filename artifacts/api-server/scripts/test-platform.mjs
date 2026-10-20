@@ -7,6 +7,10 @@ import { PRIVATE_DOCUMENT_BUCKET, privateDocumentKey } from "../src/lib/private-
 import { runEnergyIntegration } from "./test-energy-integration.mjs";
 import { runEngineeringIntegration } from "./test-engineering-integration.mjs";
 import { runSustainabilityIntegration } from "./test-sustainability-integration.mjs";
+import { assertFixtureTarget } from "./fixture-safety.mjs";
+
+// Must precede even cleanup and database connections.
+assertFixtureTarget();
 
 // Isolated, synthetic development fixtures. Never print credentials or reuse customer data.
 const fixturePath = "/tmp/geit-platform-test-fixtures.json";
@@ -36,7 +40,7 @@ async function cleanup() {
       const deleted = await store.remove(files.data.map((file) => `${fixtures.orgIds[i]}/${file.name}`));
       if (deleted.error || deleted.data.length !== files.data.length) throw new Error("Synthetic storage cleanup failed.");
     }
-    await auth.auth.signOut();
+    await auth.auth.signOut({ scope: "local" });
   }
   const ids = fixtures.accounts.map((a) => a.id);
   await db.query("delete from public.geit_organisations where id in (select organisation_id from public.geit_memberships where user_id=any($1::uuid[]))", [ids]);

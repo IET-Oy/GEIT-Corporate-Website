@@ -14,6 +14,7 @@
     "test:pkce": "tsx --test scripts/test-platform-pkce.mjs",
     "test:readiness": "tsx --test tests/readiness.test.ts",
     "test:auth-outages": "tsx --test tests/auth-outage.test.ts",
+    "test:safe": "tsx --test tests/*.test.ts scripts/test-platform-pkce.mjs",
     "test:production": "node scripts/test-production-smoke.mjs",
     "audit:database": "node scripts/audit-database.mjs",
     "audit:source": "node scripts/audit-source.mjs",

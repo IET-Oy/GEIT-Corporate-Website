@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { pathToFileURL } from "node:url";
 import { createClient } from "@supabase/supabase-js";
+import { assertFixtureTarget } from "./fixture-safety.mjs";
 
 export async function verifyEnergyBoundary({ clients, orgIds, accountId, passed }) {
   for (const table of ["sites", "meters", "tariffs", "rules", "imports", "readings", "analyses", "alerts"]) {
@@ -37,7 +38,7 @@ export async function verifyEnergyBoundary({ clients, orgIds, accountId, passed 
   passed("An own-tenant RPC call with another tenant's import ID cannot access the import");
 }
 if (import.meta.url === pathToFileURL(process.argv[1]).href) {
-  if (process.env.NODE_ENV === "production") throw new Error("Development-only verification.");
+  assertFixtureTarget();
   const fixtures = JSON.parse(await readFile("/tmp/geit-platform-test-fixtures.json", "utf8"));
   const clients = [];
   for (const account of fixtures.accounts.slice(0, 2)) {

@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GEIT — QA, Security and End-to-End Audit — 20 October 2026</title>
+<style>
+:root{font-family:Arial,Helvetica,sans-serif;color:#152c42;background:#eef2f5;line-height:1.6}
+body{margin:0}main{max-width:1080px;margin:auto;background:white;padding:40px}
+header{border-top:6px solid #168568;border-bottom:1px solid #d6e0e6;padding-bottom:24px}
+h1{line-height:1.2;font-size:32px}h2{margin-top:34px;font-size:23px}h3{font-size:18px}
+.muted{color:#566b7d}.warning{padding:18px;background:#fff4dc;border-left:4px solid #cf941d}
+.badge{display:inline-block;padding:4px 12px;background:#10243a;color:white;font-weight:bold}
+table{border-collapse:collapse;width:100%;margin:18px 0;font-size:14px}
+td,th{border:1px solid #d6e0e6;text-align:left;vertical-align:top;padding:11px}th{background:#edf4f3}
+code,pre{font-family:monospace;font-size:13px}pre{background:#10243a;color:#f0f6fa;padding:16px;overflow:auto}
+li{margin:6px 0}.pass{color:#087553;font-weight:bold}.blocked{color:#8c5600;font-weight:bold}
+@media(max-width:650px){main{padding:20px}h1{font-size:26px}.scroll{overflow:auto}td,th{min-width:150px}}
+@media print{main{padding:0}body{background:white}pre{white-space:pre-wrap}h2{break-after:avoid}tr{break-inside:avoid}}
+</style>
+</head>
+<body><main>
+<header><p class="muted">GLOBAL ENERGY INNOVATION TECHNOLOGIES · 20 OCTOBER 2026</p>
+<h1>QA, security and end-to-end audit</h1>
+<p>Existing GEIT corporate site and Energy Intelligence SaaS. No redesign, no new billing provider, no production-data modification.</p>
+<span class="badge">VERDICT: INTERNAL TESTING ONLY</span></header>
+<p class="warning"><strong>This is not a production-readiness certification.</strong> Safe local checks and signed-out browser journeys were executed. The configured Supabase project was not independently classified as non-production, so remote fixture writes, authenticated customer CRUD, direct cross-tenant behavioural tests and stress traffic were not run. Historical results have not been counted as new passes.</p>
+
+<h2>1. Executed results</h2>
+<div class="scroll"><table>
+<thead><tr><th>Check</th><th>Actual result</th><th>Boundary</th></tr></thead>
+<tbody>
+<tr><td>API automated suite</td><td class="pass">74 passed, 0 failed</td><td>Node-reported count including nested tests. Energy, engineering, sustainability, provenance, AI adapter, auth failures/PKCE, import security, HTTP authorization boundaries, exports and fixture safety. Provider behaviour is synthetic where stated.</td></tr>
+<tr><td>Website automated suite</td><td class="pass">13 passed, 0 failed</td><td>Navigation, module manifest, founder renderings and public support contracts. Not authenticated UI coverage.</td></tr>
+<tr><td>Preview sandbox suite</td><td class="pass">1 passed, 0 failed</td><td>Component discovery. Total across the three suites: 88 reported tests.</td></tr>
+<tr><td>Compiled API smoke</td><td class="pass">9 grouped checks passed</td><td>Isolated local production-mode process: startup, JSON 400/413/404, CSRF, signed-out denial, no cross-origin CORS, auth rate limit and fail-closed missing production origin. Not a deployed-domain test.</td></tr>
+<tr><td>TypeScript and complete build</td><td class="pass">Passed with supplied build configuration</td><td>Root build includes full typecheck and recursive builds. Initial bare shell build failed for missing PORT; corrected invocation: PORT=5173 BASE_PATH=/ pnpm run build. No code workaround or weakened check.</td></tr>
+<tr><td>Localisation</td><td class="pass">4 languages × 22 routes; 639 source entries</td><td>Existing catalogue/form checks passed. Not human translation approval or proof of every interactive support reply in each language.</td></tr>
+<tr><td>Database metadata</td><td class="pass">Read-only audit passed</td><td>6 migration checksums; 15 tenant tables with RLS; 0 anon/PUBLIC table grants; 16 restricted-search-path security-definer functions; private bucket with 10,485,760-byte limit. No record mutations. Policy configuration is not live tenant-isolation proof.</td></tr>
+<tr><td>Dependencies</td><td class="pass">0 vulnerabilities reported</td><td>Critical/high/moderate/low/info all zero in the dependency scanner at audit time.</td></tr>
+<tr><td>Static security scan</td><td>Complete; 2 medium findings</td><td>Both identify session-cookie assignment. Reviewed below; no critical/high finding reported.</td></tr>
+<tr><td>Privacy/dataflow scan</td><td class="blocked">Failed to complete</td><td>HOUNDDOG_SCHEMA_MISMATCH: JSON schema validation failed. No privacy assurance inferred.</td></tr>
+<tr><td>Current-source secret patterns</td><td class="pass">164 files, 0 common private-key literal matches</td><td>Source/build-pattern check only. Not all secret formats, Git history, production logs or infrastructure.</td></tr>
+<tr><td>Browser QA</td><td class="pass">Signed-out checks and focused validation retest completed</td><td>Desktop 1280×720, tablet 768×1024 and mobile 390×844 inspected. No captured runtime console errors. No valid remote auth request submitted.</td></tr>
+</tbody></table></div>
+
+<h2>2. Fixes and regression coverage</h2>
+<h3>High: remote fixture writes were insufficiently guarded — fixed</h3>
+<p><strong>Reproduction before the fix:</strong> the integration harness rejected NODE_ENV=production, but accepted any configured remote Supabase connection when run as development. Process mode does not classify a remote database. Account creation, object upload and cleanup could therefore target an unintended environment.</p>
+<p>The harness now fails before connecting unless the operator explicitly enables fixture writes and names an exact staging Supabase project reference matching its HTTPS endpoint. Production mode, mismatched hosts, credentials in the URL and malformed endpoints are rejected. The standalone energy-boundary harness has the same guard. Cleanup signs out only its own session, preventing accidental invalidation of a concurrent browser fixture session.</p>
+<p><strong>Verified:</strong> two fixture-safety tests passed; an unapproved harness invocation exited nonzero with “Fixture writes disabled” before connecting. This is a safety guard, not automated proof that an operator-labelled project is non-production.</p>
+<h3>Accessibility/validation: auth fields lacked native constraints — fixed</h3>
+<p>Browser inspection found missing required and length attributes despite existing submit-time validation. Added required email/password/name semantics, email/name/password bounds, and focus on the first invalid field for sign-in, registration, recovery and password update. Existing custom messages, ARIA error states, routes and styling remain.</p>
+<p><strong>Verified after fix:</strong> blank and deliberately invalid submissions focus the expected field; invalid registration shows email and minimum-password messages; no POST requests occurred. Required password bounds are 12–128 on registration/reset. A browser advisory about adding a username hint to the reset-password form remains; not a runtime failure.</p>
+<h3>New automated safety checks</h3>
+<ul>
+<li>Real local HTTP requests against Express with a synthetic provider: foreign-organisation denial, reader mutation denial, 12 concurrent own-tenant reads with tenant filters on every query, foreign report IDs, strict rejection of forged ownership fields and injection-shaped identifiers. These are server-authorization tests, not direct database RLS tests.</li>
+<li>Empty and &gt;2 MiB imports, invalid encoding, corrupt ZIP/XLSX, executable/disguised filename, missing/extra cells, unsupported units, formula-shaped and nonfinite values, row limit, BOM/quoted CSV, multi-sheet XLSX and actual compressed content expanding beyond 16 MiB.</li>
+<li>16 independent parallel parser calls preserve their own quantities and duplicate-error previews. Eight concurrent 5,000-row parser calls were additionally benchmarked.</li>
+<li>Actual downloaded CSV/XLSX template headers, filled with a synthetic row, round-trip through the parser; demo template already contains data. Real CSV/XLSX/PDF export bytes are generated and checked for expected consumption, workbook structure, safe string cells and PDF signature. No persistent-record report-download claim is inferred.</li>
+</ul>
+<p>The first new template test incorrectly tried to import an intentionally empty template directly; it failed and was corrected to fill synthetic data before import. The product did not require a template change. Final affected tests passed.</p>
+
+<h2>3. Coverage by requested area</h2>
+<div class="scroll"><table><thead><tr><th>Area</th><th>Executed / inspected</th><th>Remaining evidence</th></tr></thead><tbody>
+<tr><td>Authentication and routes</td><td>All configured app module routes display a signed-out gate without private content. Register/login/recovery navigation and invalid form handling checked. Local outage, PKCE and invalid-credential tests pass.</td><td>Actual signup/email verification, successful login, refresh/revocation, logout, recovery email, old/new password behaviour and authenticated browser access require approved staging and inbox access.</td></tr>
+<tr><td>CRUD, ownership and integrity</td><td>HTTP role/tenant guards, strict inputs and signed calculation provenance tested locally. SQL inspected: per-organisation membership locks, per-meter import locks, overlap exclusion constraints, transaction-based commit and idempotent committed-import return.</td><td>Live two-tenant and all-role CRUD, direct PostgREST/RPC bypass attempts, concurrent same-meter commits, last-owner races, archive/import races, reload persistence and partial-failure rollback not newly executed.</td></tr>
+<tr><td>Ingestion</td><td>Actual CSV/Excel parser tested, units/date/decimal errors and duplicates detected; 5,000-row and 2 MiB limits; forms/API validation inspected. No configured physical-data integration found.</td><td>Saved preview → commit → retrieval → analysis → reload/report workflow with a real staging database, API retries and duplicate commit race.</td></tr>
+<tr><td>Files and secure storage</td><td>Import file-content parsing/rejection and expansion bound tested. Private bucket metadata and tenant-key helper inspected. Import files are parsed into rows; they are not a general document-upload library.</td><td>Real storage bytes, MIME spoofing, cross-tenant list/read/delete, upload interruption/retry, malicious document scanning, resumable/multi-file uploads and permissions need staging tests. No malware scanner or general multi-file progress/retry UI was found.</td></tr>
+<tr><td>Realtime, webhooks and sync</td><td>No implemented production streaming/IoT/webhook ingestion or live connector found. Saved-analysis alerts are not background notification delivery.</td><td>Latency, reconnect, replay, out-of-order events, stale-data recovery and webhook signature/idempotency cannot pass for an unimplemented path. These are missing capabilities if needed for launch, not working integrations.</td></tr>
+<tr><td>AI and external data</td><td>Optional AI disabled-path, consent, authorised evidence selection and forged output rejection tested using a controlled adapter. No fake live-provider success.</td><td>Configured provider, privacy approval, actual network failure/retry and model-response verification not completed. Unconfigured source status must remain explicit.</td></tr>
+<tr><td>Billing</td><td>No configured payment provider or implemented paid entitlement/webhook lifecycle identified. No billing or paid service added.</td><td>No checkout/subscription/refund/webhook test claimed. If enabled later, use provider test mode with signed webhook verification, replay/idempotency, tenant mapping and revocation.</td></tr>
+<tr><td>UI and accessibility</td><td>Public header links, mobile menu, contact validation/no-send disclosure, FAQ accordion and local-memory support open/answer/reset/close checked. No mobile horizontal overflow observed in inspected views.</td><td>Authenticated pages, screen-reader conformance and complete keyboard coverage remain. Floating support controls can cover lower-right public content at tablet/mobile sizes; retained as a low-priority UX issue rather than redesigning approved controls.</td></tr>
+</tbody></table></div>
+<p>The Energy SaaS navigation link resolves through /energy-saas to /app; this is the approved app-entry behaviour, not a broken destination. The hero’s partially visible headline in one capture is consistent with its approved typing animation; it was not treated as a confirmed persistent rendering bug.</p>
+
+<h2>4. Performance measurements and risks</h2>
+<p>Reproduce with <code>pnpm --filter @workspace/api-server exec tsx scripts/benchmark-safe.ts</code>. Synthetic inputs only, one local process, no external load.</p>
+<div class="scroll"><table><thead><tr><th>Workload</th><th>Measured time</th><th>Observation</th></tr></thead><tbody>
+<tr><td>30 daily intervals / 30-day calculation</td><td>289 ms; event-loop delay 290 ms</td><td>720 kWh, conserved expected total.</td></tr>
+<tr><td>365 daily intervals / 365-day calculation</td><td>2,936 ms; event-loop delay 3,044 ms</td><td>8,760 kWh. Synchronous minute-by-minute local-time grouping blocks the process.</td></tr>
+<tr><td>8 concurrent 5,000-row CSV parser calls</td><td>442 ms total</td><td>40,000 valid rows. Calls share one event loop; not eight independent CPU workers.</td></tr>
+<tr><td>Peak process RSS during benchmark</td><td>153 MiB</td><td>Includes runtime/libraries and all benchmark phases; not per-upload memory or production capacity.</td></tr>
+</tbody></table></div>
+<p class="warning"><strong>High-priority multi-user launch blocker:</strong> permitted year-long calculations can block unrelated requests for seconds. Move bounded work into workers/jobs or introduce a proven equivalent grouping algorithm with DST/fractional-time-zone regression tests and explicit concurrency limits. No unverified algorithm replacement was made in this audit.</p>
+<ul>
+<li>Rate limiting is per-process, not distributed. Verify trusted proxy/IP behaviour on the actual deployment and use a shared gateway/store before multi-instance launch.</li>
+<li>No dedicated heavy-work queue or measured backpressure exists for simultaneous parsing, calculation and export requests. Authentication does not itself protect a process from expensive authorised workloads.</li>
+<li>List caps (250 module records, 500 factors/sources), 10,000 analysis intervals and 366-day periods bound workloads but do not constitute pagination or capacity proof.</li>
+<li>No staging database EXPLAIN/lock contention/connection saturation or p95/p99 authenticated HTTP load test was run. Large uploads, event bursts and provider outages under sustained load remain unmeasured.</li>
+<li>Build warnings remain: main JS about 813 kB minified, app chunk about 505 kB, WebGL about 528 kB; tooltip source-map diagnostic. These do not fail the build but need performance review on physical low-powered devices.</li>
+</ul>
+
+<h2>5. Security review and operational gaps</h2>
+<ul>
+<li><strong>Medium SAST findings reviewed:</strong> platform-session.ts writes access/refresh tokens returned by Supabase. The sign-in flow validates provider output and verified email, uses fixed cookie names, HttpOnly, Secure on HTTPS, SameSite=Lax and scoped paths. This is not a confirmed attacker-controlled session fixation path. The scanner findings remain visible; actual published cookie/session rotation testing remains required.</li>
+<li><strong>Injection and disclosure:</strong> tested malformed/ownership inputs fail closed; parameterised database helper usage and constrained table selection inspected. JSON API errors omit internal provider details; logs serialize path without query, method and status instead of bodies/tokens. This is not exhaustive penetration testing or a complete log-retention audit.</li>
+<li><strong>Transit:</strong> database audit connected using certificate verification; Supabase endpoint is HTTPS. Production configuration rejects non-HTTPS origins. Published TLS, security headers, proxy cookies and custom domain were not verified.</li>
+<li><strong>At rest:</strong> a private bucket/RLS limits access; this does not independently establish encryption-at-rest configuration, key ownership, backup encryption or retention. Those controls require provider/operational evidence.</li>
+<li><strong>Recovery:</strong> backup/PITR settings, Storage-byte backups, restore drills and signing-key recovery remain unverified. Private Storage metadata alone is insufficient for object-byte recovery.</li>
+<li><strong>Secrets:</strong> no values were printed or embedded in the report. Required runtime/setup names are SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, SUPABASE_DB_URL, stable SESSION_SECRET, managed legacy DATABASE_URL where imported, production PLATFORM_ORIGIN and build-time VITE_PUBLIC_SITE_URL. Optional AI uses OPENAI_API_KEY, GEIT_AI_MODEL and GEIT_AI_ENABLED only after approval. No billing secret is needed while billing is disabled.</li>
+<li><strong>SEO/build configuration:</strong> VITE_PUBLIC_SITE_URL is absent during this build, so sitemap generation explicitly skipped. Set the verified public HTTPS origin rather than inventing a canonical URL. No publish action was taken.</li>
+</ul>
+
+<h2>6. Remaining launch gates</h2>
+<ol>
+<li>Confirm a disposable staging Supabase project and matching staging app origin; then execute actual authenticated, direct-RLS, Storage and transactional race tests with synthetic fixtures.</li>
+<li>Complete actual inbox verification/recovery and authenticated browser CRUD/reload/export journeys for every implemented module and role.</li>
+<li>Resolve heavy-calculation event-loop blocking and measure representative concurrent HTTP/database/exports load with resource limits and backpressure.</li>
+<li>Verify backup/restore, Storage-byte recovery, signing-key continuity and provider security/retention settings.</li>
+<li>Set and test production origin/domain, Supabase redirect allowlist, HTTPS/cookies, shared rate limiting, observability and incident handling. Re-run the failed privacy scan successfully or obtain an equivalent documented review.</li>
+<li>Do not advertise live integrations, streaming, billing, multi-file management or background alerts until actually implemented and verified.</li>
+</ol>
+<h2>7. Reproduction and evidence</h2>
+<p>Permanent instructions: <code>docs/qa-staging-workflow.md</code>. Existing deployment procedure: <code>docs/production-deployment.md</code>. New test files are in <code>artifacts/api-server/tests</code>: api-boundaries, fixture-safety, import-security and report-exports.</p>
+<pre>pnpm --filter @workspace/api-server run test:safe
+pnpm --filter @workspace/geit-website run test:platform
+pnpm --filter @workspace/geit-website run check:localization
+pnpm --filter @workspace/mockup-sandbox exec node --test tests/*.test.mjs
+PORT=5173 BASE_PATH=/ pnpm run build
+pnpm --filter @workspace/api-server run test:production
+pnpm --filter @workspace/api-server run audit:database
+pnpm --filter @workspace/api-server run audit:source
+pnpm --filter @workspace/api-server exec tsx scripts/benchmark-safe.ts</pre>
+<p class="muted">Session-local execution evidence: /tmp/geit-qa-final-api.log, /tmp/geit-qa-final-web.log, /tmp/geit-qa-final-language.log, /tmp/geit-qa-final-build.log, /tmp/geit-qa-benchmark.json and /tmp/geit-qa-guard.log. These temporary logs are not durable audit storage. Browser screenshots include signed-out routes, responsive pages and the post-fix invalid authentication forms. This report records actual results; no unexecuted test is marked passed.</p>
+</main></body></html>

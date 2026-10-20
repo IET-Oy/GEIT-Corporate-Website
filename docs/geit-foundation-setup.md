@@ -158,9 +158,17 @@ Origin/header CSRF checks must remain in place.
 
 ## Reproducible verification
 
-With both existing workflows running and development variables configured:
+Before any integration run, follow [the staging approval workflow](qa-staging-workflow.md).
+The harness now requires `GEIT_ALLOW_TEST_FIXTURE_WRITES=yes` and an exact
+`GEIT_TEST_SUPABASE_PROJECT_REF` matching a confirmed disposable non-production
+Supabase project. Development process mode alone is not approval. This also
+applies to fixture cleanup. Use `test:safe` for local provider-adapter tests
+without remote fixture writes.
+
+With both existing staging workflows running and the approved staging variables configured:
 
 ```sh
+# Writes fixtures: only after the explicit staging-target approval above.
 pnpm --filter @workspace/api-server run test:platform
 pnpm --filter @workspace/api-server run test:pkce
 pnpm --filter @workspace/geit-website run test:platform
