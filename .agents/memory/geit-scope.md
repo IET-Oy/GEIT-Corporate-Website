@@ -21,7 +21,7 @@ Align the first-bar Home link with the horizontal start of second-bar Industries
 
 **How to apply:** Shift only the four primary links. Keep the logo and language selector anchored in place; allow responsive alignment to follow translated link widths rather than using a fixed offset.
 
-Preserve the homepage foreground and the description statement. The current approved headline is “Make smarter energy decisions.” in a compact box with subtle continuous appearance animation and a static reduced-motion mode. The latest placement request puts this headline at the bottom of the hero and moves the consulting description and both CTA links outside the hero, directly below it.
+Preserve the homepage foreground and the description statement. The current approved headline is “Make smarter energy decisions.” in a compact box with subtle continuous appearance animation and a static reduced-motion mode. The latest placement request puts this headline at the bottom centre of the hero and moves the consulting description and both CTA links outside the hero, directly below it; Explore Our Services belongs at the right-hand end of that section.
 
 **Why:** The user approved the box placements, then explicitly replaced the longer headline in the public support and founder-photo update.
 

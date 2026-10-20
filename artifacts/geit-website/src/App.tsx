@@ -92,18 +92,20 @@ return <><Meta title="Energy Intelligence for Better Decisions" description="GEI
         <span className="h-px w-5 shrink-0 bg-[#e8b64b] sm:w-10"/>{c("GLOBAL OUTLOOK · BUILT FOR WHAT'S NEXT")}
       </div>
     </div>
-    <div className="relative min-w-0 max-w-[790px] page-reveal" data-testid="hero-bottom-content">
+    <div className="relative min-w-0 max-w-[790px] self-center text-center page-reveal" data-testid="hero-bottom-content">
       <HeroHeadline/>
     </div>
   </div>
 </section>
 <section className="border-b border-[#dce3e8] bg-[#f2f5f7]" data-testid="home-introduction">
-  <div className="mx-auto grid max-w-[1320px] items-center gap-6 px-5 py-8 lg:grid-cols-[1fr_1.1fr] lg:gap-10 lg:px-10">
+  <div className="mx-auto grid max-w-[1320px] items-center gap-6 px-5 py-8 lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:gap-10 lg:px-10">
     <div className="flex flex-col gap-3 sm:flex-row" data-testid="hero-actions">
       <ButtonLink href="/contact">Request a Consultation</ButtonLink>
-      <ButtonLink href="/services" secondary>Explore Our Services</ButtonLink>
     </div>
     <p className="rounded-lg border border-[#dce3e8] bg-white p-5 text-base leading-7 text-[#10243a] shadow-sm" data-testid="hero-summary-box">{c("Integrated consulting, project development, digital energy and carbon services—grounded in data, rigorous analysis and sound economics.")}</p>
+    <div className="justify-self-end">
+      <ButtonLink href="/services" secondary>Explore Our Services</ButtonLink>
+    </div>
   </div>
 </section>
 <section className="bg-white"><div className="mx-auto grid max-w-[1320px] gap-8 px-5 py-16 md:grid-cols-[.65fr_1.6fr] md:items-center lg:px-10 lg:py-20"><Eyebrow>THE GEIT APPROACH</Eyebrow><div><p className="max-w-3xl text-2xl font-semibold leading-snug text-[#10243a] sm:text-3xl">{c("Energy decisions should be driven by data, rigorous analysis and sound economics.")}</p><p className="mt-5 max-w-3xl text-sm leading-7 text-[#667782]">{c("We bring technical understanding and commercial thinking together—so organisations can move from fragmented information to a considered next step.")}</p></div></div></section>

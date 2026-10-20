@@ -64,6 +64,10 @@ test("hero aligns positioning labels at the top, anchors the headline below and 
   const introduction = app.slice(app.indexOf('data-testid="home-introduction"'), app.indexOf("</section>", app.indexOf('data-testid="home-introduction"')));
   assert.ok(introduction.includes('href="/contact"') && introduction.includes('href="/services"'));
   assert.ok(introduction.includes('data-testid="hero-summary-box"'));
+  assert.match(hero, /self-center text-center[^"]*" data-testid="hero-bottom-content"/);
+  assert.ok(introduction.indexOf('href="/services"') > introduction.indexOf('data-testid="hero-summary-box"'));
+  assert.match(introduction, /justify-self-end">\s*<ButtonLink href="\/services"/);
+  assert.ok(app.includes("lg:grid-cols-[auto_minmax(0,1fr)_auto]"));
   assert.match(hero, /flex-col justify-between/);
   assert.ok(!hero.includes("hero-veil") && !hero.includes("bg-white"));
   const css = readFileSync(new URL("../src/index.css", import.meta.url), "utf8");
