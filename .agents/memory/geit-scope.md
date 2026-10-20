@@ -31,7 +31,7 @@ Combine the owner's supplied energy-infrastructure office image and the orb → 
 
 **Why:** The owner corrected the placement: “The image and animation should should be the hero, while the dark blue color is removed.” They also required preserving all existing content and navigation.
 
-**How to apply:** Keep both visuals together within the existing hero, retain readable text and all existing copy, CTA links, navigation and page sections. Do not revert to an image-only hero or a separate photograph below the hero.
+**How to apply:** Keep both visuals together within the existing hero, retain readable text and all existing copy, CTA links, navigation and page sections. Do not revert to an image-only hero or a separate photograph below the hero. The user confirmed this combined approach, then requested removal of the whitish wash in favour of glass behind text only: keep the animated headline and Global Energy & Technology at the top, with both CTA buttons and the consulting description in the bottom region. Leave the image clear between those groups.
 
 The user approved the full phased Energy Intelligence SaaS extension, including authentication, persistent tenant data and private storage. This supersedes the earlier corporate-only prohibition on adding authentication or a database. Preserve the existing corporate site and existing data.
 

@@ -411,10 +411,12 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 }
 @media (prefers-reduced-motion:reduce){.geit-headline-type{animation:none;clip-path:none}}
 
-/* Hero: photo + light field combined, light neutral veil only */
-.hero-veil{background:linear-gradient(90deg,rgba(244,247,249,.78) 0%,rgba(244,247,249,.5) 38%,rgba(244,247,249,0) 75%)}
-@media (max-width:1023px){.hero-veil{background:rgba(244,247,249,.55)}}
+/* Clear photo and animation, with glass only behind foreground text. */
 [data-testid="home-hero"] canvas{background-color:transparent}
-[data-testid="home-hero"] [data-testid="button-link--services"]{color:#10243a;background:rgba(255,255,255,.9);border-color:rgba(16,36,58,.35)}
-[data-testid="home-hero"] [data-testid="button-link--services"]:hover{background:#fff;border-color:#168568}
-[data-testid="home-hero"] .geit-headline{border-left-color:#e8b64b}
+[data-testid="home-hero"] .hero-glass,
+[data-testid="home-hero"] .hero-heading>p,
+[data-testid="home-hero"] .geit-headline,
+[data-testid="home-hero"] [data-testid="button-link--services"]{color:#fff;background:rgba(0,0,0,.38);border:1px solid rgba(255,255,255,.3);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);text-shadow:0 1px 3px rgba(0,0,0,.5)}
+[data-testid="home-hero"] .hero-heading>p{width:fit-content;padding:.65rem .9rem;border-radius:6px}
+[data-testid="home-hero"] .geit-headline{border-left:3px solid #e8b64b}
+[data-testid="home-hero"] [data-testid="button-link--services"]:hover{background:rgba(0,0,0,.52);border-color:#e8b64b}
