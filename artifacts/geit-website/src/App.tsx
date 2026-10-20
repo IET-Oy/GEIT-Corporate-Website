@@ -23,6 +23,7 @@ import { HeroHeadline } from '@/components/hero-headline';
 import { SaasFaqSection } from '@/components/saas-faq-section';
 import { SupportWidget } from '@/components/support-widget';
 import { FoundersLeadership } from '@/components/founders-leadership';
+import { ServiceImage } from '@/components/service-image';
 
 const PlatformApp = lazy(() => import('@/platform/app-routes').then((module) => ({ default: module.AppRoutes })));
 function AppRoutes() {
@@ -79,7 +80,7 @@ function Breadcrumb({items}: {items:{label:string;href?:string}[]}){
 return <nav aria-label={c("Breadcrumb")} className="mb-8 flex flex-wrap items-center gap-2 text-xs text-[#6b7b87]">{items.map((item,i)=><span key={item.label} className="inline-flex items-center gap-2">{i>0&&<ChevronRight size={13}/ >}{item.href?<Link href={item.href} className="hover:text-[#168568]">{c(item.label)}</Link>:<span aria-current="page" className="text-[#10243a]">{c(item.label)}</span>}</span>)}</nav>}
 function ServiceCard({service,index=0}: {service:typeof services[number];index?:number}){
   const { c } = useLanguage();
-const Icon=service.icon;return <article className="group flex min-h-[260px] flex-col border border-[#dce3e8] bg-white p-7 transition-all duration-300 hover:-translate-y-1 hover:border-[#168568]/45 hover:shadow-[0_18px_45px_-30px_rgba(16,36,58,.35)]" data-testid={`card-service-${service.slug}`}><div className="flex items-start justify-between"><span className="grid h-11 w-11 place-items-center bg-[#e8f2ef] text-[#168568]"><Icon size={20}/></span><span className="font-mono text-xs text-[#a1adb6]">0{index+1}</span></div><h3 className="mt-7 text-xl font-bold leading-snug text-[#10243a]">{c(service.title)}</h3><p className="mt-3 line-clamp-2 text-sm leading-6 text-[#647481]">{c(service.offer)}</p><Link href={`/services/${service.slug}`} className="mt-auto inline-flex items-center gap-2 pt-6 text-sm font-bold text-[#168568]">{c("Explore service ")}<ArrowRight size={16} className="transition-transform group-hover:translate-x-1"/></Link></article>}
+return <article className="group flex min-h-[260px] flex-col overflow-hidden border border-[#dce3e8] bg-white p-7 transition-all duration-300 hover:-translate-y-1 hover:border-[#168568]/45 hover:shadow-[0_18px_45px_-30px_rgba(16,36,58,.35)]" data-testid={`card-service-${service.slug}`}><div className="-mx-7 -mt-7"><ServiceImage slug={service.slug} title={service.title}/></div><span className="mt-5 self-end font-mono text-xs text-[#a1adb6]">{String(index+1).padStart(2,'0')}</span><h3 className="mt-3 text-xl font-bold leading-snug text-[#10243a]">{c(service.title)}</h3><p className="mt-3 line-clamp-2 text-sm leading-6 text-[#647481]">{c(service.offer)}</p><Link href={`/services/${service.slug}`} className="mt-auto inline-flex items-center gap-2 pt-6 text-sm font-bold text-[#168568]">{c("Explore service ")}<ArrowRight size={16} className="transition-transform group-hover:translate-x-1"/></Link></article>}
 function HomePage(){
   const { c } = useLanguage();
 return <><Meta title="Energy Intelligence for Better Decisions" description="GEIT Ltd is a global energy and technology company helping businesses and institutions make technically rigorous, commercially sound energy decisions." path="/"/>
@@ -124,7 +125,6 @@ return <section className="bg-[#10243a] text-white"><div className="mx-auto max-
 function ServiceDetail({service}: {service:typeof services[number]}) {
   const { c } = useLanguage();
 
-  const Icon = service.icon;
   const methodology = serviceMethodologies[service.slug];
 
   return (
@@ -147,7 +147,7 @@ function ServiceDetail({service}: {service:typeof services[number]}) {
           <div className="grid gap-12 lg:grid-cols-[.82fr_1.18fr]">
             <aside className="lg:sticky lg:top-28 lg:self-start">
               <div className="bg-[#168568] p-8 text-white">
-                <Icon size={26} />
+                <div className="-mx-8 -mt-8"><ServiceImage slug={service.slug} title={service.title}/></div>
                 <p className="mt-7 text-xs font-bold tracking-[.16em] text-white/70">{c("A PRACTICAL STARTING POINT")}</p>
                 <h2 className="mt-3 text-2xl font-bold">{c("A better decision begins with the right question.")}</h2>
                 <p className="mt-4 text-sm leading-6 text-white/75">{c("We’ll shape the work around your context, available evidence and decision needs.")}</p>

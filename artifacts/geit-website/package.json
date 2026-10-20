@@ -9,7 +9,7 @@
     "serve": "vite preview --config vite.config.ts --host 0.0.0.0",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "check:localization": "node scripts/check-localization.mjs",
-    "test:platform": "node --test --test-concurrency=1 tests/platform-manifest.test.mjs tests/site-navigation.test.mjs tests/founder-profiles.test.mjs tests/public-support.test.mjs tests/hero-light-field.test.mjs"
+    "test:platform": "node --test --test-concurrency=1 tests/platform-manifest.test.mjs tests/site-navigation.test.mjs tests/founder-profiles.test.mjs tests/public-support.test.mjs tests/hero-light-field.test.mjs tests/service-images.test.mjs"
   },
   "devDependencies": {
     "@hookform/resolvers": "^3.10.0",
