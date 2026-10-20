@@ -62,17 +62,17 @@ export function SiteHeader() {
             </span>
           </Link>
           <div className="ml-auto flex min-w-0 items-center gap-2 sm:gap-3">
-            <nav ref={primaryNav} className="hidden shrink-0 flex-nowrap items-center gap-2.5 py-1 lg:flex xl:gap-5" aria-label={t("mainNavigation")}>
+            <nav ref={primaryNav} className="hidden shrink-0 flex-nowrap items-center gap-2.5 py-1 md:flex xl:gap-5" aria-label={t("mainNavigation")}>
               {primaryNavigation.map((link) => item(link))}
             </nav>
             <LanguageSelector />
-            <button type="button" className="grid h-10 w-10 place-items-center rounded-md text-[#10243a] transition hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#168568] lg:hidden" onClick={() => setOpen((v) => !v)} aria-label={open ? t("menuClose") : t("menuOpen")} aria-expanded={open} aria-controls="mobile-navigation" data-testid="button-mobile-menu">
+            <button type="button" className="grid h-10 w-10 place-items-center rounded-md text-[#10243a] transition hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#168568] md:hidden" onClick={() => setOpen((v) => !v)} aria-label={open ? t("menuClose") : t("menuOpen")} aria-expanded={open} aria-controls="mobile-navigation" data-testid="button-mobile-menu">
               {open ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
             </button>
           </div>
         </div>
         {open && (
-          <nav id="mobile-navigation" className="border-t border-[#dce3e8] bg-white px-5 py-3 lg:hidden" aria-label={t("mainNavigation")}>
+          <nav id="mobile-navigation" className="border-t border-[#dce3e8] bg-white px-5 py-3 md:hidden" aria-label={t("mainNavigation")}>
             {primaryNavigation.map((l) => (
               <Link key={l.href} href={l.href} aria-current={isActive(l.href) ? "page" : undefined} className={`block border-b border-[#edf0f2] py-3 text-sm font-semibold hover:text-[#168568] ${isActive(l.href) ? "text-[#168568]" : "text-[#10243a]"}`}>
                 {t(l.key)}

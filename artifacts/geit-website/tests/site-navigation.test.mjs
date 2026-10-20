@@ -22,3 +22,10 @@ test("language selector keeps its header slot and platform entry opens the exist
   assert.ok(readFileSync(new URL("../src/components/hero-headline.tsx", import.meta.url), "utf8").includes('c("Make smarter energy decisions.")') && app.includes("<HeroHeadline/>") && !app.includes("Build a more efficient, resilient and low-carbon future."));
   assert.ok(app.includes("Integrated consulting, project development, digital energy and carbon services—grounded in data, rigorous analysis and sound economics."));
 });
+
+test("upper-bar links remain visible in compact desktop previews with a phone-only menu", () => {
+  const header = readFileSync(new URL("../src/components/site-header.tsx", import.meta.url), "utf8");
+  assert.match(header, /<nav ref=\{primaryNav\} className="[^"]*\bmd:flex\b/);
+  assert.match(header, /<button type="button" className="[^"]*\bmd:hidden\b/);
+  assert.match(header, /<nav id="mobile-navigation" className="[^"]*\bmd:hidden\b/);
+});
