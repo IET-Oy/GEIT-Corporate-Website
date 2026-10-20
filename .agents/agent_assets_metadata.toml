@@ -28,3 +28,17 @@ mtime_ms = 1792490336155
 storage_uri = "gcs://replit-rams-assets-archer/rams/assets/repl:fce71e1d-6c2b-4e84-8d15-001075ea3502/4c6964fa-22ab-434a-b1ee-0eafe2282cd1/14fb77d2-3929-4a06-bdf3-fcddb00e6d1a"
 storage_version_token = "1792490380078423"
 content_type = "text/html"
+
+[[outputs]]
+id = "ALwoWK4Ej7cDiIGx9tI3a"
+uri = "file://generated-artifacts/geit-support-language-review.html"
+type = "html"
+title = "GEIT support translations — review record"
+description = "Side-by-side English, French, Kinyarwanda and Swahili FAQ/support copy, with human review approval confirmed by the project owner. Approval applies only to FAQ/support translations."
+logical_id = "d5c4095d-08cf-40a2-9e17-bc32b3150340"
+content_hash = "sha256:79508d9d153a4ea48b0523313faf3b7db3f3c5f32745a6d771205d22e55896a4"
+size = 82021
+mtime_ms = 1792479763000
+storage_uri = "gcs://replit-rams-assets-archer/rams/assets/repl:fce71e1d-6c2b-4e84-8d15-001075ea3502/d5c4095d-08cf-40a2-9e17-bc32b3150340/3907f93b-1d4a-47c0-9672-7a5c275e50e6"
+storage_version_token = "1792490479831981"
+content_type = "text/html"

@@ -12,6 +12,7 @@ French (`fr.json`), Kinyarwanda (`rw.json`) and Kiswahili (`sw.json`) are **gene
 - Keep `{service}`, `{name}` and other interpolation tokens intact.
 - Check mobile layouts and read the full service methodologies, not just headings.
 - Only after a full locale has been approved, record the human review in `../page-copy.ts` and change that locale's review status. Until then the site must retain its localized draft notice and the “Read in English” button.
+- Public FAQ/support uses separate typed catalogs: `faq-fr.ts`, `faq-rw.ts`, `faq-sw.ts` and `support.ts`. The project owner confirmed human review approval for these three support translations; `supportReview` records that confirmation without inventing a reviewer identity. This does not approve the broader website catalogs. Review future changes to questions, answers, status notes, UI text, keywords, fallback/contact replies and link labels against `../../data/saas-faq.ts` and the English `support.ts` copy; see `docs/public-support.md` for the feature-limit checklist.
 
 ## Maintaining copy
 

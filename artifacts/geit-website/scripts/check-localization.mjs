@@ -73,12 +73,9 @@ try {
       assert.equal((html.match(/<h1\b/g) ?? []).length, 1, `${locale} ${route}: page not rendered correctly`);
       assert.equal(html.includes('data-testid="language-coverage-notice"'), locale !== "en", `${locale} ${route}: review disclosure`);
       if (locale !== "en") {
-        // Public support is explicitly labelled English and uses lang="en".
-        // Keep the untranslated-copy assertion strict for every other section.
-        const translatedHtml = html.replace(/<section\b[^>]*\blang="en"[^>]*>[\s\S]*?<\/section>/g, "");
         for (const source of sources) {
           if (catalogs[locale][source] !== source && source.length > 20) {
-            assert.ok(!translatedHtml.includes(">" + escape(source) + "<"), `${locale} ${route}: untranslated text: ${source}`);
+            assert.ok(!html.includes(">" + escape(source) + "<"), `${locale} ${route}: untranslated text: ${source}`);
           }
         }
       }

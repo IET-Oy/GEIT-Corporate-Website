@@ -20,6 +20,8 @@ test("public FAQ answers, fallbacks and rendered accessibility contracts", async
   });
   try {
     const faq = await server.ssrLoadModule("/src/data/saas-faq.ts");
+    const { LanguageProvider } = await server.ssrLoadModule("/src/lib/language-context.tsx");
+    const { supportCopy, supportReview } = await server.ssrLoadModule("/src/lib/translations/support.ts");
     await t.test("every suggested and exact FAQ question resolves to supported copy", () => {
       assert.equal(faq.saasFaq.length, 12);
       assert.equal(new Set(faq.saasFaq.map((item) => item.id)).size, 12);
@@ -75,7 +77,8 @@ test("public FAQ answers, fallbacks and rendered accessibility contracts", async
     await t.test("accordion and launcher render accessible names and states", async () => {
       const { SaasFaqSection } = await server.ssrLoadModule("/src/components/saas-faq-section.tsx");
       const { SupportWidget } = await server.ssrLoadModule("/src/components/support-widget.tsx");
-      const wrap = (component) => renderToStaticMarkup(createElement(Router, { ssrPath: "/" }, createElement(component)));
+      const wrap = (component) => renderToStaticMarkup(createElement(LanguageProvider, { initialLanguage: "en" },
+        createElement(Router, { ssrPath: "/" }, createElement(component))));
       const section = wrap(SaasFaqSection);
       assert.equal((section.match(/aria-expanded="false"/g) ?? []).length, 12);
       assert.equal((section.match(/role="region"/g) ?? []).length, 12);
@@ -88,6 +91,77 @@ test("public FAQ answers, fallbacks and rendered accessibility contracts", async
       assert.match(widget, /e\.key === "Escape"/);
       const css = readFileSync(path.join(root, "src/index.css"), "utf8");
       assert.match(css, /prefers-reduced-motion:\s*reduce[\s\S]*geit-headline-type/);
+    });
+    await t.test("all locales share facts, route targets and complete translated copy", async () => {
+      const { SaasFaqSection } = await server.ssrLoadModule("/src/components/saas-faq-section.tsx");
+      const { SupportWidget } = await server.ssrLoadModule("/src/components/support-widget.tsx");
+      for (const language of ["en", "fr", "rw", "sw"]) {
+        const items = faq.getSaasFaq(language);
+        const copy = supportCopy[language];
+        assert.equal(items.length, 12);
+        assert.equal(supportReview[language].status, language === "en" ? "source" : "human-review-approved");
+        assert.equal(supportReview[language].reviewer, null);
+        if (language !== "en") assert.equal(supportReview[language].confirmation, "project-owner");
+        assert.deepEqual(Object.keys(copy).sort(), Object.keys(supportCopy.en).sort());
+        for (const value of Object.values(copy)) assert.ok(value.trim());
+        for (const [index, item] of items.entries()) {
+          const source = faq.saasFaq[index];
+          assert.equal(item.id, source.id);
+          assert.equal(item.status, source.status);
+          assert.equal(item.humanHelp, source.humanHelp);
+          assert.deepEqual(item.links.map(link => link.href), source.links.map(link => link.href));
+          if (language !== "en") {
+            for (const field of ["question", "answer", "statusNote"]) assert.notEqual(item[field], source[field]);
+            item.links.forEach((link, i) => assert.notEqual(link.label, source.links[i].label));
+          }
+          const answer = faq.answerFromFaq(item.question, items, language);
+          assert.equal(answer.text, item.answer);
+          assert.equal(answer.status, source.status);
+          assert.deepEqual(answer.links, item.links);
+        }
+        for (const question of faq.getSuggestedQuestions(language)) {
+          assert.ok(items.some(item => item.question === question));
+          const answer = await faq.answerQuestion(question, undefined, undefined, language);
+          assert.ok(items.some(item => item.answer === answer.text));
+        }
+        assert.equal(faq.answerFromFaq("zzzyyyxxxx", items, language).text, copy.unknown);
+        assert.ok(items.find(item => item.id === "data").answer.includes("2 MiB"));
+        assert.match(items.find(item => item.id === "data").answer, /5[ ,]?000/);
+        assert.ok(items.find(item => item.id === "inefficiencies").answer.includes("35"));
+        const render = component => renderToStaticMarkup(createElement(LanguageProvider, { initialLanguage: language },
+          createElement(Router, { ssrPath: "/" }, createElement(component))));
+        const section = render(SaasFaqSection);
+        assert.ok(section.includes(`lang="${language}"`));
+        assert.ok(section.includes(copy.heading));
+        assert.equal((section.match(/aria-expanded="false"/g) ?? []).length, 12);
+        assert.ok(render(SupportWidget).includes(copy.launcher));
+        assert.equal(section.includes(supportCopy.en.intro), language === "en");
+        assert.equal(section.includes(copy.english), language !== "en");
+      }
+    });
+    await t.test("local questions, accents, apostrophes and human requests resolve in the selected language", () => {
+      const queries = {
+        fr: { alerts: "Comment fonctionnent les alertes ?", data: "Quelles données puis-je importer ?", "solar-battery": "batterie solaire", inefficiencies: "efficacite", human: "Je veux parler à une personne de mon compte" },
+        rw: { alerts: "imenyesha", data: "kwinjiza amakuru", "solar-battery": "bateri izuba", inefficiencies: "gupfa ubusa", human: "Ndashaka umuntu kuri konti yanjye" },
+        sw: { alerts: "arifa", data: "kuingiza data", "solar-battery": "betri jua", inefficiencies: "ufanisi", human: "Nataka mtu kuhusu akaunti yangu" },
+      };
+      for (const [language, cases] of Object.entries(queries)) {
+        const items = faq.getSaasFaq(language);
+        for (const [id, question] of Object.entries(cases)) {
+          const answer = faq.answerFromFaq(question, items, language);
+          if (id === "human") {
+            assert.equal(answer.kind, "human");
+            assert.equal(answer.text, supportCopy[language].human);
+            assert.equal(answer.links[0].href, "/contact");
+          } else {
+            assert.equal(answer.text, items.find(item => item.id === id).answer, `${language}: ${question}`);
+            assert.ok(faq.searchFaq(question, items).some(item => item.id === id));
+          }
+        }
+        const item = items[0];
+        const asciiQuestion = item.question.normalize("NFD").replace(/\p{M}/gu, "").replace(/[’]/g, "'");
+        assert.equal(faq.answerFromFaq(asciiQuestion, items, language).text, item.answer);
+      }
     });
   } finally {
     await server.close();

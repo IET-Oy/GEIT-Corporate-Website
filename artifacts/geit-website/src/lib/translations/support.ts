@@ -1,0 +1,127 @@
+import type { LanguageCode } from "../i18n";
+
+const en = {
+  eyebrow: "ENERGY SAAS FAQ",
+  heading: "Energy SaaS: frequently asked questions",
+  intro: "Answers describe what the platform does today, based on a technical audit dated 19 October 2026. The platform is in internal testing. Each answer is marked as available, limited or planned.",
+  search: "SEARCH THE FAQ", placeholder: "Try: alerts, solar, import",
+  count: "{shown} of {total} questions shown.", noMatch: "No matching questions.",
+  empty: "Nothing matches that search.", clear: "Clear search", or: "or",
+  contact: "Contact GEIT", ask: "Ask in FAQ chat",
+  available: "Available now", limited: "Available with limits", planned: "Planned, not yet available",
+  title: "GEIT support (FAQ mode)",
+  disclosure: "Answers come from a fixed FAQ. No AI service is connected. Messages are not saved.",
+  welcome: "Hello. I answer questions about GEIT Ltd and the Energy SaaS platform from a fixed FAQ. I am not an AI assistant and I cannot see your account.",
+  close: "Close support chat", conversation: "Conversation",
+  humanHelp: "Human help:", contactPage: "contact page",
+  replyTime: "Contacting GEIT does not guarantee a reply time.",
+  busy: "Looking through the FAQ.", suggestions: "SUGGESTED QUESTIONS",
+  question: "Your question", input: "Ask about Energy SaaS", send: "Send question",
+  reset: "New conversation", read: "Read the full FAQ", launcher: "Support chat (FAQ)",
+  human: "That sounds like a question for a person. This FAQ chat cannot see accounts or contracts. Please use the contact page or the direct details below.",
+  unknown: "I could not find a matching answer in the Energy SaaS FAQ. Please try one of the suggested questions, or contact GEIT directly.",
+  faqLink: "Energy SaaS FAQ", english: "Read in English",
+  languageReset: "Changing language starts a new conversation.",
+};
+type SupportCopy = Record<keyof typeof en, string>;
+export const supportReview = {
+  en: { status: "source", reviewer: null },
+  // The project owner confirmed "human review approved" for this support work.
+  // No reviewer identity was supplied; do not invent one or approve other catalogs.
+  fr: { status: "human-review-approved", reviewer: null, confirmation: "project-owner" },
+  rw: { status: "human-review-approved", reviewer: null, confirmation: "project-owner" },
+  sw: { status: "human-review-approved", reviewer: null, confirmation: "project-owner" },
+} as const;
+
+const fr: SupportCopy = {
+  eyebrow: "FAQ ENERGY SAAS", heading: "Energy SaaS : questions fréquentes",
+  intro: "Les réponses décrivent les fonctions actuelles, selon un audit technique du 19 octobre 2026. La plateforme est en phase de test interne. Chaque réponse indique une fonction disponible, limitée ou prévue.",
+  search: "RECHERCHER DANS LA FAQ", placeholder: "Exemples : alertes, solaire, import",
+  count: "{shown} questions affichées sur {total}.", noMatch: "Aucune question correspondante.",
+  empty: "Aucun résultat pour cette recherche.", clear: "Effacer la recherche", or: "ou",
+  contact: "Contacter GEIT", ask: "Poser la question dans le chat FAQ",
+  available: "Disponible", limited: "Disponible avec des limites", planned: "Prévu, pas encore disponible",
+  title: "Assistance GEIT (mode FAQ)",
+  disclosure: "Les réponses proviennent d’une FAQ fixe. Aucun service d’IA n’est connecté. Les messages ne sont pas enregistrés.",
+  welcome: "Bonjour. Je réponds aux questions sur GEIT Ltd et Energy SaaS à partir d’une FAQ fixe. Je ne suis pas un assistant IA et je ne peux pas consulter votre compte.",
+  close: "Fermer le chat d’assistance", conversation: "Conversation",
+  humanHelp: "Assistance humaine :", contactPage: "page de contact",
+  replyTime: "Contacter GEIT ne garantit aucun délai de réponse.",
+  busy: "Recherche dans la FAQ.", suggestions: "QUESTIONS SUGGÉRÉES",
+  question: "Votre question", input: "Question sur Energy SaaS", send: "Envoyer la question",
+  reset: "Nouvelle conversation", read: "Lire toute la FAQ", launcher: "Chat d’assistance (FAQ)",
+  human: "Cette question semble nécessiter une personne. Ce chat FAQ ne peut consulter ni les comptes ni les contrats. Utilisez la page de contact ou les coordonnées ci-dessous.",
+  unknown: "Je n’ai pas trouvé de réponse correspondante dans la FAQ Energy SaaS. Essayez une question suggérée ou contactez directement GEIT.",
+  faqLink: "FAQ Energy SaaS", english: "Lire en anglais",
+  languageReset: "Changer de langue commence une nouvelle conversation.",
+};
+const rw: SupportCopy = {
+  eyebrow: "IBIBAZO KURI ENERGY SAAS", heading: "Energy SaaS: ibibazo bikunze kubazwa",
+  intro: "Ibisubizo bisobanura ibyo urubuga rukora ubu, hashingiwe ku igenzura rya tekiniki ryo ku wa 19 Ukwakira 2026. Urubuga ruri mu igerageza ry’imbere. Buri gisubizo kigaragaza ibihari, ibifite imipaka cyangwa ibiteganyijwe.",
+  search: "SHAKA MU BIBAZO BIKUNZE KUBAZWA", placeholder: "Urugero: imenyesha, izuba, kwinjiza",
+  count: "Herekanwa ibibazo {shown} kuri {total}.", noMatch: "Nta kibazo gihuye n’ubushakashatsi.",
+  empty: "Nta gisubizo gihuye n’ibyo washakishije.", clear: "Siba ibyo washakishije", or: "cyangwa",
+  contact: "Vugana na GEIT", ask: "Baza mu kiganiro cy’ibibazo bikunze kubazwa",
+  available: "Birahari ubu", limited: "Birahari ariko bifite imipaka", planned: "Birateganyijwe, ntibiraboneka",
+  title: "Ubufasha bwa GEIT (ibibazo bikunze kubazwa)",
+  disclosure: "Ibisubizo biva mu bibazo n’ibisubizo byateguwe. Nta serivisi y’ubwenge buhangano ihujwe. Ubutumwa ntibubikwa.",
+  welcome: "Muraho. Nsubiza ibibazo kuri GEIT Ltd na Energy SaaS nkoresheje ibibazo n’ibisubizo byateguwe. Sindi umufasha w’ubwenge buhangano kandi sinshobora kureba konti yawe.",
+  close: "Funga ikiganiro cy’ubufasha", conversation: "Ikiganiro",
+  humanHelp: "Ubufasha bw’umuntu:", contactPage: "urupapuro rw’itumanaho",
+  replyTime: "Kuvugana na GEIT ntibyemeza igihe uzabonera igisubizo.",
+  busy: "Turashaka mu bibazo bikunze kubazwa.", suggestions: "IBIBAZO WAHERAHO",
+  question: "Ikibazo cyawe", input: "Baza kuri Energy SaaS", send: "Ohereza ikibazo",
+  reset: "Ikiganiro gishya", read: "Soma ibibazo byose", launcher: "Ikiganiro cy’ubufasha (FAQ)",
+  human: "Iki kibazo gikeneye umuntu. Iki kiganiro ntigishobora kureba konti cyangwa amasezerano. Koresha urupapuro rw’itumanaho cyangwa amakuru ari hasi.",
+  unknown: "Nta gisubizo gihuye n’ikibazo cyawe nabonye mu bibazo bya Energy SaaS. Gerageza kimwe mu bibazo byatanzwe cyangwa uvugane na GEIT.",
+  faqLink: "Ibibazo kuri Energy SaaS", english: "Soma mu Cyongereza",
+  languageReset: "Guhindura ururimi bitangiza ikiganiro gishya.",
+};
+const sw: SupportCopy = {
+  eyebrow: "MASWALI YA ENERGY SAAS", heading: "Energy SaaS: maswali yanayoulizwa mara kwa mara",
+  intro: "Majibu yanaeleza uwezo wa sasa wa jukwaa, kulingana na ukaguzi wa kiufundi wa tarehe 19 Oktoba 2026. Jukwaa liko katika majaribio ya ndani. Kila jibu linaonyesha kinachopatikana, kilicho na mipaka au kilichopangwa.",
+  search: "TAFUTA KATIKA MASWALI", placeholder: "Mfano: arifa, jua, kuingiza",
+  count: "Maswali {shown} kati ya {total} yanaonyeshwa.", noMatch: "Hakuna maswali yanayolingana.",
+  empty: "Hakuna matokeo yanayolingana na utafutaji.", clear: "Futa utafutaji", or: "au",
+  contact: "Wasiliana na GEIT", ask: "Uliza kwenye gumzo la maswali",
+  available: "Inapatikana sasa", limited: "Inapatikana kwa mipaka", planned: "Imepangwa, bado haipatikani",
+  title: "Msaada wa GEIT (hali ya maswali)",
+  disclosure: "Majibu yanatoka kwenye maswali na majibu yaliyotayarishwa. Hakuna huduma ya AI iliyounganishwa. Ujumbe hauhifadhiwi.",
+  welcome: "Habari. Ninajibu maswali kuhusu GEIT Ltd na Energy SaaS kwa kutumia maswali na majibu yaliyotayarishwa. Mimi si msaidizi wa AI na siwezi kuona akaunti yako.",
+  close: "Funga gumzo la msaada", conversation: "Mazungumzo",
+  humanHelp: "Msaada wa mtu:", contactPage: "ukurasa wa mawasiliano",
+  replyTime: "Kuwasiliana na GEIT hakuhakikishi muda wa kupata jibu.",
+  busy: "Inatafuta katika maswali.", suggestions: "MASWALI YALIYOPENDEKEZWA",
+  question: "Swali lako", input: "Uliza kuhusu Energy SaaS", send: "Tuma swali",
+  reset: "Mazungumzo mapya", read: "Soma maswali yote", launcher: "Gumzo la msaada (FAQ)",
+  human: "Swali hili linaonekana kuhitaji mtu. Gumzo hili haliwezi kuona akaunti au mikataba. Tumia ukurasa wa mawasiliano au maelezo yaliyo hapa chini.",
+  unknown: "Sikupata jibu linalolingana katika maswali ya Energy SaaS. Jaribu mojawapo ya maswali yaliyopendekezwa au wasiliana moja kwa moja na GEIT.",
+  faqLink: "Maswali ya Energy SaaS", english: "Soma kwa Kiingereza",
+  languageReset: "Kubadilisha lugha huanzisha mazungumzo mapya.",
+};
+export const supportCopy: Record<LanguageCode, SupportCopy> = { en, fr, rw, sw };
+
+/** Localized labels, never localized route targets. */
+export const supportLinks: Record<Exclude<LanguageCode, "en">, Record<string, string>> = {
+  fr: {
+    "Contact GEIT": fr.contact, "Energy SaaS sign-in": "Connexion à Energy SaaS",
+    "Explore all GEIT services": "Voir tous les services GEIT", "Digital energy solutions": "Solutions énergétiques numériques",
+    "Energy management service": "Service de gestion de l’énergie", "Renewable energy advisory": "Conseil en énergies renouvelables",
+    "Battery storage consulting": "Conseil en stockage par batteries", "Energy efficiency and auditing": "Efficacité énergétique et audits",
+    "Privacy Policy": "Politique de confidentialité", "Forgot password": "Mot de passe oublié", "Sign in": "Se connecter",
+  },
+  rw: {
+    "Contact GEIT": rw.contact, "Energy SaaS sign-in": "Injira muri Energy SaaS",
+    "Explore all GEIT services": "Reba serivisi zose za GEIT", "Digital energy solutions": "Ibisubizo by’ingufu bishingiye ku ikoranabuhanga",
+    "Energy management service": "Serivisi yo gucunga ingufu", "Renewable energy advisory": "Ubujyanama ku ngufu zisubira",
+    "Battery storage consulting": "Ubujyanama ku bubiko bw’ingufu muri bateri", "Energy efficiency and auditing": "Gukoresha ingufu neza n’igenzura",
+    "Privacy Policy": "Politiki y’ibanga", "Forgot password": "Wibagiwe ijambo ry’ibanga", "Sign in": "Injira",
+  },
+  sw: {
+    "Contact GEIT": sw.contact, "Energy SaaS sign-in": "Ingia kwenye Energy SaaS",
+    "Explore all GEIT services": "Angalia huduma zote za GEIT", "Digital energy solutions": "Suluhisho za kidijitali za nishati",
+    "Energy management service": "Huduma ya usimamizi wa nishati", "Renewable energy advisory": "Ushauri wa nishati jadidifu",
+    "Battery storage consulting": "Ushauri wa uhifadhi wa nishati kwenye betri", "Energy efficiency and auditing": "Ufanisi wa nishati na ukaguzi",
+    "Privacy Policy": "Sera ya faragha", "Forgot password": "Umesahau nenosiri", "Sign in": "Ingia",
+  },
+};

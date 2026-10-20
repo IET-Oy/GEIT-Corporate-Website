@@ -21,11 +21,17 @@ Align the first-bar Home link with the horizontal start of second-bar Industries
 
 **How to apply:** Shift only the four primary links. Keep the logo and language selector anchored in place; allow responsive alignment to follow translated link widths rather than using a fixed offset.
 
-Preserve the approved homepage visualization and the description statement. The current approved headline is “Make smarter energy decisions.” in a compact box with subtle continuous appearance animation and a static reduced-motion mode. Anchor the separate description box to the hero's bottom-right, not the viewport. Stack naturally on smaller screens.
+Preserve the homepage foreground and the description statement. The current approved headline is “Make smarter energy decisions.” in a compact box with subtle continuous appearance animation and a static reduced-motion mode. Anchor the separate description box to the hero's bottom-right, not the viewport. Stack naturally on smaller screens.
 
 **Why:** The user approved the box placements, then explicitly replaced the longer headline in the public support and founder-photo update.
 
-**How to apply:** Adjust responsive padding and widths without paraphrasing, overlapping calls to action, or replacing the approved hero background.
+**How to apply:** Adjust responsive padding and widths without paraphrasing or overlapping calls to action. Follow the later background replacement direction below.
+
+The owner later requested: “Replace the homepage background and remove the existing orb. Create a dark, animated interface where mint and violet light evolves from a glowing orb into a spiral galaxy, then a thinking brain, subtly responding to user interactions.”
+
+**Why:** This explicitly supersedes preserving the previous orb implementation, not the approved foreground copy, navigation or language selector.
+
+**How to apply:** Keep the replacement scoped to the homepage background, retain the orb → galaxy → brain sequence and subtle interaction, and preserve the existing headline and separate description boxes.
 
 The user approved the full phased Energy Intelligence SaaS extension, including authentication, persistent tenant data and private storage. This supersedes the earlier corporate-only prohibition on adding authentication or a database. Preserve the existing corporate site and existing data.
 

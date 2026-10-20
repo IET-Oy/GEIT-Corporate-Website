@@ -1,6 +1,7 @@
 # GEIT public support, FAQ and leadership content
 
-The corporate site's floating support widget runs in **FAQ mode**, in English.
+The corporate site's floating support widget runs in **FAQ mode**, using the
+existing shared English, French, Kinyarwanda or Swahili language selection.
 It uses the same facts and links as the searchable homepage section at
 `/#saas-faq`. It is not connected to an AI API and cannot inspect accounts,
 submit enquiries, open tickets or retrieve private customer records.
@@ -17,8 +18,39 @@ Edit `artifacts/geit-website/src/data/saas-faq.ts`. Keep answers consistent with
 verified module functionality and mark limitations explicitly. Do not describe
 saved-analysis alerts as continuous monitoring or claim notification delivery.
 The report hub, live measurement ingestion and advanced optimisation are not
-operational features. FAQ text is explicitly marked English; the existing
-language selector and corporate translation workflow are unchanged.
+operational features. The English factual source owns statuses, route targets
+and escalation flags. Draft FAQ translations live in
+`src/lib/translations/faq-{fr,rw,sw}.ts`; UI text, link labels and review metadata
+live in `src/lib/translations/support.ts`. Search handles Unicode letters,
+accents and apostrophes, and includes localized keywords. The selector itself,
+its location and preference persistence are unchanged.
+
+Changing language clears the FAQ search and starts a new in-memory chat while
+preserving whether the panel is open. Pending replies from the old conversation
+are ignored. Both translated support surfaces retain an English-source button.
+The project owner explicitly confirmed human review approval for French,
+Kinyarwanda and Swahili FAQ/support copy. This confirmation is recorded in
+`supportReview`; no reviewer identity was provided or invented. The broader
+website translation catalogs remain awaiting human review, with their global
+draft notices unchanged.
+
+## Language review maintenance
+
+A fluent reviewer for each language should compare future changes to all twelve questions, answers,
+status notes and links, plus every UI string and keyword, against the English
+source. Pay special attention to manual-only import (5,000 rows / 2 MiB),
+35 consecutive complete days for forecasts, save-time-only alerts without
+delivery, baseline-only solar/battery scenarios, the unavailable report hub,
+no security certification, internal testing, and no enquiry sending or storage.
+Review fallback and human-contact replies as well as suggested questions.
+Record the reviewed language, reviewer confirmation and any corrections before
+changing review status. Approval of support copy alone must not approve the rest
+of that language's website catalog or remove its global draft notice.
+
+Generate a self-contained, side-by-side review packet from the current catalogs:
+`node artifacts/geit-website/scripts/export-support-review.mjs`.
+The HTML output is in `generated-artifacts/` and is intentionally excluded from
+Git and deployment.
 
 The optional `SupportAnswerProvider` interface is an integration boundary only.
 `configuredProvider` remains null. A future implementation must call an approved,

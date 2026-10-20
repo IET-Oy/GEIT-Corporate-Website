@@ -1,6 +1,11 @@
 import { companyContact } from "@/config/company-contact";
+import type { LanguageCode } from "@/lib/i18n";
+import { supportCopy, supportLinks } from "@/lib/translations/support";
+import { frFaq } from "@/lib/translations/faq-fr";
+import { rwFaq } from "@/lib/translations/faq-rw";
+import { swFaq } from "@/lib/translations/faq-sw";
 
-/** Public support copy is English only and is not routed through the translation catalogue. */
+/** English factual source. Draft translations cannot override statuses or route targets. */
 export type FaqStatus = "available" | "limited" | "planned";
 export type FaqLink = { label: string; href: string };
 export type FaqItem = {
@@ -164,6 +169,30 @@ export const suggestedQuestions: string[] = [
   "How can users obtain technical support?",
 ];
 
+const faqCatalogs = { fr: frFaq, rw: rwFaq, sw: swFaq };
+
+export function getSaasFaq(language: LanguageCode): FaqItem[] {
+  if (language === "en") return saasFaq;
+  return saasFaq.map((item) => {
+    const draft = faqCatalogs[language][item.id];
+    if (!draft) throw new Error(`Missing ${language} FAQ translation: ${item.id}`);
+    return {
+      ...item, ...draft,
+      keywords: [...item.keywords, ...draft.keywords],
+      links: item.links.map((link) => {
+        const label = supportLinks[language][link.label];
+        if (!label) throw new Error(`Missing ${language} support link: ${link.label}`);
+        return { ...link, label };
+      }),
+    };
+  });
+}
+
+export function getSuggestedQuestions(language: LanguageCode): string[] {
+  const ids = ["what-is", "data", "alerts", "start", "support"];
+  return getSaasFaq(language).filter((item) => ids.includes(item.id)).map((item) => item.question);
+}
+
 export function humanContact(): { email: string | null; telephone: string | null; page: string } {
   return { email: companyContact.businessEmail, telephone: companyContact.businessTelephone, page: "/contact" };
 }
@@ -176,23 +205,29 @@ export function searchFaq(query: string, items: FaqItem[] = saasFaq): FaqItem[] 
 }
 
 function tokenize(q: string): string[] {
-  return q
-    .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, " ")
+  return normalizeSearch(q)
+    .replace(/[^\p{L}\p{N}\s-]/gu, " ")
     .split(/\s+/)
     .filter((t) => t.length > 2 && !STOP.has(t));
 }
-const STOP = new Set(["the", "and", "does", "can", "how", "what", "who", "for", "are", "with", "you", "your", "this", "that", "have", "from", "platform", "geit"]);
+const STOP = new Set(["the", "and", "does", "can", "how", "what", "who", "for", "are", "with", "you", "your", "this", "that", "have", "from", "platform", "geit",
+  "les", "des", "une", "est", "que", "qui", "pour", "dans", "sur", "comment", "quels", "quelles", "peut", "elle", "plateforme", "votre", "sont",
+  "iki", "bite", "gute", "ni", "ese", "kuri", "muri", "nshobora", "urubuga", "yawe", "nini", "gani", "kwa", "je", "ina", "lina", "jukwaa", "yako", "na"]);
+
+function normalizeSearch(value: string): string {
+  return value.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase().replace(/[’‘]/g, "'");
+}
 
 function rank(terms: string[], items: FaqItem[]) {
   return items
     .map((item) => {
-      const q = item.question.toLowerCase();
-      const a = item.answer.toLowerCase();
+      const q = normalizeSearch(item.question);
+      const a = normalizeSearch(item.answer);
+      const keywords = item.keywords.map(normalizeSearch);
       let score = 0;
       for (const t of terms) {
-        if (item.keywords.some((k) => k === t || k.split(" ").includes(t))) score += 3;
-        else if (item.keywords.some((k) => k.includes(t))) score += 2;
+        if (keywords.some((k) => k === t || k.split(" ").includes(t))) score += 3;
+        else if (keywords.some((k) => k.includes(t))) score += 2;
         if (q.includes(t)) score += 2;
         if (a.includes(t)) score += 1;
       }
@@ -211,25 +246,28 @@ export type SupportAnswer = {
 };
 
 const HUMAN_RE = /\b(human|person|agent|call me|speak to|talk to|complaint|refund|invoice|contract|legal|urgent|my account|my data|outage)\b/i;
+const LOCAL_HUMAN_RE = /\b(humain|personne|parler|reclamation|remboursement|facture|contrat|juridique|mon compte|mes donnees|panne|umuntu|mvugishe|ikirego|gusubizwa|amasezerano|konti yanjye|amakuru yanjye|byihutirwa|mtu|binadamu|malalamiko|kurejeshewa|ankara|mkataba|kisheria|dharura|akaunti yangu|data zangu|kukatika)\b/i;
 
 /** Pure FAQ matcher. Never claims to be AI and never invents an answer. */
-export function answerFromFaq(question: string, items: FaqItem[] = saasFaq): SupportAnswer {
+export function answerFromFaq(question: string, items: FaqItem[] = saasFaq, language: LanguageCode = "en"): SupportAnswer {
   const q = question.trim();
+  const copy = supportCopy[language];
+  const contactLink = { ...CONTACT, label: copy.contact };
   const ranked = rank(tokenize(q), items);
-  const exact = items.find((i) => i.question.toLowerCase() === q.toLowerCase());
+  const exact = items.find((i) => normalizeSearch(i.question) === normalizeSearch(q));
   const best = exact ?? (ranked[0] && ranked[0].score >= 3 ? ranked[0].item : undefined);
-  if (HUMAN_RE.test(q) && !exact) {
+  if ((HUMAN_RE.test(q) || LOCAL_HUMAN_RE.test(normalizeSearch(q))) && !exact) {
     return {
       kind: "human",
-      text: "That sounds like a question for a person. This FAQ chat cannot see accounts or contracts. Please use the contact page or the direct details below.",
-      links: [CONTACT],
+      text: copy.human,
+      links: [contactLink],
     };
   }
   if (!best) {
     return {
       kind: "human",
-      text: "I could not find a matching answer in the Energy SaaS FAQ. Please try one of the suggested questions, or contact GEIT directly.",
-      links: [CONTACT, { label: "Energy SaaS FAQ", href: "/#saas-faq" }],
+      text: copy.unknown,
+      links: [contactLink, { label: copy.faqLink, href: "/#saas-faq" }],
     };
   }
   return {
@@ -244,7 +282,7 @@ export function answerFromFaq(question: string, items: FaqItem[] = saasFaq): Sup
 /** Future integration boundary. Implementations must call a server-side endpoint; no keys in the browser. */
 export interface SupportAnswerProvider {
   readonly id: string;
-  answer(question: string, context: { faq: FaqItem[]; signal?: AbortSignal }): Promise<SupportAnswer>;
+  answer(question: string, context: { faq: FaqItem[]; language: LanguageCode; signal?: AbortSignal }): Promise<SupportAnswer>;
 }
 
 /** No public AI provider is configured. Set only when a real, secure provider exists. */
@@ -254,16 +292,18 @@ export async function answerQuestion(
   question: string,
   provider: SupportAnswerProvider | null = configuredProvider,
   signal?: AbortSignal,
+  language: LanguageCode = "en",
 ): Promise<SupportAnswer> {
+  const faq = getSaasFaq(language);
   if (provider) {
     try {
-      const res = await provider.answer(question, { faq: saasFaq, signal });
+      const res = await provider.answer(question, { faq, language, signal });
       return { ...res, kind: "provider" };
     } catch {
       /* fall through to the FAQ matcher; no success is simulated */
     }
   }
-  return answerFromFaq(question);
+  return answerFromFaq(question, faq, language);
 }
 
 export const SUPPORT_OPEN_EVENT = "geit:support-open";
