@@ -20,10 +20,10 @@ export const companyContact: CompanyContactConfig = {
   businessEmail: "dntechnologies.info@gmail.com",
   businessTelephone: "+250 78 866567",
   socialProfiles: {
-    linkedin: null,
-    facebook: null,
+    linkedin: "https://www.linkedin.com/company/geit-ltd/",
+    facebook: "https://www.facebook.com/profile.php?id=61595860880036",
     instagram: null,
     youtube: null,
-    x: null,
+    x: "https://x.com/GeitLtd1",
   },
 };

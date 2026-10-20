@@ -1,4 +1,5 @@
-import { Facebook, Instagram, Linkedin, Youtube, X, type LucideIcon } from "lucide-react";
+import { Facebook, Instagram, Linkedin, Youtube, type LucideProps } from "lucide-react";
+import type { ComponentType } from "react";
 import { Link, useLocation } from "wouter";
 import { companyContact, type SocialProfileKey } from "@/config/company-contact";
 import { useLanguage } from "@/lib/language-context";
@@ -14,12 +15,16 @@ const footerServices = [
   { label: "Carbon Footprint Services", href: "/services/carbon-footprint-services" },
 ];
 
-const socialItems: { key: SocialProfileKey; name: string; Icon: LucideIcon }[] = [
+function XBrand({ size = 16, ...props }: LucideProps) {
+  return <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" {...props}><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.64 7.584H.47l8.6-9.835L0 1.154h7.594l5.243 6.932 6.064-6.933ZM17.61 20.644h2.039L6.486 3.24H4.298L17.61 20.644Z"/></svg>;
+}
+
+const socialItems: { key: SocialProfileKey; name: string; Icon: ComponentType<LucideProps> }[] = [
   { key: "linkedin", name: "LinkedIn", Icon: Linkedin },
   { key: "facebook", name: "Facebook", Icon: Facebook },
   { key: "instagram", name: "Instagram", Icon: Instagram },
   { key: "youtube", name: "YouTube", Icon: Youtube },
-  { key: "x", name: "X", Icon: X },
+  { key: "x", name: "X", Icon: XBrand },
 ];
 
 export function SiteFooter() {
@@ -107,7 +112,9 @@ export function SiteFooter() {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={c("GEIT on {name}", { name })}
-                      className="grid h-11 w-11 place-items-center rounded-full border border-white/20 text-white/75 transition hover:border-white hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#e8b64b]"
+                      title={c("GEIT on {name}", { name })}
+                      data-testid={`footer-social-${key}`}
+                      className="grid h-11 w-11 place-items-center rounded-full border border-white/20 text-white/75 transition-colors hover:border-[#e8b64b] hover:bg-white/10 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#e8b64b]"
                     >
                       <Icon size={16} aria-hidden="true" />
                     </a>
