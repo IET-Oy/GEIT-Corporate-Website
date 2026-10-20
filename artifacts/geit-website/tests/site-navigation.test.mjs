@@ -29,3 +29,16 @@ test("upper-bar links remain visible in compact desktop previews with a phone-on
   assert.match(header, /<button type="button" className="[^"]*\bmd:hidden\b/);
   assert.match(header, /<nav id="mobile-navigation" className="[^"]*\bmd:hidden\b/);
 });
+
+test("homepage uses the supplied decorative photo without mounting the former animation", () => {
+  const sections = readFileSync(new URL("../src/components/home-sections.tsx", import.meta.url), "utf8");
+  const hero = sections.slice(sections.indexOf("export function HeroOrb()"), sections.indexOf("const does ="));
+  assert.ok(hero.includes("images/homepage-background.webp"));
+  assert.ok(hero.includes('alt=""'));
+  assert.ok(hero.includes('fetchPriority="high"'));
+  assert.ok(hero.includes("object-cover"));
+  assert.ok(!sections.includes("HeroLightField"));
+  const image = readFileSync(new URL("../public/images/homepage-background.webp", import.meta.url));
+  assert.equal(image.subarray(0, 4).toString(), "RIFF");
+  assert.equal(image.subarray(8, 12).toString(), "WEBP");
+});

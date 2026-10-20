@@ -9,11 +9,11 @@ Do not treat a passing build or a fallback screenshot as evidence that the orb's
 
 **How to apply:** If reintroducing GPU rendering, check WebGL availability first. If it remains unavailable, report that limitation and require evidence from a WebGL-capable browser before claiming the animation is verified. The replacement background deliberately uses Canvas2D so its actual shapes can be captured without WebGL.
 
-Keep the Energy Orb, Spiral Galaxy and Neural Brain visualization purely decorative in the homepage hero background, with a meaningful text-free SVG fallback when Canvas2D is unavailable.
+Keep homepage background artwork purely decorative, outside the accessibility tree and tab order. The owner subsequently replaced the animated visualization with their supplied photograph.
 
 **Why:** The user explicitly requested an immersive hero background and prohibited visible labels, captions, element names or explanatory text. This overrides the earlier labelled preview presentation.
 
-**How to apply:** Keep the background out of the accessibility tree and tab order, with no visible controls or status messages. Maintain foreground contrast, text-free fallback artwork and reduced-motion support; preserving the old GPU implementation is no longer required after the owner's background replacement request.
+**How to apply:** Preserve foreground contrast and avoid additional labels, controls or status messages. Follow the current photograph direction in the scope notes; the animation-verification history below applies only if animation is explicitly requested again.
 
 Do not equate Canvas2D draw-submission time with the complete rendering or energy cost.
 

@@ -1,14 +1,22 @@
 import { useLanguage } from "@/lib/language-context";
 import { Link } from 'wouter';
 import { ArrowRight } from 'lucide-react';
-import { HeroLightField } from '@/components/hero-light-field';
 import { IndustriesPreview } from '@/components/industries-section';
 
 const Tag = ({ children, light = false }: { children: string; light?: boolean }) => <p className={`mb-5 flex items-center gap-3 text-[11px] font-bold tracking-[.19em] ${light ? 'text-[#e8b64b]' : 'text-[#168568]'}`}><span className="h-[2px] w-7 bg-[#e8b64b]"/>{children}</p>;
 
 export function HeroOrb() {
-  return <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-20 select-none overflow-hidden bg-[#0a1424]" data-testid="hero-orb">
-    <HeroLightField/>
+  return <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-20 select-none overflow-hidden bg-[#0a1424]" data-testid="hero-background">
+    <img
+      src={`${import.meta.env.BASE_URL}images/homepage-background.webp`}
+      alt=""
+      width="1024"
+      height="558"
+      loading="eager"
+      fetchPriority="high"
+      decoding="async"
+      className="h-full w-full object-cover object-center"
+    />
   </div>;
 }
 

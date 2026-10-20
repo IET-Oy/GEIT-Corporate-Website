@@ -27,11 +27,11 @@ Preserve the homepage foreground and the description statement. The current appr
 
 **How to apply:** Adjust responsive padding and widths without paraphrasing or overlapping calls to action. Follow the later background replacement direction below.
 
-The owner later requested: “Replace the homepage background and remove the existing orb. Create a dark, animated interface where mint and violet light evolves from a glowing orb into a spiral galaxy, then a thinking brain, subtly responding to user interactions.”
+Use the owner's supplied energy-infrastructure office image as the homepage hero background instead of the orb → galaxy → brain animation.
 
-**Why:** This explicitly supersedes preserving the previous orb implementation, not the approved foreground copy, navigation or language selector.
+**Why:** The owner's latest instruction was “Use this figure as the home page background,” superseding the earlier animated-background direction.
 
-**How to apply:** Keep the replacement scoped to the homepage background, retain the orb → galaxy → brain sequence and subtle interaction, and preserve the existing headline and separate description boxes.
+**How to apply:** Keep the replacement scoped to the homepage background, preserve the foreground headline and description boxes, and maintain readable contrast and responsive image cropping. Do not reintroduce the animation without a new request.
 
 The user approved the full phased Energy Intelligence SaaS extension, including authentication, persistent tenant data and private storage. This supersedes the earlier corporate-only prohibition on adding authentication or a database. Preserve the existing corporate site and existing data.
 
