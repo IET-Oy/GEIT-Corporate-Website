@@ -27,11 +27,11 @@ Preserve the homepage foreground and the description statement. The current appr
 
 **How to apply:** Adjust responsive padding and widths without paraphrasing or overlapping calls to action. Follow the later background replacement direction below.
 
-Display the owner's supplied energy-infrastructure office image as separate homepage content, not as a background. Keep the orb → galaxy → brain hero animation and all other content.
+Combine the owner's supplied energy-infrastructure office image and the orb → galaxy → brain animation in the same homepage hero. Remove the dark-blue hero treatment and do not add a separate image section.
 
-**Why:** The owner clarified: “instead make the image home page, not back ground. the animation also stays and other contents preserved.”
+**Why:** The owner corrected the placement: “The image and animation should should be the hero, while the dark blue color is removed.” They also required preserving all existing content and navigation.
 
-**How to apply:** Keep the full image visible in its own responsive homepage figure without cropping or text overlay; preserve the animated hero, its headline/description boxes, navigation and existing sections.
+**How to apply:** Keep both visuals together within the existing hero, retain readable text and all existing copy, CTA links, navigation and page sections. Do not revert to an image-only hero or a separate photograph below the hero.
 
 The user approved the full phased Energy Intelligence SaaS extension, including authentication, persistent tenant data and private storage. This supersedes the earlier corporate-only prohibition on adding authentication or a database. Preserve the existing corporate site and existing data.
 

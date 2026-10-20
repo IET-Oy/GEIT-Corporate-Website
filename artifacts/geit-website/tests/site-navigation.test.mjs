@@ -30,19 +30,19 @@ test("upper-bar links remain visible in compact desktop previews with a phone-on
   assert.match(header, /<nav id="mobile-navigation" className="[^"]*\bmd:hidden\b/);
 });
 
-test("homepage preserves the animated hero and displays the supplied photo as separate content", () => {
+test("homepage hero combines the supplied photo with the light-field animation", () => {
   const sections = readFileSync(new URL("../src/components/home-sections.tsx", import.meta.url), "utf8");
-  const hero = sections.slice(sections.indexOf("export function HeroOrb()"), sections.indexOf("export function HomepageImage()"));
+  assert.ok(!sections.includes("HomepageImage"));
+  const hero = sections.slice(sections.indexOf("export function HeroOrb()"), sections.indexOf("const does ="));
+  assert.ok(hero.includes("images/homepage-background.webp"));
   assert.ok(hero.includes("<HeroLightField/>"));
-  assert.ok(!hero.includes("<img"));
-  const photo = sections.slice(sections.indexOf("export function HomepageImage()"), sections.indexOf("const does ="));
-  assert.ok(photo.includes("images/homepage-background.webp"));
-  assert.ok(photo.includes("<figure"));
-  assert.ok(photo.includes('alt="Solar energy infrastructure'));
-  assert.ok(photo.includes("h-auto w-full"));
-  assert.ok(!photo.includes('aria-hidden="true"'));
+  assert.ok(hero.indexOf("<img") < hero.indexOf("<HeroLightField/>"));
+  assert.ok(!hero.includes("bg-[#0a1424]"));
   const app = readFileSync(new URL("../src/App.tsx", import.meta.url), "utf8");
-  assert.match(app, /<HomepageImage\/>\s*<WhatGeitDoes\/>/);
+  assert.ok(!app.includes("HomepageImage"));
+  assert.ok(!app.includes("rgba(16,36,58,.95)"));
+  assert.ok(!app.includes('bg-[#10243a]/90'));
+  assert.ok(app.includes("<WhatGeitDoes/>"));
   const image = readFileSync(new URL("../public/images/homepage-background.webp", import.meta.url));
   assert.equal(image.subarray(0, 4).toString(), "RIFF");
   assert.equal(image.subarray(8, 12).toString(), "WEBP");

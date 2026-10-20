@@ -1,5 +1,5 @@
 - [GEIT scope and identity](geit-scope.md) — approved two-bar nav, protected language selector, hero boxes, global Home; phased SaaS extension approved.
-- [Hero visual verification](webgl-verification.md) — decorative animated background stays; supplied photograph is separate content; GPU verification limits.
+- [Hero visual verification](webgl-verification.md) — photograph and animation share the hero without dark-blue treatment; decorative-only and GPU verification limits.
 - [GEIT language review](geit-language-review.md) — complete translation drafts are allowed, but must be labelled as awaiting human review.
 - [Supabase preview trust](supabase-preview.md) — database CA, preview cookies, real email-link boundaries and isolated test-session cleanup.
 - [Engineering result provenance](engineering-result-provenance.md) — exposed Supabase RPCs require output authenticity checks, not just tenant isolation and input hashes.

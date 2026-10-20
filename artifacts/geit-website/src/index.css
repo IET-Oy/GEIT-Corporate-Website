@@ -399,7 +399,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 }
 
 /* Hero headline: compact box, CSS-only typing and erasing, no layout shift */
-.geit-headline{display:inline-block;max-width:100%;margin:0;padding:.7rem 1.1rem;border:1px solid rgba(255,255,255,.18);border-left:3px solid #e8b64b;border-radius:6px;background:rgba(16,36,58,.72);backdrop-filter:blur(4px);font-size:clamp(1.1rem,4.7vw,2.6rem);font-weight:800;line-height:1.15;letter-spacing:-.03em;white-space:normal;text-wrap:balance}
+.geit-headline{display:inline-block;max-width:100%;margin:0;padding:.7rem 1.1rem;border:1px solid rgba(255,255,255,.7);border-left:3px solid #e8b64b;border-radius:6px;background:rgba(255,255,255,.72);color:#10243a;border-color:rgba(255,255,255,.7);backdrop-filter:blur(4px);font-size:clamp(1.1rem,4.7vw,2.6rem);font-weight:800;line-height:1.15;letter-spacing:-.03em;white-space:normal;text-wrap:balance}
 .geit-headline-inner{position:relative;display:block}
 .geit-headline-sizer{display:block;visibility:hidden}
 .geit-headline-type{position:absolute;inset:0;display:block;clip-path:inset(0 0 0 0);animation:geit-type 10s infinite}
@@ -410,3 +410,11 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
   94%,100%{clip-path:inset(0 100% 0 0)}
 }
 @media (prefers-reduced-motion:reduce){.geit-headline-type{animation:none;clip-path:none}}
+
+/* Hero: photo + light field combined, light neutral veil only */
+.hero-veil{background:linear-gradient(90deg,rgba(244,247,249,.78) 0%,rgba(244,247,249,.5) 38%,rgba(244,247,249,0) 75%)}
+@media (max-width:1023px){.hero-veil{background:rgba(244,247,249,.55)}}
+[data-testid="home-hero"] canvas{background-color:transparent}
+[data-testid="home-hero"] [data-testid="button-link--services"]{color:#10243a;background:rgba(255,255,255,.9);border-color:rgba(16,36,58,.35)}
+[data-testid="home-hero"] [data-testid="button-link--services"]:hover{background:#fff;border-color:#168568}
+[data-testid="home-hero"] .geit-headline{border-left-color:#e8b64b}

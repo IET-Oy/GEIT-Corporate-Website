@@ -7,24 +7,9 @@ import { IndustriesPreview } from '@/components/industries-section';
 const Tag = ({ children, light = false }: { children: string; light?: boolean }) => <p className={`mb-5 flex items-center gap-3 text-[11px] font-bold tracking-[.19em] ${light ? 'text-[#e8b64b]' : 'text-[#168568]'}`}><span className="h-[2px] w-7 bg-[#e8b64b]"/>{children}</p>;
 
 export function HeroOrb() {
-  return <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-20 select-none overflow-hidden bg-[#0a1424]" data-testid="hero-orb">
+  return <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-20 select-none overflow-hidden" data-testid="hero-orb">
+    <img src={`${import.meta.env.BASE_URL}images/homepage-background.webp`} alt="" width="1024" height="558" decoding="async" fetchPriority="high" className="hero-photo absolute inset-0 h-full w-full object-cover" data-testid="hero-photo"/>
     <HeroLightField/>
-  </div>;
-}
-
-export function HomepageImage() {
-  return <div id="homepage-image" className="bg-[#f2f5f7] px-5 py-8 lg:px-10 lg:py-12" data-testid="homepage-image">
-    <figure className="mx-auto max-w-[1240px] overflow-hidden rounded-lg border border-[#dce3e8]">
-      <img
-        src={`${import.meta.env.BASE_URL}images/homepage-background.webp`}
-        alt="Solar energy infrastructure visualisation on an office display"
-        width="1024"
-        height="558"
-        loading="lazy"
-        decoding="async"
-        className="block h-auto w-full"
-      />
-    </figure>
   </div>;
 }
 
