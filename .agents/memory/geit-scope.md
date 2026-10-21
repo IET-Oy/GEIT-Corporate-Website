@@ -68,3 +68,9 @@ Keep corporate glass light enough to see the content. Small action links and sec
 **Why:** The owner reported overly black panels and bright white text disappearing on light surfaces, and requested only these small visual corrections.
 
 **How to apply:** Preserve the existing layout and functionality. Match the hero label's translucent neutral glass, delicate border and rounded corners for corporate action links; do not apply white text indiscriminately to pale panels or form disclosures.
+
+Upper navigation active links use only the gold underline, without a filled badge. Service and industry pictures fill their frames with cover cropping rather than padded letterboxing.
+
+**Why:** The owner explicitly requested the upper navigation to match the second bar's selected-link treatment and the removal of empty pale space around those pictures.
+
+**How to apply:** Preserve frame sizes and original uploads. Do not reintroduce baked-in image padding or a coloured active-link background.

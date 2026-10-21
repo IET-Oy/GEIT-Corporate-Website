@@ -13,7 +13,7 @@ export function SectorArt({ sector }: { sector: Sector }) {
     height={403}
     loading="lazy"
     decoding="async"
-    className="h-full w-full bg-[#e9eff1] object-contain"
+    className="h-full w-full object-cover"
     data-testid={`sector-image-${sector.id}`}
   />;
 }

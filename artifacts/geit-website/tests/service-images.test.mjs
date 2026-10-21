@@ -18,7 +18,7 @@ test('all eleven services have distinct local WebP artwork', () => {
   assert.equal(new Set(images).size, 11);
 });
 
-test('service cards and details share accessible, responsive, uncropped images instead of service icons', () => {
+test('service cards and details share accessible, responsive, full-frame images instead of service icons', () => {
   const app = readFileSync(new URL('../src/App.tsx', import.meta.url), 'utf8');
   const image = readFileSync(new URL('../src/components/service-image.tsx', import.meta.url), 'utf8');
   assert.equal((app.match(/<ServiceImage slug=\{service.slug\} title=\{service.title\}/g) ?? []).length, 2);
@@ -29,7 +29,8 @@ test('service cards and details share accessible, responsive, uncropped images i
   assert.match(image, /decoding="async"/);
   assert.match(image, /width=\{768\}/);
   assert.match(image, /height=\{480\}/);
-  assert.match(image, /object-contain/);
+  assert.match(image, /object-cover/);
+  assert.doesNotMatch(image, /object-contain|bg-\[#e9eff1\]/);
   assert.ok(app.includes('services.slice(0,6).map') && app.includes('services.map'));
   assert.ok(app.includes('href={`/services/${service.slug}`}'));
 });

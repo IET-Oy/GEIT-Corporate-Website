@@ -1,6 +1,6 @@
 import { useLanguage } from '@/lib/language-context';
 
-/** Supplied service artwork, kept uncropped inside a consistent card frame. */
+/** Supplied service artwork fills the frame with a centred cover crop. */
 export function ServiceImage({ slug, title }: { slug: string; title: string }) {
   const { c } = useLanguage();
   return (
@@ -11,7 +11,7 @@ export function ServiceImage({ slug, title }: { slug: string; title: string }) {
       height={480}
       loading="lazy"
       decoding="async"
-      className="aspect-[8/5] w-full object-contain bg-[#e9eff1]"
+      className="aspect-[8/5] w-full object-cover"
       data-testid={`service-image-${slug}`}
     />
   );

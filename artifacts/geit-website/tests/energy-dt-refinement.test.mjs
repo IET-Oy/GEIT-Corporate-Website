@@ -106,6 +106,19 @@ test("small actions and section labels share hero glass while pale panels use na
   assert.match(source("App.tsx"), /geit-readable-glass[^"]*" id="low-carbon-transition"/);
 });
 
+test("upper navigation uses a gold underline without a filled active badge, and mission matches vision", () => {
+  const header = source("components/site-header.tsx");
+  const css = source("corporate-glass.css");
+  const app = source("App.tsx");
+  assert.match(header, /border-b-2 border-\[#e8b64b\] font-bold/);
+  assert.doesNotMatch(header, /!text-\[#123B2A\]/);
+  assert.match(css, /\.geit-public > header \.navlink:is\(\[aria-current="page"\],:hover,:focus-visible\) \{\s*color: #fff !important;\s*background: transparent;\s*box-shadow: none;/);
+  const mission = app.match(/<span className="([^"]*)">\{c\("OUR MISSION"\)\}/)?.[1];
+  const vision = app.match(/<span className="([^"]*)">\{c\("OUR VISION"\)\}/)?.[1];
+  assert.ok(mission);
+  assert.equal(mission, vision);
+});
+
 test("all corporate pages share glass styling while retaining inner-page scope and the existing hero", async () => {
   const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
   const server = await createServer({

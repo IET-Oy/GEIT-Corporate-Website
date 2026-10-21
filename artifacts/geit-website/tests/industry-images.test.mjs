@@ -27,7 +27,8 @@ test('homepage previews and industry sections share responsive pictures and reta
   assert.match(view, /height=\{403\}/);
   assert.match(view, /loading="lazy"/);
   assert.match(view, /decoding="async"/);
-  assert.match(view, /object-contain/);
+  assert.match(view, /object-cover/);
+  assert.doesNotMatch(view, /object-contain/);
   assert.ok(view.includes('href={`/industries#${s.id}`}'));
   assert.ok(view.includes('id={s.id}'));
   assert.ok(view.includes('href={v.href}') && view.includes('href="/contact"'));

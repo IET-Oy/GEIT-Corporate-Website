@@ -71,13 +71,19 @@
 
 /* Dark green remains dark green, with a small contrasting glass backing. */
 .geit-public :is(p,span,a,button).text-\[\#168568\]:not([data-testid="home-hero"] *),
-.geit-public :is(a,button).text-\[\#116d55\],
-.geit-public > header .navlink[aria-current="page"],
-.geit-public > header .navlink:hover,
-.geit-public > header .navlink:focus-visible {
+.geit-public :is(a,button).text-\[\#116d55\] {
   color: #123B2A !important;
   background-color: rgba(222, 242, 231, .94);
   box-shadow: 0 0 0 2px rgba(222, 242, 231, .94);
+}
+.geit-public > header .navlink:is([aria-current="page"],:hover,:focus-visible) {
+  color: #fff !important;
+  background: transparent;
+  box-shadow: none;
+}
+.geit-public > header .navlink:focus-visible {
+  outline: 2px solid #e8b64b;
+  outline-offset: 4px;
 }
 .geit-public main :is(a,button)[class*="hover:text-[#168568]"]:hover {
   color: #123B2A;
