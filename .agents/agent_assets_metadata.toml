@@ -42,3 +42,17 @@ mtime_ms = 1792479763000
 storage_uri = "gcs://replit-rams-assets-archer/rams/assets/repl:fce71e1d-6c2b-4e84-8d15-001075ea3502/d5c4095d-08cf-40a2-9e17-bc32b3150340/3907f93b-1d4a-47c0-9672-7a5c275e50e6"
 storage_version_token = "1792490479831981"
 content_type = "text/html"
+
+[[outputs]]
+id = "dlbvP4G2Ns9qrluA1vXRn"
+uri = "file://generated-artifacts/geit-energy-dt-staging-source.zip"
+type = "unspecified"
+title = "Download GEIT Energy DT staging source ZIP"
+description = "Verified existing staging source archive (2.34 MB). Includes source, staging configuration templates and setup documentation. No deployment or database operations performed; environment isolation remains unverified."
+logical_id = "fcff2a08-e172-4b20-947d-4d4492e45c83"
+content_hash = "sha256:1f2effa4ead0bb06f3c2c6d341032b69435ba387217662a67ec7e90e50cd6bc4"
+size = 2339753
+mtime_ms = 1792603273920
+storage_uri = "gcs://replit-rams-assets-archer/rams/assets/repl:fce71e1d-6c2b-4e84-8d15-001075ea3502/fcff2a08-e172-4b20-947d-4d4492e45c83/8b7beaed-8047-44d7-b6b2-76b33a649644"
+storage_version_token = "1792604244122270"
+content_type = "application/octet-stream"
