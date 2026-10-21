@@ -55,7 +55,21 @@ test("public product descriptions and multilingual support use the Energy DT nam
   assert.match(source("platform/common.tsx"), /ENERGY DT/);
 });
 
-test("rendered public pages scope glass refinements off Home and preserve its hero", async () => {
+test("corporate navigation glass is paint-only and text recolouring excludes the hero and SVGs", () => {
+  const css = source("index.css");
+  const glass = css.slice(css.indexOf("/* Corporate glass across Home"));
+  for (const marker of [".geit-public>header", '.geit-public>[data-testid="nav-application"]', ".geit-public>footer"]) {
+    assert.ok(glass.includes(marker), marker);
+  }
+  assert.match(glass, /backdrop-filter:blur/);
+  assert.match(glass, /box-shadow:/);
+  assert.match(glass, /:not\(svg\):not\(svg \*\):not\(\[data-testid="home-hero"\] \*\)/);
+  assert.match(glass, /color:#123B2A!important/);
+  assert.doesNotMatch(glass, /(?:^|[;{])\s*(?:padding|margin|position|top|left|height|display|grid-template-columns)\s*:/m);
+  assert.match(glass, /prefers-reduced-motion:reduce/);
+});
+
+test("all corporate pages share glass styling while retaining inner-page scope and the existing hero", async () => {
   const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
   const server = await createServer({
     root, configFile: false, appType: "custom", logLevel: "error",
@@ -70,7 +84,8 @@ test("rendered public pages scope glass refinements off Home and preserve its he
     for (const route of ["/", "/about", "/services", "/industries", "/digital-energy-solutions", "/insights", "/contact"]) {
       const html = renderToStaticMarkup(createElement(LanguageProvider, { initialLanguage: "en" },
         createElement(Router, { ssrPath: route }, createElement(SiteRoutes))));
-      assert.equal(/class="grain min-h-\[100dvh\] geit-corp"/.test(html), route !== "/", route);
+      assert.match(html, /class="grain min-h-\[100dvh\] geit-public/);
+      assert.equal(/class="grain min-h-\[100dvh\] geit-public geit-corp"/.test(html), route !== "/", route);
       assert.match(html, /geit-silver-link/);
       assert.match(html, /href="\/energy-saas"/);
       if (route !== "/") assert.match(html, /geit-glass/, `${route}: floating glass content`);

@@ -45,7 +45,7 @@ export function SiteHeader() {
 
   const isActive = (href: string) => (href === "/" ? path === "/" : path === href || path.startsWith(href + "/"));
   const cls = (href: string, extra = "") =>
-    `navlink whitespace-nowrap leading-4 lg:!text-[14px] ${extra} ${isActive(href) ? "!text-[#168568] border-b-2 border-[#e8b64b] font-bold" : ""}`;
+    `navlink whitespace-nowrap leading-4 lg:!text-[14px] ${extra} ${isActive(href) ? "!text-[#123B2A] border-b-2 border-[#e8b64b] font-bold" : ""}`;
   const item = (l: { key: MessageKey; href: string }, extra = "") => (
     <Link key={l.href} href={l.href} className={cls(l.href, extra)} aria-current={isActive(l.href) ? "page" : undefined}>
       {t(l.key)}
