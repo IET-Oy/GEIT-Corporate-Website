@@ -99,7 +99,7 @@ export default function ContactForm() {
 
   return (
     <div
-      className="bg-white geit-glass p-6 shadow-[0_24px_65px_-45px_rgba(16,36,58,.55)] sm:p-9"
+      className="bg-white geit-glass geit-readable-glass p-6 shadow-[0_24px_65px_-45px_rgba(16,36,58,.55)] sm:p-9"
       data-testid="form-contact"
     >
       <div className="mb-7">

@@ -71,10 +71,10 @@ test("corporate navigation glass is paint-only and text recolouring excludes the
 
 test("corporate glass uses neutral dark surfaces rather than white or navy slabs", () => {
   const glass = source("corporate-glass.css");
-  assert.match(glass, /--corporate-glass: rgba\(0, 0, 0, \.58\)/);
+  assert.match(glass, /--corporate-glass: rgba\(0, 0, 0, \.38\)/);
   assert.match(glass, /\.geit-public > header,/);
   assert.match(glass, /background: var\(--corporate-glass\)/);
-  assert.match(glass, /background-color: rgba\(0, 0, 0, \.24\)/);
+  assert.match(glass, /background-color: rgba\(0, 0, 0, \.12\)/);
   assert.match(glass, /backdrop-filter: blur\(8px\)/);
   assert.match(glass, /color: #fff/);
   assert.match(glass, /color: #123B2A !important/);
@@ -92,6 +92,18 @@ test("a decorative viewport image backs corporate pages without changing the app
   assert.ok(shell.includes('${import.meta.env.BASE_URL}images/homepage-background.webp'));
   assert.match(shell, /alt="" width="1024" height="558"/);
   assert.ok(source("main.tsx").indexOf("import './corporate-glass.css'") > source("main.tsx").indexOf("import './index.css'"));
+});
+
+test("small actions and section labels share hero glass while pale panels use navy copy", () => {
+  const css = source("corporate-glass.css");
+  assert.match(css, /main a:is\(\.inline-flex,\.font-bold\)\[href\]:not\(nav a\):not\(\.underline\)/);
+  assert.match(css, /main p\.geit-section-label\[class\]:not\(\[data-testid="home-hero"\] \*\)/);
+  assert.match(css, /border-radius: 6px/);
+  assert.match(css, /padding: \.65rem \.9rem/);
+  assert.match(css, /color: #10243a !important/);
+  assert.match(css, /\[role="alert"\].*[\s\S]*color: #7a2a1d/);
+  assert.match(source("components/contact-form.tsx"), /geit-readable-glass/);
+  assert.match(source("App.tsx"), /geit-readable-glass[^"]*" id="low-carbon-transition"/);
 });
 
 test("all corporate pages share glass styling while retaining inner-page scope and the existing hero", async () => {

@@ -62,3 +62,9 @@ Remove the white tint in corporate glass panels and navigation bars AND the ligh
 **Why:** The owner first selected “White tint in the panels and navigation bars,” then explicitly requested removing the light page backgrounds behind those panels as well.
 
 **How to apply:** The owner's subsequent clarification requires a visibly image-backed glass design across all corporate pages, like the hero—not clear panels over the browser's white canvas. Extend the existing supplied hero image behind public corporate content, with readable neutral dark glass and floating surfaces. Preserve positions, hero animation, branding, the silver Energy DT control and existing application functionality.
+
+Keep corporate glass light enough to see the content. Small action links and section labels should match the “GLOBAL ENERGY & TECHNOLOGY” hero label; use dark navy copy on light surfaces such as the contact form and low-carbon content.
+
+**Why:** The owner reported overly black panels and bright white text disappearing on light surfaces, and requested only these small visual corrections.
+
+**How to apply:** Preserve the existing layout and functionality. Match the hero label's translucent neutral glass, delicate border and rounded corners for corporate action links; do not apply white text indiscriminately to pale panels or form disclosures.

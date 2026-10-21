@@ -4,7 +4,7 @@ import { ArrowRight } from 'lucide-react';
 import { HeroLightField } from '@/components/hero-light-field';
 import { IndustriesPreview } from '@/components/industries-section';
 
-const Tag = ({ children, light = false }: { children: string; light?: boolean }) => <p className={`mb-5 flex items-center gap-3 text-[11px] font-bold tracking-[.19em] ${light ? 'text-[#e8b64b]' : 'text-[#168568]'}`}><span className="h-[2px] w-7 bg-[#e8b64b]"/>{children}</p>;
+const Tag = ({ children, light = false }: { children: string; light?: boolean }) => <p className={`geit-section-label mb-5 flex items-center gap-3 text-[11px] font-bold tracking-[.19em] ${light ? 'text-[#e8b64b]' : 'text-[#168568]'}`}><span className="h-[2px] w-7 bg-[#e8b64b]"/>{children}</p>;
 
 export function HeroOrb() {
   return <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-20 select-none overflow-hidden" data-testid="hero-orb">

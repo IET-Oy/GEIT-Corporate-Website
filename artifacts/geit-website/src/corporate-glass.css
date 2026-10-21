@@ -4,7 +4,7 @@
   isolation: isolate;
   background: #161d20;
   color: #fff;
-  --corporate-glass: rgba(0, 0, 0, .58);
+  --corporate-glass: rgba(0, 0, 0, .38);
   --corporate-edge: rgba(255, 255, 255, .28);
 }
 .geit-public .corporate-backdrop {
@@ -47,16 +47,16 @@
   box-shadow: 0 16px 40px -28px rgba(0, 0, 0, .65), inset 0 0 0 1px var(--corporate-edge);
 }
 .geit-public main :is(.geit-glass, article, [class~="bg-white"][class~="border"]):not([data-testid="home-hero"] *) {
-  background-color: rgba(0, 0, 0, .24);
+  background-color: rgba(0, 0, 0, .12);
   border-color: var(--corporate-edge);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   box-shadow: 0 12px 30px -20px rgba(0, 0, 0, .65), inset 0 1px 0 rgba(255, 255, 255, .15);
 }
 .geit-public.geit-corp main form.geit-glass,
-.geit-public main form.geit-glass { background-color: rgba(0, 0, 0, .24); }
+.geit-public main form.geit-glass { background-color: rgba(0, 0, 0, .12); }
 .geit-public main :is(article, aside > div)[class~="bg-[#10243a]"],
-.geit-public main li[class~="bg-[#10243a]"] { background-color: rgba(0, 0, 0, .28); }
+.geit-public main li[class~="bg-[#10243a]"] { background-color: rgba(0, 0, 0, .16); }
 
 /* Replace dark body copy on glass, not the semantic accent/error colours. */
 .geit-public main :is(h1,h2,h3,h4,h5,p,span,label,li,dt,dd,div,a,button,nav,strong)[class*="text-[#"]:not(
@@ -87,13 +87,53 @@
 .geit-public main input,
 .geit-public main select,
 .geit-public main textarea { color: #10243a; }
-.geit-public main [data-testid="home-introduction"] [data-testid="button-link--services"] {
-  color: #fff;
-  background: rgba(0, 0, 0, .4);
-  border-color: var(--corporate-edge);
+/* Match the existing hero's GLOBAL ENERGY & TECHNOLOGY label. */
+.geit-public main a:is(.inline-flex,.font-bold)[href]:not(nav a):not(.underline),
+.geit-public a[data-testid="floating-consultation-cta"],
+.geit-public main p.geit-section-label[class]:not([data-testid="home-hero"] *) {
+  color: #fff !important;
+  background: rgba(0, 0, 0, .38);
+  border: 1px solid rgba(255, 255, 255, .3);
+  border-radius: 6px;
+  padding: .65rem .9rem;
+  width: fit-content;
+  max-width: 100%;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, .5);
+  box-shadow: none;
 }
-.geit-public main [data-testid="home-introduction"] [data-testid="button-link--services"]:hover {
-  background: rgba(0, 0, 0, .6);
+.geit-public main a:is(.inline-flex,.font-bold)[href]:not(nav a):not(.underline):hover,
+.geit-public a[data-testid="floating-consultation-cta"]:hover {
+  color: #fff !important;
+  background: rgba(0, 0, 0, .48);
+  border-color: rgba(255, 255, 255, .6);
+  transform: none;
+}
+.geit-public main a:is(.inline-flex,.font-bold)[href]:not(nav a):not(.underline):focus-visible {
+  outline: 2px solid #e8b64b;
+  outline-offset: 4px;
+}
+/* Light existing surfaces need navy copy, not the global white glass copy. */
+.geit-public main .geit-readable-glass,
+.geit-public main div:is([class~="bg-[#f2f5f7]"],[class~="bg-[#f7f9fa]"]) {
+  background-color: rgba(222, 235, 239, .85) !important;
+  color: #10243a;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+.geit-public main :is(.geit-readable-glass,div[class~="bg-[#f2f5f7]"],div[class~="bg-[#f7f9fa]"])
+  :is(h2,h3,p,label,span,strong,div):not(.geit-section-label):not([aria-hidden="true"]):not([role="alert"]):not([role="alert"] *),
+.geit-public main .geit-readable-glass [data-testid="company-contact-methods"] a {
+  color: #10243a !important;
+  text-shadow: none;
+}
+.geit-public main .geit-readable-glass [role="status"] {
+  background-color: rgba(239, 246, 248, .92);
+  color: #10243a;
+}
+.geit-public main .geit-readable-glass [role="alert"] :is(p,span) {
+  color: #7a2a1d !important;
 }
 .geit-public main [role="alert"] {
   background-color: rgba(255, 238, 233, .96);
