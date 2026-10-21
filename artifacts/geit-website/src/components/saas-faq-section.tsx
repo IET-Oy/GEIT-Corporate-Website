@@ -26,7 +26,7 @@ function LocalizedFaq() {
       <div className="mx-auto max-w-[1320px] px-5 py-16 lg:px-10 lg:py-20">
         <div className="grid gap-8 lg:grid-cols-[.8fr_1.2fr]">
           <div>
-            <p className="mb-5 flex items-center gap-3 text-[11px] font-bold tracking-[.19em] text-[#168568]"><span className="h-[2px] w-7 bg-[#e8b64b]" />{copy.eyebrow}</p>
+            <p className="geit-section-label mb-5 flex items-center gap-3 text-[11px] font-bold tracking-[.19em] text-[#168568]"><span className="h-[2px] w-7 bg-[#e8b64b]" />{copy.eyebrow}</p>
             <h2 id="saas-faq-heading" className="text-3xl font-bold leading-tight text-[#10243a] sm:text-4xl">{copy.heading}</h2>
             <p className="mt-4 max-w-md text-sm leading-7 text-[#647481]">{copy.intro}</p>
             <SupportLanguageNotice />
@@ -54,7 +54,7 @@ function LocalizedFaq() {
                           <ChevronDown size={18} aria-hidden="true" className={`shrink-0 text-[#168568] transition-transform motion-reduce:transition-none ${isOpen ? "rotate-180" : ""}`} />
                         </button>
                       </h3>
-                      <div id={`${uid}-p-${f.id}`} role="region" aria-labelledby={`${uid}-b-${f.id}`} hidden={!isOpen} className="pb-6 pr-8">
+                      <div id={`${uid}-p-${f.id}`} role="region" aria-labelledby={`${uid}-b-${f.id}`} hidden={!isOpen} className="geit-readable-glass rounded pb-6 pl-4 pr-8 pt-4">
                         <p className="mb-3 inline-block border border-[#c9d5db] bg-[#f2f5f7] px-2 py-1 text-[11px] font-bold tracking-[.08em] text-[#10243a]">{copy[f.status].toUpperCase()}: {f.statusNote}</p>
                         <p className="text-sm leading-7 text-[#4f6370]">{f.answer}</p>
                         <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm font-bold">

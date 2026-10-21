@@ -96,6 +96,7 @@
 /* Match the existing hero's GLOBAL ENERGY & TECHNOLOGY label. */
 .geit-public main a:is(.inline-flex,.font-bold)[href]:not(nav a):not(.underline),
 .geit-public a[data-testid="floating-consultation-cta"],
+.geit-public main span.geit-section-label[class],
 .geit-public main p.geit-section-label[class]:not([data-testid="home-hero"] *) {
   color: #fff !important;
   background: rgba(0, 0, 0, .38);

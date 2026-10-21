@@ -119,6 +119,19 @@ test("upper navigation uses a gold underline without a filled active badge, and 
   assert.equal(mission, vision);
 });
 
+test("homepage sector numbers, sector links and FAQ label reuse glass while answers use readable navy surfaces", () => {
+  const sectors = source("components/industries-section.tsx").split("export function IndustriesPreview()")[1];
+  const faq = source("components/saas-faq-section.tsx");
+  const css = source("corporate-glass.css");
+  assert.equal((sectors.match(/<span className="geit-section-label/g) ?? []).length, 2);
+  assert.ok(sectors.includes('href={`/industries#${s.id}`}'));
+  assert.match(css, /\.geit-public main span\.geit-section-label\[class\],/);
+  assert.match(faq, /<p className="geit-section-label[^"]*">[\s\S]*?\{copy\.eyebrow\}/);
+  assert.match(faq, /role="region"[^>]*hidden=\{!isOpen\} className="geit-readable-glass/);
+  assert.match(css, /main :is\(\.geit-readable-glass[\s\S]*?color: #10243a !important/);
+  assert.match(faq, /aria-expanded=\{isOpen\}/);
+});
+
 test("all corporate pages share glass styling while retaining inner-page scope and the existing hero", async () => {
   const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
   const server = await createServer({

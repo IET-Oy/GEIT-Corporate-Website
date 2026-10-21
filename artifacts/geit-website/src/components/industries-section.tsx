@@ -40,9 +40,9 @@ export function IndustriesContent() {
 export function IndustriesPreview() {
   const { c } = useLanguage();
 
-  return <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{sectors.map((s, i) => (
+  return <div id="home-sectors" className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{sectors.map((s, i) => (
     <Link key={s.id} href={`/industries#${s.id}`} data-testid={`card-sector-${s.id}`} className="group flex flex-col border border-[#dce3e8] bg-white geit-glass transition hover:-translate-y-1 hover:border-[#168568]/50">
       <div className="aspect-[400/210]"><SectorArt sector={s}/></div>
-      <div className="flex flex-1 flex-col p-4"><span className="font-mono text-xs text-[#168568]">0{i + 1}</span><span className="mt-1 text-sm font-bold leading-5 text-[#10243a]">{c(s.name)}</span><span className="mt-3 inline-flex items-center gap-1 pt-1 text-xs font-bold text-[#168568]">{c("View sector ")}<ArrowRight size={13} className="transition group-hover:translate-x-1"/></span></div>
+      <div className="flex flex-1 flex-col p-4"><span className="geit-section-label font-mono text-xs text-[#168568]">0{i + 1}</span><span className="mt-1 text-sm font-bold leading-5 text-[#10243a]">{c(s.name)}</span><span className="geit-section-label mt-3 inline-flex items-center gap-1 pt-1 text-xs font-bold text-[#168568]">{c("View sector ")}<ArrowRight size={13} className="transition group-hover:translate-x-1"/></span></div>
     </Link>))}</div>;
 }
