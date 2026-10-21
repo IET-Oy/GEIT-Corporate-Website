@@ -57,8 +57,8 @@ The customer-facing product is Energy DT — Energy Digital Twin. Preserve techn
 
 **How to apply:** Preserve the approved homepage structure, image, animation, text and positions. The owner's later refinement expands transparent glass panels and subtle elevation to ALL corporate pages, including Home and both navigation bars, without moving content. Change green text throughout all pages to dark green (#123B2A), preserving button backgrounds, decorative colors and readable white hero text. The application may use a separate restrained, Apple-inspired interface, but navigation must only expose existing capabilities and mark planned destinations honestly.
 
-Remove the white tint in corporate glass panels and navigation bars, not the light page backgrounds.
+Remove the white tint in corporate glass panels and navigation bars AND the light page backgrounds behind them.
 
-**Why:** The owner explicitly selected “White tint in the panels and navigation bars” when asked which white background to remove.
+**Why:** The owner first selected “White tint in the panels and navigation bars,” then explicitly requested removing the light page backgrounds behind those panels as well.
 
-**How to apply:** Use clear glass fills with the existing blur, subtle borders and elevation. Preserve page backgrounds, positions, hero readability, branding and the silver Energy DT control.
+**How to apply:** Use transparent corporate page layers and clear glass fills with the existing blur, subtle borders and elevation. Preserve positions, hero readability, branding, dark branded sections and the silver Energy DT control. Do not add an unrequested replacement wallpaper.

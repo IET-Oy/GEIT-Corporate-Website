@@ -81,6 +81,18 @@ test("light glass panels and navigation have no white fill, retaining blur and d
   assert.match(css, /\[data-testid="home-hero"\] \.geit-headline\{color:#fff;background:rgba\(0,0,0,\.38\)/);
 });
 
+test("corporate page backdrop layers are transparent without changing the app or image frames", () => {
+  const css = source("index.css");
+  assert.ok(css.includes("body:has(.geit-public){background:transparent}"));
+  assert.ok(css.includes(".geit-public{background:transparent}"));
+  const sections = css.match(/\.geit-public main section:is\([\s\S]*?\)\{background-color:transparent\}/)?.[0] ?? "";
+  assert.ok(sections.includes('[class~="bg-white"]'));
+  assert.ok(sections.includes('[class~="bg-[#f2f5f7]"]'));
+  assert.match(sections, /background-color:transparent/);
+  assert.ok(!sections.includes("bg-[#10243a]") && !sections.includes("bg-[#168568]"));
+  assert.ok(!sections.includes(".geit-app") && !sections.includes("img"));
+});
+
 test("all corporate pages share glass styling while retaining inner-page scope and the existing hero", async () => {
   const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
   const server = await createServer({

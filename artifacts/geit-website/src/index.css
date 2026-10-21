@@ -454,6 +454,17 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .geit-app table{font-variant-numeric:tabular-nums}
 
 /* Corporate glass across Home and inner pages: paint-only, no layout changes. */
+/* Clear the page layers as well as panels; no replacement backdrop is added. */
+body:has(.geit-public){background:transparent}
+.geit-public{background:transparent}
+.geit-public main section:is(
+  [class~="bg-white"],
+  [class~="bg-[#f2f5f7]"],
+  [class~="bg-[#f7f9fa]"],
+  [class~="bg-[#e6f0ed]"],
+  [class~="bg-[#e7eeef]"],
+  [class~="bg-[#e9eff1]"]
+){background-color:transparent}
 .geit-public>header,
 .geit-app>header{
   background:transparent;
