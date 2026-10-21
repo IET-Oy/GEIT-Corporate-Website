@@ -1,0 +1,113 @@
+/* Image-backed corporate glass only. Application routes keep their own theme. */
+.geit-public {
+  position: relative;
+  isolation: isolate;
+  background: #161d20;
+  color: #fff;
+  --corporate-glass: rgba(0, 0, 0, .58);
+  --corporate-edge: rgba(255, 255, 255, .28);
+}
+.geit-public .corporate-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.geit-public .corporate-backdrop img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Keep all existing widths, padding, margins and responsive positions. */
+.geit-public > header,
+.geit-public > [data-testid="nav-application"],
+.geit-public #mobile-navigation,
+.geit-public > footer {
+  background: var(--corporate-glass);
+  border-color: var(--corporate-edge);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 28px -20px rgba(0, 0, 0, .6), inset 0 1px 0 rgba(255, 255, 255, .18);
+}
+.geit-public > header .navlink,
+.geit-public #mobile-navigation a { color: #fff; }
+.geit-public > header button[data-testid="button-mobile-menu"] { color: #fff; }
+.geit-public > header button[data-testid="button-mobile-menu"]:hover { background: rgba(255, 255, 255, .12); }
+
+.geit-public main > section:not([data-testid="home-hero"]) {
+  background: transparent;
+}
+.geit-public main > section:not([data-testid="home-hero"]) > div {
+  background: var(--corporate-glass);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 16px 40px -28px rgba(0, 0, 0, .65), inset 0 0 0 1px var(--corporate-edge);
+}
+.geit-public main :is(.geit-glass, article, [class~="bg-white"][class~="border"]):not([data-testid="home-hero"] *) {
+  background-color: rgba(0, 0, 0, .24);
+  border-color: var(--corporate-edge);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 12px 30px -20px rgba(0, 0, 0, .65), inset 0 1px 0 rgba(255, 255, 255, .15);
+}
+.geit-public.geit-corp main form.geit-glass,
+.geit-public main form.geit-glass { background-color: rgba(0, 0, 0, .24); }
+.geit-public main :is(article, aside > div)[class~="bg-[#10243a]"],
+.geit-public main li[class~="bg-[#10243a]"] { background-color: rgba(0, 0, 0, .28); }
+
+/* Replace dark body copy on glass, not the semantic accent/error colours. */
+.geit-public main :is(h1,h2,h3,h4,h5,p,span,label,li,dt,dd,div,a,button,nav,strong)[class*="text-[#"]:not(
+  [class*="text-[#168568]"],
+  [class*="text-[#123B2A]"],
+  [class*="text-[#116d55]"],
+  [class*="text-[#e8b64b]"],
+  [class*="text-[#a53d2b]"],
+  [class*="text-[#9b2c1b]"],
+  [class*="text-[#873e25]"]
+):not([data-testid="home-hero"] *) { color: #fff; }
+
+/* Dark green remains dark green, with a small contrasting glass backing. */
+.geit-public :is(p,span,a,button).text-\[\#168568\]:not([data-testid="home-hero"] *),
+.geit-public :is(a,button).text-\[\#116d55\],
+.geit-public > header .navlink[aria-current="page"],
+.geit-public > header .navlink:hover,
+.geit-public > header .navlink:focus-visible {
+  color: #123B2A !important;
+  background-color: rgba(222, 242, 231, .94);
+  box-shadow: 0 0 0 2px rgba(222, 242, 231, .94);
+}
+.geit-public main :is(a,button)[class*="hover:text-[#168568]"]:hover {
+  color: #123B2A;
+  background-color: rgba(222, 242, 231, .94);
+}
+.geit-public main .form-input,
+.geit-public main input,
+.geit-public main select,
+.geit-public main textarea { color: #10243a; }
+.geit-public main [data-testid="home-introduction"] [data-testid="button-link--services"] {
+  color: #fff;
+  background: rgba(0, 0, 0, .4);
+  border-color: var(--corporate-edge);
+}
+.geit-public main [data-testid="home-introduction"] [data-testid="button-link--services"]:hover {
+  background: rgba(0, 0, 0, .6);
+}
+.geit-public main [role="alert"] {
+  background-color: rgba(255, 238, 233, .96);
+  color: #7a2a1d;
+}
+.geit-public main [role="alert"] :is(p,span) { color: inherit; }
+@media (prefers-reduced-transparency: reduce) {
+  .geit-public { --corporate-glass: rgba(0, 0, 0, .88); }
+}
+@media (max-width: 767px) {
+  .geit-public > header,
+  .geit-public > [data-testid="nav-application"],
+  .geit-public main > section:not([data-testid="home-hero"]) > div {
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+  }
+}

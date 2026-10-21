@@ -61,4 +61,4 @@ Remove the white tint in corporate glass panels and navigation bars AND the ligh
 
 **Why:** The owner first selected “White tint in the panels and navigation bars,” then explicitly requested removing the light page backgrounds behind those panels as well.
 
-**How to apply:** Use transparent corporate page layers and clear glass fills with the existing blur, subtle borders and elevation. Preserve positions, hero readability, branding, dark branded sections and the silver Energy DT control. Do not add an unrequested replacement wallpaper.
+**How to apply:** The owner's subsequent clarification requires a visibly image-backed glass design across all corporate pages, like the hero—not clear panels over the browser's white canvas. Extend the existing supplied hero image behind public corporate content, with readable neutral dark glass and floating surfaces. Preserve positions, hero animation, branding, the silver Energy DT control and existing application functionality.

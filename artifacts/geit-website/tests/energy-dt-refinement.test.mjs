@@ -69,28 +69,29 @@ test("corporate navigation glass is paint-only and text recolouring excludes the
   assert.match(glass, /prefers-reduced-motion:reduce/);
 });
 
-test("light glass panels and navigation have no white fill, retaining blur and dark surfaces", () => {
-  const css = source("index.css");
-  const glass = css.slice(css.indexOf("/* Corporate glass across Home"));
-  assert.match(glass, /\.geit-public>header,\s*\.geit-app>header\{\s*background:transparent;/);
-  assert.match(glass, /#mobile-navigation[^{]*\{\s*background:transparent;/);
-  assert.match(glass, /:not\(\[data-testid="home-hero"\] \*\)\{\s*background-color:transparent;/);
-  assert.match(glass, /form\.geit-glass\{background-color:transparent\}/);
-  assert.match(glass, /backdrop-filter:blur\(14px\)/);
-  assert.match(glass, /background:rgba\(16,36,58,\.86\)/);
-  assert.match(css, /\[data-testid="home-hero"\] \.geit-headline\{color:#fff;background:rgba\(0,0,0,\.38\)/);
+test("corporate glass uses neutral dark surfaces rather than white or navy slabs", () => {
+  const glass = source("corporate-glass.css");
+  assert.match(glass, /--corporate-glass: rgba\(0, 0, 0, \.58\)/);
+  assert.match(glass, /\.geit-public > header,/);
+  assert.match(glass, /background: var\(--corporate-glass\)/);
+  assert.match(glass, /background-color: rgba\(0, 0, 0, \.24\)/);
+  assert.match(glass, /backdrop-filter: blur\(8px\)/);
+  assert.match(glass, /color: #fff/);
+  assert.match(glass, /color: #123B2A !important/);
+  assert.match(source("index.css"), /\[data-testid="home-hero"\] \.geit-headline\{color:#fff;background:rgba\(0,0,0,\.38\)/);
 });
 
-test("corporate page backdrop layers are transparent without changing the app or image frames", () => {
-  const css = source("index.css");
-  assert.ok(css.includes("body:has(.geit-public){background:transparent}"));
-  assert.ok(css.includes(".geit-public{background:transparent}"));
-  const sections = css.match(/\.geit-public main section:is\([\s\S]*?\)\{background-color:transparent\}/)?.[0] ?? "";
-  assert.ok(sections.includes('[class~="bg-white"]'));
-  assert.ok(sections.includes('[class~="bg-[#f2f5f7]"]'));
-  assert.match(sections, /background-color:transparent/);
-  assert.ok(!sections.includes("bg-[#10243a]") && !sections.includes("bg-[#168568]"));
-  assert.ok(!sections.includes(".geit-app") && !sections.includes("img"));
+test("a decorative viewport image backs corporate pages without changing the app or animation loops", () => {
+  const css = source("corporate-glass.css");
+  assert.match(css, /\.corporate-backdrop \{\s*position: fixed/);
+  assert.match(css, /pointer-events: none/);
+  assert.match(css, /object-fit: cover/);
+  assert.doesNotMatch(css, /\.geit-app\b|animation:|background-attachment:/);
+  const shell = source("App.tsx").split("function Shell(")[1].split("function Eyebrow(")[0];
+  assert.match(shell, /aria-hidden="true" data-testid="corporate-backdrop"/);
+  assert.ok(shell.includes('${import.meta.env.BASE_URL}images/homepage-background.webp'));
+  assert.match(shell, /alt="" width="1024" height="558"/);
+  assert.ok(source("main.tsx").indexOf("import './corporate-glass.css'") > source("main.tsx").indexOf("import './index.css'"));
 });
 
 test("all corporate pages share glass styling while retaining inner-page scope and the existing hero", async () => {
@@ -111,6 +112,7 @@ test("all corporate pages share glass styling while retaining inner-page scope a
       assert.match(html, /class="grain min-h-\[100dvh\] geit-public/);
       assert.equal(/class="grain min-h-\[100dvh\] geit-public geit-corp"/.test(html), route !== "/", route);
       assert.match(html, /geit-silver-link/);
+      assert.match(html, /data-testid="corporate-backdrop"/);
       assert.match(html, /href="\/energy-saas"/);
       if (route !== "/") assert.match(html, /geit-glass/, `${route}: floating glass content`);
       else {

@@ -71,7 +71,7 @@ return <Link href={href} data-testid={`link-${href.replaceAll('/','-')||'home'}`
 function ButtonLink({href,children,secondary=false}: {href:string;children:string;secondary?:boolean}) {
   const { c } = useLanguage();
 return <Link href={href} data-testid={`button-link-${href.replaceAll('/','-')||'home'}`} className={`inline-flex items-center justify-center gap-3 px-6 py-4 text-sm font-bold transition-all duration-300 hover:-translate-y-0.5 ${secondary?'border border-white/35 text-white hover:bg-white/10':'bg-[#168568] text-white hover:bg-[#116d55]'}`}>{c(children)}<ArrowUpRight size={17}/></Link>}
-function Shell({children}: {children:ReactNode}){const [shellPath]=useLocation();return <div className={`grain min-h-[100dvh] geit-public${shellPath==="/"?"":" geit-corp"}`}><Schema/><RouteScroll/><SiteHeader/><AppNav/><main>{children}</main><SiteFooter/><FloatingConsultation/><SupportWidget/></div>}
+function Shell({children}: {children:ReactNode}){const [shellPath]=useLocation();return <div className={`grain min-h-[100dvh] geit-public${shellPath==="/"?"":" geit-corp"}`}><div className="corporate-backdrop" aria-hidden="true" data-testid="corporate-backdrop"><img src={`${import.meta.env.BASE_URL}images/homepage-background.webp`} alt="" width="1024" height="558" decoding="async"/></div><Schema/><RouteScroll/><SiteHeader/><AppNav/><main>{children}</main><SiteFooter/><FloatingConsultation/><SupportWidget/></div>}
 function Eyebrow({children}: {children:string}){
   const { c } = useLanguage();
 return <p className="mb-5 flex items-center gap-3 text-[11px] font-bold tracking-[.19em] text-[#168568]"><span className="h-[2px] w-7 bg-[#e8b64b]"/>{c(children)}</p>}
