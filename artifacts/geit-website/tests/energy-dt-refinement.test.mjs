@@ -69,6 +69,18 @@ test("corporate navigation glass is paint-only and text recolouring excludes the
   assert.match(glass, /prefers-reduced-motion:reduce/);
 });
 
+test("light glass panels and navigation have no white fill, retaining blur and dark surfaces", () => {
+  const css = source("index.css");
+  const glass = css.slice(css.indexOf("/* Corporate glass across Home"));
+  assert.match(glass, /\.geit-public>header,\s*\.geit-app>header\{\s*background:transparent;/);
+  assert.match(glass, /#mobile-navigation[^{]*\{\s*background:transparent;/);
+  assert.match(glass, /:not\(\[data-testid="home-hero"\] \*\)\{\s*background-color:transparent;/);
+  assert.match(glass, /form\.geit-glass\{background-color:transparent\}/);
+  assert.match(glass, /backdrop-filter:blur\(14px\)/);
+  assert.match(glass, /background:rgba\(16,36,58,\.86\)/);
+  assert.match(css, /\[data-testid="home-hero"\] \.geit-headline\{color:#fff;background:rgba\(0,0,0,\.38\)/);
+});
+
 test("all corporate pages share glass styling while retaining inner-page scope and the existing hero", async () => {
   const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
   const server = await createServer({

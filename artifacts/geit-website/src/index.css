@@ -433,8 +433,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 
 /* ---- Corporate non-home glass: scope .geit-corp (absent on "/") ---- */
 .geit-corp main a.text-\[\#168568\],.geit-corp main a.text-\[\#168568\]:hover,.geit-corp main a.text-\[\#116d55\],.geit-corp main a span.text-\[\#168568\],.geit-corp main nav a:hover{color:#123B2A}
-.geit-corp main .geit-glass,.geit-corp main section article:is([class*="bg-white"],[class*="bg-[#f2f5f7]"],[class*="bg-[#f7f9fa]"]),.geit-corp main section aside>div:is([class*="bg-white"]),.geit-corp main form.geit-glass{background-color:rgba(255,255,255,.66);-webkit-backdrop-filter:blur(14px) saturate(1.15);backdrop-filter:blur(14px) saturate(1.15);border:1px solid rgba(255,255,255,.75);box-shadow:0 10px 30px -18px rgba(16,36,58,.28),inset 0 1px 0 rgba(255,255,255,.6);transition:transform .3s ease,box-shadow .3s ease}
-.geit-corp main form.geit-glass{background-color:rgba(255,255,255,.88)}
+.geit-corp main .geit-glass,.geit-corp main section article:is([class*="bg-white"],[class*="bg-[#f2f5f7]"],[class*="bg-[#f7f9fa]"]),.geit-corp main section aside>div:is([class*="bg-white"]),.geit-corp main form.geit-glass{background-color:transparent;-webkit-backdrop-filter:blur(14px) saturate(1.15);backdrop-filter:blur(14px) saturate(1.15);border:1px solid rgba(255,255,255,.75);box-shadow:0 10px 30px -18px rgba(16,36,58,.28),inset 0 1px 0 rgba(255,255,255,.6);transition:transform .3s ease,box-shadow .3s ease}
+.geit-corp main form.geit-glass{background-color:transparent}
 .geit-corp header .navlink:hover,.geit-corp header .navlink:focus-visible,.geit-corp header .navlink[aria-current="page"],.geit-corp header .navlink.\!text-\[\#168568\]{color:#123B2A!important}
 .geit-corp main a[class*="hover:text-[#168568]"]:hover,.geit-corp header #mobile-navigation a[aria-current="page"],.geit-corp header #mobile-navigation a:hover{color:#123B2A}
 .geit-corp main section article:is([class*="bg-white"],[class*="bg-[#f2f5f7]"],[class*="bg-[#f7f9fa]"]):hover,.geit-corp main a.geit-glass:hover{transform:translateY(-3px);box-shadow:0 18px 40px -20px rgba(16,36,58,.35),inset 0 1px 0 rgba(255,255,255,.7)}
@@ -456,7 +456,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 /* Corporate glass across Home and inner pages: paint-only, no layout changes. */
 .geit-public>header,
 .geit-app>header{
-  background:rgba(242,245,247,.64);
+  background:transparent;
   border-color:rgba(255,255,255,.65);
   -webkit-backdrop-filter:blur(18px) saturate(1.15);
   backdrop-filter:blur(18px) saturate(1.15);
@@ -471,21 +471,21 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
   box-shadow:0 12px 28px -20px rgba(16,36,58,.5),inset 0 1px 0 rgba(255,255,255,.12);
 }
 .geit-public #mobile-navigation,.geit-app #mobile-navigation{
-  background:rgba(255,255,255,.84);
+  background:transparent;
   -webkit-backdrop-filter:blur(18px);
   backdrop-filter:blur(18px);
 }
 .geit-public main :is(.geit-glass,article[class*="bg-white"],article[class*="bg-[#f2f5f7]"],[class~="bg-white"][class~="border"]):not([data-testid="home-hero"] *){
-  background-color:rgba(255,255,255,.55);
+  background-color:transparent;
   border-color:rgba(255,255,255,.8);
   -webkit-backdrop-filter:blur(14px) saturate(1.12);
   backdrop-filter:blur(14px) saturate(1.12);
   box-shadow:0 12px 32px -22px rgba(16,36,58,.35),inset 0 1px 0 rgba(255,255,255,.8);
   transition:box-shadow .25s ease,background-color .25s ease;
 }
-.geit-public main form.geit-glass{background-color:rgba(255,255,255,.84)}
+.geit-public main form.geit-glass{background-color:transparent}
 .geit-public main article:not([class*="bg-"]){
-  background-color:rgba(255,255,255,.42);
+  background-color:transparent;
   -webkit-backdrop-filter:blur(12px);
   backdrop-filter:blur(12px);
   box-shadow:0 10px 26px -22px rgba(16,36,58,.35),inset 0 0 0 1px rgba(255,255,255,.6);
