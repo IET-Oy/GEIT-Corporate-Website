@@ -9,8 +9,8 @@ export const frFaq: Record<string, FaqTranslation> = {
     keywords: ["services", "conseil", "consultant", "recherche", "développement", "recharge", "carbone", "entreprise"],
   },
   "what-is": {
-    question: "Qu’est-ce que GEIT Energy SaaS ?",
-    answer: "GEIT Energy SaaS est un espace de travail d’analyse énergétique accessible après connexion. Les organisations importent manuellement des données par intervalles, gèrent les sites et compteurs et enregistrent analyses, scénarios et rapports. Il est actuellement en test interne et n’est donc pas proposé comme service de surveillance en production.",
+    question: "Qu’est-ce que GEIT Energy DT ?",
+    answer: "GEIT Energy DT est un espace de travail d’analyse énergétique accessible après connexion. Les organisations importent manuellement des données par intervalles, gèrent les sites et compteurs et enregistrent analyses, scénarios et rapports. Il est actuellement en test interne et n’est donc pas proposé comme service de surveillance en production.",
     statusNote: "Phase de test interne.", keywords: ["plateforme", "produit", "espace", "présentation"],
   },
   who: {

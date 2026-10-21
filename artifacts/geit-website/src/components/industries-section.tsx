@@ -21,7 +21,7 @@ export function IndustriesContent() {
   const { c } = useLanguage();
 
   return <div className="space-y-6">{sectors.map((s, i) => (
-    <article key={s.id} id={s.id} tabIndex={-1} data-testid={`section-industry-${s.id}`} className="scroll-mt-36 grid overflow-hidden border border-[#dce3e8] bg-white lg:grid-cols-2">
+    <article key={s.id} id={s.id} tabIndex={-1} data-testid={`section-industry-${s.id}`} className="scroll-mt-36 grid overflow-hidden border border-[#dce3e8] bg-white geit-glass lg:grid-cols-2">
       <div className={`aspect-[400/210] lg:aspect-auto lg:min-h-[320px] ${i % 2 ? 'lg:order-2' : ''}`}><SectorArt sector={s}/></div>
       <div className="p-7 sm:p-9">
         <p className="font-mono text-xs font-bold text-[#168568]">{c("SECTOR / 0")}{i + 1}</p>
@@ -41,7 +41,7 @@ export function IndustriesPreview() {
   const { c } = useLanguage();
 
   return <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{sectors.map((s, i) => (
-    <Link key={s.id} href={`/industries#${s.id}`} data-testid={`card-sector-${s.id}`} className="group flex flex-col border border-[#dce3e8] bg-white transition hover:-translate-y-1 hover:border-[#168568]/50">
+    <Link key={s.id} href={`/industries#${s.id}`} data-testid={`card-sector-${s.id}`} className="group flex flex-col border border-[#dce3e8] bg-white geit-glass transition hover:-translate-y-1 hover:border-[#168568]/50">
       <div className="aspect-[400/210]"><SectorArt sector={s}/></div>
       <div className="flex flex-1 flex-col p-4"><span className="font-mono text-xs text-[#168568]">0{i + 1}</span><span className="mt-1 text-sm font-bold leading-5 text-[#10243a]">{c(s.name)}</span><span className="mt-3 inline-flex items-center gap-1 pt-1 text-xs font-bold text-[#168568]">{c("View sector ")}<ArrowRight size={13} className="transition group-hover:translate-x-1"/></span></div>
     </Link>))}</div>;

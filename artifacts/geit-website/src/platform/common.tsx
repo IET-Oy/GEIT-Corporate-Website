@@ -29,7 +29,7 @@ export function withOrg(path: string, org?: string | null) {
 
 export function usePageMeta(title: string) {
   useEffect(() => {
-    document.title = `${title} | GEIT Energy Intelligence`;
+    document.title = `${title} | GEIT Energy DT — Energy Digital Twin`;
     const meta = document.createElement("meta");
     meta.name = "robots";
     meta.content = "noindex, nofollow";
@@ -76,7 +76,7 @@ export function AuthFrame({ title, intro, children, footer }: { title: string; i
   return (
     <div className="mx-auto grid max-w-[1120px] gap-10 px-5 py-12 lg:grid-cols-[.9fr_1.1fr] lg:px-10 lg:py-20">
       <div className="page-reveal">
-        <p className="mb-5 flex items-center gap-3 text-[11px] font-bold tracking-[.19em] text-[#168568]"><span className="h-[2px] w-7 bg-[#e8b64b]" />ENERGY INTELLIGENCE WORKSPACE</p>
+        <p className="mb-5 flex items-center gap-3 text-[11px] font-bold tracking-[.19em] text-[#168568]"><span className="h-[2px] w-7 bg-[#e8b64b]" />ENERGY DT — ENERGY DIGITAL TWIN</p>
         <h1 className="text-3xl font-extrabold leading-tight text-[#10243a] sm:text-4xl">{title}</h1>
         <p className="mt-5 max-w-md text-sm leading-7 text-[#5d707c]">{intro}</p>
         <p className="mt-8 max-w-md border-l-2 border-[#e8b64b] pl-4 text-xs leading-5 text-[#6b7b87]">The workspace is currently available in English only. Corporate pages remain available in every supported language.</p>

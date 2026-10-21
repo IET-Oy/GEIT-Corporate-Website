@@ -10,6 +10,16 @@ import {
 import { platformModules } from "@/config/platform-modules";
 import { Alert, Field, PlannedBadge, ROLE_LABELS, Skeleton, SubmitButton, TextLink, WRITE, apiMessage, apiStatus, useOrgParam, usePageMeta, withOrg } from "./common";
 
+const NAV_LABELS: Record<string, string> = { "energy-management": "Energy Analysis", "digital-energy": "Digital Twin", "projects-reports": "Reports" };
+const NAV_GROUPS = [
+  { label: "Overview", ids: ["overview"] },
+  { label: "Analysis", ids: ["energy-management", "digital-energy"] },
+  { label: "Engineering", ids: ["energy-consulting", "renewable-energy", "energy-auditing", "battery-flexibility"] },
+  { label: "Sustainability", ids: ["carbon-footprint"] },
+  { label: "Reports", ids: ["projects-reports"] },
+  { label: "Settings", ids: ["organisation-settings"] },
+] as const;
+
 type Ctx = { user: { id: string; email: string; fullName: string }; org: PlatformOrganisation };
 
 function zones(): string[] {
@@ -104,7 +114,7 @@ export function Workspace({ title, path, children }: { title: string; path: stri
     return (
       <div className="mx-auto max-w-xl px-5 py-20 page-reveal" data-testid="state-signed-out">
         <h1 className="text-3xl font-extrabold text-[#10243a]">Sign in to open the workspace</h1>
-        <p className="mt-4 text-sm leading-7 text-[#5d707c]">The Energy Intelligence workspace is for registered members of an organisation.</p>
+        <p className="mt-4 text-sm leading-7 text-[#5d707c]">Energy DT — Energy Digital Twin is for registered members of an organisation.</p>
         <div className="mt-7 flex flex-wrap gap-4"><Link href="/app/sign-in" data-testid="link-signin" className="bg-[#168568] px-6 py-3 text-sm font-bold text-white">Sign in</Link><Link href="/app/register" data-testid="link-register" className="border border-[#10243a] px-6 py-3 text-sm font-bold text-[#10243a]">Create account</Link></div>
       </div>
     );
@@ -118,6 +128,7 @@ export function Workspace({ title, path, children }: { title: string; path: stri
     <div className="mx-auto grid w-full min-w-0 max-w-[1320px] grid-cols-1 gap-0 lg:grid-cols-[270px_minmax(0,1fr)]">
       <aside className="min-w-0 border-b border-[#dce3e8] bg-white lg:min-h-[calc(100dvh-84px)] lg:border-b-0 lg:border-r">
         <div className="px-5 pt-5">
+          <p className="mb-5 border-b border-[#edf0f2] pb-4 text-sm font-bold tracking-tight text-[#10243a]" data-testid="text-app-brand">Energy DT <span className="block text-[11px] font-medium text-[#6b7b87]">Energy Digital Twin</span></p>
           <p className="text-[10px] font-bold tracking-[.16em] text-[#6b7b87]">ORGANISATION</p>
           <label htmlFor="org-switch" className="sr-only">Switch organisation</label>
           <select id="org-switch" className="form-input mt-2" value={active.id} data-testid="select-org" onChange={(e) => navigate(withOrg(path, e.target.value))}>
@@ -126,16 +137,22 @@ export function Workspace({ title, path, children }: { title: string; path: stri
           <Link href="/app?choose=1" className="mt-3 inline-block text-xs font-bold text-[#168568] underline" data-testid="link-manage-organisations">Choose or create an organisation</Link>
           <div className="mt-3 flex items-center justify-between gap-2 text-xs text-[#6b7b87]"><span data-testid="text-user">{user.fullName}</span><SignOutButton /></div>
         </div>
-        <nav aria-label="Workspace modules" className="mt-4 flex gap-1 overflow-x-auto px-3 pb-3 lg:flex-col lg:overflow-visible lg:pb-6">
-          {platformModules.map((m) => {
-            const here = path === m.path;
-            return (
-              <Link key={m.id} href={withOrg(m.path, active.id)} aria-current={here ? "page" : undefined} data-testid={`link-module-${m.id}`}
-                className={`flex shrink-0 items-center justify-between gap-3 border-l-2 px-3 py-2.5 text-[13px] font-semibold transition ${here ? "border-[#e8b64b] bg-[#e8f2ef] text-[#10243a]" : "border-transparent text-[#34495a] hover:bg-[#f2f5f7]"}`}>
-                <span className="whitespace-nowrap">{m.title}</span>{m.readiness === "planned" && <PlannedBadge />}
-              </Link>
-            );
-          })}
+        <nav aria-label="Workspace modules" className="mt-4 flex gap-1 overflow-x-auto px-3 pb-3 lg:flex-col lg:overflow-visible lg:pb-6" data-testid="nav-workspace">
+          {NAV_GROUPS.map((g) => (
+            <div key={g.label} className="flex shrink-0 gap-1 lg:flex-col" role="group" aria-label={g.label}>
+              <p className="hidden px-3 pt-4 text-[10px] font-bold tracking-[.16em] text-[#6b7b87] lg:block">{g.label.toUpperCase()}</p>
+              {g.ids.map((id) => {
+                const m = platformModules.find((x) => x.id === id)!;
+                const here = path === m.path;
+                return (
+                  <Link key={m.id} href={withOrg(m.path, active.id)} aria-current={here ? "page" : undefined} data-testid={`link-module-${m.id}`}
+                    className={`flex shrink-0 items-center justify-between gap-3 border-l-2 px-3 py-2.5 text-[13px] font-semibold transition ${here ? "border-[#e8b64b] bg-[#e8f2ef] text-[#10243a]" : "border-transparent text-[#34495a] hover:bg-[#f2f5f7]"}`}>
+                    <span className="whitespace-nowrap">{NAV_LABELS[m.id] ?? m.title}</span>{m.readiness === "planned" && <PlannedBadge />}
+                  </Link>
+                );
+              })}
+            </div>
+          ))}
         </nav>
       </aside>
       <div className="min-w-0 px-5 py-8 lg:px-10 lg:py-10">{children({ user, org: active })}</div>
@@ -153,9 +170,9 @@ export function OverviewPage() {
           <p className="mt-2 text-sm text-[#5d707c]">Signed in as {user.fullName}. Your role: <strong>{ROLE_LABELS[org.role]}</strong>. Time zone: {org.timezone}.</p>
         </header>
         <Alert tone="info">Account and organisation management are live. Energy Management, four engineering modules (consulting, auditing, renewable energy, battery), Carbon Footprint and AI & Digital Energy are available. Projects and Reports is planned and does not hold data yet; no figures are shown until they are built.</Alert>
-        <div className="grid gap-px bg-[#d0dce1] sm:grid-cols-2">
-          <Link href={withOrg("/app/organisation-settings", org.id)} data-testid="link-overview-settings" className="flex items-start gap-4 bg-white p-6 hover:bg-[#f2f5f7]"><Settings className="mt-1 text-[#168568]" size={20} aria-hidden="true" /><span><strong className="block text-[#10243a]">Organisation settings</strong><span className="text-sm text-[#5d707c]">Edit details and manage members.</span></span></Link>
-          <div className="flex items-start gap-4 bg-white p-6"><LayoutGrid className="mt-1 text-[#6b7b87]" size={20} aria-hidden="true" /><span><strong className="block text-[#10243a]">Service modules</strong><span className="text-sm text-[#5d707c]">Energy Management, six engineering and sustainability modules are available. Projects and Reports is planned; use the side navigation to read its notice.</span></span></div>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Link href={withOrg("/app/organisation-settings", org.id)} data-testid="link-overview-settings" className="flex items-start gap-4 border border-[#dce3e8] bg-white p-7 hover:bg-[#f2f5f7]"><Settings className="mt-1 text-[#168568]" size={20} aria-hidden="true" /><span><strong className="block text-[#10243a]">Organisation settings</strong><span className="text-sm text-[#5d707c]">Edit details and manage members.</span></span></Link>
+          <div className="flex items-start gap-4 border border-[#dce3e8] bg-white p-7"><LayoutGrid className="mt-1 text-[#6b7b87]" size={20} aria-hidden="true" /><span><strong className="block text-[#10243a]">Service modules</strong><span className="text-sm text-[#5d707c]">Energy Management, six engineering and sustainability modules are available. Projects and Reports is planned; use the side navigation to read its notice.</span></span></div>
         </div>
       </div>)}
     </Workspace>

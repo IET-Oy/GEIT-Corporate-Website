@@ -26,7 +26,7 @@ export const STATUS_LABEL: Record<FaqStatus, string> = {
 };
 
 const CONTACT: FaqLink = { label: "Contact GEIT", href: "/contact" };
-const PLATFORM: FaqLink = { label: "Energy SaaS sign-in", href: "/app" };
+const PLATFORM: FaqLink = { label: "Energy DT sign-in", href: "/app" };
 
 export const saasFaq: FaqItem[] = [
   {
@@ -41,9 +41,9 @@ export const saasFaq: FaqItem[] = [
   },
   {
     id: "what-is",
-    question: "What is GEIT Energy SaaS?",
+    question: "What is GEIT Energy DT?",
     answer:
-      "GEIT Energy SaaS is a signed-in workspace for energy analysis. Organisations import interval data manually, manage sites and meters, and save analyses, scenarios and reports. It is currently in internal testing, so it is not offered as a production monitoring service.",
+      "GEIT Energy DT is a signed-in workspace for energy analysis. Organisations import interval data manually, manage sites and meters, and save analyses, scenarios and reports. It is currently in internal testing, so it is not offered as a production monitoring service.",
     status: "limited",
     statusNote: "Internal testing stage.",
     keywords: ["what", "saas", "platform", "energy saas", "product", "workspace", "about"],
@@ -162,7 +162,7 @@ export const saasFaq: FaqItem[] = [
 ];
 
 export const suggestedQuestions: string[] = [
-  "What is GEIT Energy SaaS?",
+  "What is GEIT Energy DT?",
   "What energy data can the platform monitor?",
   "How do alerts and notifications work?",
   "How can customers get started or request a demonstration?",

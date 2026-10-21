@@ -15,7 +15,7 @@ const engineering = Object.keys(MODULE_PATH) as EngModule[];
 export function AppRoutes() {
   const planned = platformModules.filter((m) => m.readiness === "planned");
   return (
-    <div className="min-h-[100dvh] bg-[#f2f5f7]">
+    <div className="geit-app min-h-[100dvh] bg-[#f2f5f7]">
       <SiteHeader />
       <AppNav />
       <main id="app-main">

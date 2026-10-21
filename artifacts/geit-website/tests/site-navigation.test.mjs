@@ -8,7 +8,7 @@ test("approved navigation has four primary and four secondary links in exact ord
   assert.deepEqual(secondaryNavigation.map((link) => link.href), ["/industries", "/digital-energy-solutions", "/energy-saas", "/contact"]);
   const all = [...primaryNavigation, ...secondaryNavigation];
   assert.equal(new Set(all.map((link) => link.href)).size, 8);
-  assert.equal(secondaryNavigation[2].label, "Energy SaaS");
+  assert.equal(secondaryNavigation[2].label, "Energy DT");
 });
 
 test("language selector keeps its header slot and platform entry opens the existing application", () => {

@@ -1,0 +1,83 @@
+# GEIT Ltd Website Refinement — Complete Requirements
+
+Update the existing GEIT Ltd website and Energy DT application. Do not rebuild the project or remove existing functionality.
+
+## 1. Homepage — No Design Changes
+The homepage already has the desired glassmorphism design. Preserve its existing layout, colours, backgrounds, glass effects, animations, typography, content, and navigation. The only permitted homepage change is renaming the Energy SaaS link to Energy DT and applying the silver-fluid styling described below.
+
+## 2. Glassmorphism on All Other Website Pages
+Improve the existing glassmorphism design across all pages except Home:
+
+- About
+- Services
+- Industries & Solutions
+- Digital Energy Solutions
+- Insights
+- Contact
+
+Apply elegant translucent panels, subtle background blur, delicate borders, soft shadows, layered surfaces, and consistent spacing. Introduce floating content cards, gentle hover elevation, and smooth transitions where appropriate.
+
+Use the existing colour scheme on each page. Do not change the homepage or apply a new global background colour. Keep all content readable, accessible, and responsive.
+
+## 3. Change Existing Green Links to Dark Green
+On the website pages other than Home, change links that currently appear green to dark green (`#123B2A`). Preserve other colours, backgrounds, buttons, and decorative elements.
+
+Do not apply this general link-colour change to the Energy DT link, which must use the silver-fluid design below.
+
+## 4. Rename Energy SaaS to Energy DT
+Rename the customer-facing product from **Energy SaaS** to **Energy DT — Energy Digital Twin** where appropriate.
+
+Update visible product labels, navigation links, headings, and relevant descriptions. Preserve existing URLs, routing, authentication, integrations, and functionality. Do not blindly rename internal database identifiers or technical references.
+
+## 5. Energy DT Link — Square Silver-Fluid Design
+Replace the existing green Energy SaaS link with a premium, square-edged rectangular silver-fluid box labelled **Energy DT**.
+
+- Metallic silver gradients and subtle liquid-metal reflections.
+- Relatively sharp corners, not a pill shape.
+- Centred, readable text.
+- Restrained shimmer on desktop hover.
+- Subtle transitions, visible keyboard focus, and pressed states.
+- Minimalist, elegant, Apple-inspired styling.
+
+Apply this styling only to the Energy DT link. Preserve its existing position and destination wherever practical.
+
+### Responsive behaviour
+- **Desktop:** Full silver-fluid effect with a subtle 200–300 ms hover transition.
+- **Tablet:** Adjust spacing to prevent navigation collisions.
+- **Mobile:** Retain the rectangular silver design, keep the label visible, provide a touch target of at least 44 × 44 CSS pixels, and use a pressed state instead of hover.
+
+Use lightweight CSS effects, avoid distracting continuous animations, and respect reduced-motion preferences.
+
+## 6. Energy DT Application — Apple-Inspired UI
+Redesign the Energy DT application's interface, keeping it visually distinct from the corporate website.
+
+Use a clean, premium design with generous whitespace, refined typography, consistent icons, subtle glass panels, restrained shadows, and clear navigation.
+
+Where supported by existing functionality, organise the interface around:
+- Overview
+- Energy Analysis
+- Digital Twin
+- Assets
+- Reports
+- Recommendations
+- Settings
+
+Improve existing dashboards, energy charts, asset views, and digital twin visualisations without inventing functionality or data. Clearly distinguish measured, estimated, forecast, and simulated values.
+
+## 7. Technical Requirements and Verification
+- Reuse the existing codebase and components.
+- Preserve authentication, Supabase integrations, Row Level Security, tenant isolation, and storage permissions.
+- Do not break existing routes or functionality.
+- Avoid unnecessary dependencies.
+- Verify responsive behaviour on desktop, tablet, and mobile.
+- Run relevant automated tests and the production build.
+- Report completed changes and outstanding issues accurately.
+
+### Final acceptance criteria
+1. Home remains visually unchanged except for the Energy DT link.
+2. All other website pages receive the requested glassmorphism and floating-content refinements.
+3. Existing green links on those pages become dark green.
+4. The Energy SaaS product is renamed Energy DT in customer-facing interfaces.
+5. The Energy DT link has a responsive, square-edged silver-fluid appearance.
+6. The Energy DT application receives an Apple-inspired UI.
+7. Existing functionality, data integrity, and security remain intact.

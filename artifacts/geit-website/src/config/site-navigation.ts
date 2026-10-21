@@ -8,6 +8,6 @@ export const primaryNavigation = [
 export const secondaryNavigation = [
   { key: "navIndustries", href: "/industries" },
   { key: "navDigital", href: "/digital-energy-solutions" },
-  { key: null, href: "/energy-saas", label: "Energy SaaS" },
+  { key: null, href: "/energy-saas", label: "Energy DT" },
   { key: "navContact", href: "/contact" },
 ] as const;

@@ -9,13 +9,13 @@ Use the official logo alone in the header, without an additional company-name te
 
 **How to apply:** Keep meaningful logo alternative text and a homepage link; do not restore the earlier prompt's adjacent identity text.
 
-Keep the approved two-bar navigation: first bar has the existing identity, Home, About, Services, Insights and the existing language selector; second bar has Industries & Solutions, Digital Energy Solutions, Energy SaaS, Contact in that order. Energy SaaS links to `/energy-saas` and has a distinct branded background.
+Keep the approved two-bar navigation: first bar has the existing identity, Home, About, Services, Insights and the existing language selector; second bar has Industries & Solutions, Digital Energy Solutions, Energy DT, Contact in that order. Energy DT keeps the existing `/energy-saas` destination.
 
 **Why:** The user's final approved two-navigation-bar prompt supersedes the earlier single-row seven-link requirement.
 
 **How to apply:** Include each navigation item once per displayed layout; adapt using the existing mobile implementation without overflow. Leave the language component in its exact header slot: do not move, redesign or change its languages, translations, configuration, switching logic or persistence to resolve spacing.
 
-Align the first-bar Home link with the horizontal start of second-bar Industries & Solutions. Increase navigation fonts only modestly, without recentering the groups, changing bar heights/gaps/colours, or redesigning the Energy SaaS highlight.
+Align the first-bar Home link with the horizontal start of second-bar Industries & Solutions. Increase navigation fonts only modestly, without recentering the groups or changing bar heights/gaps. The later Energy DT refinement explicitly replaces the old green product highlight with silver.
 
 **Why:** The user's latest minor-adjustment request supersedes the preceding attachment's centering and 17–18px font instructions.
 
@@ -50,3 +50,9 @@ Add subscription entitlements and billing only with a configured payment provide
 **Why:** The user explicitly set this condition for production-readiness work.
 
 **How to apply:** Leave billing disabled without that provider evidence. Do not create a fake paid tier, activate access from a browser checkout redirect, or claim untested payment behaviour is production-ready.
+
+The customer-facing product is Energy DT — Energy Digital Twin. Preserve technical routes and identifiers when updating its name. Its navigation entry uses a square-edged silver-fluid design, not the former green highlight.
+
+**Why:** The owner explicitly requested the product rename and silver link while preserving routing, authentication, integrations and functionality.
+
+**How to apply:** Keep Home's approved glass design unchanged except for that product entry. Apply corporate glass/floating-card refinements and dark-green text links (#123B2A) only off Home; keep existing page colors and button colors. The application may use a separate restrained, Apple-inspired interface, but navigation must only expose existing capabilities and mark planned destinations honestly.

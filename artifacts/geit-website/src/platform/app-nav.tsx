@@ -15,7 +15,7 @@ export function AppNav() {
             data-secondary-start={link.href === "/industries" ? "" : undefined}
             data-testid={platform ? "link-energy-saas" : undefined}
             className={`inline-flex min-h-10 items-center whitespace-nowrap ${platform
-              ? "rounded-md bg-[#168568] px-4 py-2 text-white shadow-sm transition hover:bg-[#116d55] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e8b64b]"
+              ? "geit-silver-link"
               : "py-2 transition hover:text-[#e8b64b]"} ${active ? "underline decoration-[#e8b64b] decoration-2 underline-offset-4" : ""}`}>
             {link.key ? t(link.key) : link.label}
           </Link>;

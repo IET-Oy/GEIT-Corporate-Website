@@ -8,8 +8,8 @@ export const rwFaq: Record<string, FaqTranslation> = {
     statusNote: "Soma ibisobanuro bya serivisi cyangwa uvugane na GEIT ku byo ukeneye.", keywords: ["serivisi", "ubujyanama", "ubushakashatsi", "imishinga", "kwishyuza", "ibyuka", "sosiyete"],
   },
   "what-is": {
-    question: "GEIT Energy SaaS ni iki?",
-    answer: "GEIT Energy SaaS ni umwanya w’akazi wo gusesengura ingufu winjirwamo ukoresheje konti. Ibigo byinjizamo intoki amakuru y’ibipimo ku bihe byagenwe, bigacunga ahakorerwa n’ibyuma bipima, bikabika isesengura, ingero z’ibishobora kuba na raporo. Ubu iri mu igerageza ry’imbere, bityo ntitangwa nka serivisi yo gukurikirana ingufu mu mikorere isanzwe.",
+    question: "GEIT Energy DT ni iki?",
+    answer: "GEIT Energy DT ni umwanya w’akazi wo gusesengura ingufu winjirwamo ukoresheje konti. Ibigo byinjizamo intoki amakuru y’ibipimo ku bihe byagenwe, bigacunga ahakorerwa n’ibyuma bipima, bikabika isesengura, ingero z’ibishobora kuba na raporo. Ubu iri mu igerageza ry’imbere, bityo ntitangwa nka serivisi yo gukurikirana ingufu mu mikorere isanzwe.",
     statusNote: "Iri mu igerageza ry’imbere.", keywords: ["urubuga", "porogaramu", "umwanya", "ibisobanuro"],
   },
   who: {

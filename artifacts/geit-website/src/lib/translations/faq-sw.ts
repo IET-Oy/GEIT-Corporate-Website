@@ -8,8 +8,8 @@ export const swFaq: Record<string, FaqTranslation> = {
     statusNote: "Soma wigo wa huduma au wasiliana na GEIT kuhusu mahitaji yako.", keywords: ["huduma", "ushauri", "mshauri", "utafiti", "miradi", "kuchaji", "kaboni", "kampuni"],
   },
   "what-is": {
-    question: "GEIT Energy SaaS ni nini?",
-    answer: "GEIT Energy SaaS ni eneo la kazi la uchambuzi wa nishati linalohitaji kuingia kwenye akaunti. Mashirika huingiza data za vipindi kwa mikono, husimamia maeneo na mita, na huhifadhi uchambuzi, hali za mfano na ripoti. Kwa sasa iko katika majaribio ya ndani, hivyo haitolewi kama huduma ya ufuatiliaji katika matumizi halisi ya uzalishaji.",
+    question: "GEIT Energy DT ni nini?",
+    answer: "GEIT Energy DT ni eneo la kazi la uchambuzi wa nishati linalohitaji kuingia kwenye akaunti. Mashirika huingiza data za vipindi kwa mikono, husimamia maeneo na mita, na huhifadhi uchambuzi, hali za mfano na ripoti. Kwa sasa iko katika majaribio ya ndani, hivyo haitolewi kama huduma ya ufuatiliaji katika matumizi halisi ya uzalishaji.",
     statusNote: "Hatua ya majaribio ya ndani.", keywords: ["jukwaa", "bidhaa", "eneo", "maelezo"],
   },
   who: {

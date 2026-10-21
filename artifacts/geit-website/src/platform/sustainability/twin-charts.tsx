@@ -60,6 +60,11 @@ export function TwinCharts({ result }: { result: EngineeringResult }) {
   if (!h && !hh && !f) return null;
   return (
     <Panel id="charts-h" title="Charts from the saved result">
+      <ul className="mb-6 flex flex-wrap gap-x-6 gap-y-2 text-xs text-[#34495a]" aria-label="Value types legend" data-testid="legend-value-types">
+        {(h || hh) && <li><strong className="text-[#10243a]">Measured:</strong> imported building load and solar readings, where supplied</li>}
+        {f && <li><strong className="text-[#10243a]">Estimated / forecast:</strong> model output, not actual readings</li>}
+        {h && <li><strong className="text-[#10243a]">Simulated:</strong> grid flows and battery dispatch, where configured; not measured operation</li>}
+      </ul>
       <div className="space-y-8">
         {h && hist && <Chart id="history" title="Historical load, solar and battery" note="Measured and simulated series from the saved table; gaps stay as gaps." data={h.rows} step={h.step} total={hist.rows.length} series={[{ key: "loadKwh", name: "Building load", color: "#10243a" }, { key: "solarKwh", name: "Solar", color: "#c98f12" }, { key: "chargeKwh", name: "Battery charge", color: "#168568" }, { key: "dischargeKwh", name: "Battery discharge", color: "#7a3b8f", dash: "5 3" }]} />}
         {hh && hourly && <Chart id="hourly" title="Hourly load with assessed anomalies" note="Dots mark only hours the server assessed as high or low; hours not assessed are never flagged." data={hh.rows} step={hh.step} total={hourly.rows.length} series={[{ key: "energyKwh", name: "Measured hourly energy", color: "#10243a" }, { key: "expectedKwh", name: "Expected (trailing four weeks)", color: "#168568", dash: "4 3" }, { key: "anomalyPoint", name: "Flagged anomaly", color: "#b3361f", dots: true }]} />}
