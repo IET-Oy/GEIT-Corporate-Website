@@ -24,7 +24,7 @@ export function IndustriesContent() {
     <article key={s.id} id={s.id} tabIndex={-1} data-testid={`section-industry-${s.id}`} className="scroll-mt-36 grid overflow-hidden border border-[#dce3e8] bg-white geit-glass lg:grid-cols-2">
       <div className={`aspect-[400/210] lg:aspect-auto lg:min-h-[320px] ${i % 2 ? 'lg:order-2' : ''}`}><SectorArt sector={s}/></div>
       <div className="p-7 sm:p-9">
-        <p className="font-mono text-xs font-bold text-[#168568]">{c("SECTOR / 0")}{i + 1}</p>
+        <p className="geit-section-label font-mono text-xs font-bold text-[#168568]">{c("SECTOR / 0")}{i + 1}</p>
         <h2 className="mt-3 text-sm font-bold tracking-[.06em] text-[#60717e]">{c(s.name).toUpperCase()}</h2>
         <h3 className="mt-2 text-2xl font-bold leading-snug text-[#10243a]">{c(s.headline)}</h3>
         <h4 className="mt-5 text-xs font-bold tracking-[.14em] text-[#10243a]">{c("THE CHALLENGE")}</h4>

@@ -32,3 +32,14 @@ test('homepage previews and industry sections share responsive pictures and reta
   assert.ok(view.includes('id={s.id}'));
   assert.ok(view.includes('href={v.href}') && view.includes('href="/contact"'));
 });
+
+test('all eight sector badges reuse hero glass and the commitment box is navy with readable white copy', () => {
+  const view = readFileSync(new URL('../src/components/industries-section.tsx', import.meta.url), 'utf8');
+  const app = readFileSync(new URL('../src/App.tsx', import.meta.url), 'utf8');
+  const css = readFileSync(new URL('../src/corporate-glass.css', import.meta.url), 'utf8');
+  assert.match(view, /sectors\.map\(\(s, i\)/);
+  assert.match(view, /<p className="geit-section-label[^"]*">\{c\("SECTOR \/ 0"\)\}\{i \+ 1\}<\/p>/);
+  assert.match(css, /main p\.geit-section-label\[class\]:not\(\[data-testid="home-hero"\] \*\)/);
+  assert.match(app, /className="mt-10 bg-\[#10243a\] p-8" id="shared-commitment"/);
+  assert.match(app, /text-white">\{c\("Energy decisions should be driven by data, rigorous analysis and sound economics—regardless of sector or scale\."/);
+});
