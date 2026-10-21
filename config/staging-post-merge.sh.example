@@ -1,0 +1,5 @@
+#!/bin/sh
+set -eu
+printf '%s\n' 'Automatic setup and database writes are disabled in this staging source copy.' >&2
+printf '%s\n' 'Follow docs/staging-setup-guide.md and obtain approval before installing, starting services or applying schema changes.' >&2
+exit 1

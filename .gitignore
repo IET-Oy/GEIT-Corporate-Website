@@ -1,3 +1,5 @@
+# Local staging approval is an operator decision, never a copied approval.
+/config/staging-approval.json
 # See https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 
 # compiled output

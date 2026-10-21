@@ -1,0 +1,26 @@
+# Apply ONLY to the separately created staging application, before its import.
+# No live project URL, deployment credentials, or automatic DB-push hook.
+modules = ["nodejs-24", "python-base-3.13"]
+
+[deployment]
+router = "application"
+deploymentTarget = "autoscale"
+
+[deployment.postBuild]
+args = ["pnpm", "store", "prune"]
+env = { "CI" = "true" }
+
+[agent]
+stack = "PNPM_WORKSPACE"
+expertMode = true
+
+[nix]
+channel = "stable-25_05"
+
+[userenv.shared]
+GEIT_ENVIRONMENT = "staging"
+GEIT_ALLOW_TEST_FIXTURE_WRITES = "no"
+GEIT_AI_ENABLED = "false"
+
+# Intentionally no postMerge hook: the original calls `pnpm --filter db push`.
+# Configure managed services only after credentials and approval are verified.

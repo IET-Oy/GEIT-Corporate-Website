@@ -8,9 +8,12 @@ import { runEnergyIntegration } from "./test-energy-integration.mjs";
 import { runEngineeringIntegration } from "./test-engineering-integration.mjs";
 import { runSustainabilityIntegration } from "./test-sustainability-integration.mjs";
 import { assertFixtureTarget } from "./fixture-safety.mjs";
+import { verifyStagingApi } from "../src/lib/staging-isolation.ts";
 
 // Must precede even cleanup and database connections.
 assertFixtureTarget();
+// Check the actual API process, including cleanup, before any fixture connection.
+await verifyStagingApi();
 
 // Isolated, synthetic development fixtures. Never print credentials or reuse customer data.
 const fixturePath = "/tmp/geit-platform-test-fixtures.json";

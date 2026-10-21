@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "environment": "staging",
+  "independentlyVerified": false,
+  "projectRef": "",
+  "origin": "",
+  "isolationId": "",
+  "supabaseDatabaseTargetSha256": "",
+  "legacyDatabaseTargetSha256": "",
+  "publishableKeySha256": ""
+}

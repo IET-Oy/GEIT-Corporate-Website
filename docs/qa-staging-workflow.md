@@ -19,6 +19,13 @@ The explicit PORT and BASE_PATH above are build-time shell inputs, not deploymen
 
 ## Explicit approval before remote writes
 
+See [staging-isolation.md](staging-isolation.md) for the separate-workspace
+configuration and approval procedure. The harness now requires explicit staging
+mode, an independently reviewed identity approval, and a successful signed
+challenge from the actual staging API before connecting, even for cleanup.
+Do not run these commands until that preparation and separate write approval
+are complete.
+
 Do not run integration fixtures against an unclassified connection. A development process can still connect to production. The fixture commands now fail before connecting unless all of these are true:
 
 1. An operator independently confirms a **dedicated, disposable non-production Supabase project** and the application origin served by an API configured for that same project. Prefer a separate staging workspace, not temporarily repointing a shared running application.

@@ -9,6 +9,16 @@ Treat process mode and remote database environment as separate trust decisions. 
 
 **How to apply:** Verify a disposable non-production target before enabling integration fixtures. Never infer write permission from NODE_ENV, an available connection secret, or historical successful tests.
 
+Apply the same target-verification requirement to fixture cleanup. If verification
+is unavailable, retain synthetic fixtures until the approved target can be
+verified again rather than removing the guard.
+
+**Why:** Cleanup deletes real remote records and bytes; its intention to remove
+synthetic data does not make a misdirected connection safe.
+
+**How to apply:** Treat a blocked cleanup as pending, not as permission to bypass
+identity checks or use an unverified database connection.
+
 Keep database certificate verification enabled when inspecting or migrating Supabase.
 The development environment did not trust Supabase's database CA by default.
 

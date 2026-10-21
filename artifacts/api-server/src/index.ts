@@ -1,7 +1,9 @@
 import app from "./app";
 import { logger } from "./lib/logger";
 import { checkProductionConfiguration } from "./lib/production-config";
+import { assertStagingConfiguration } from "./lib/staging-isolation";
 
+if (process.env.GEIT_ENVIRONMENT === "staging") assertStagingConfiguration();
 checkProductionConfiguration(process.env);
 
 const rawPort = process.env["PORT"];
