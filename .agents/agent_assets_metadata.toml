@@ -56,3 +56,17 @@ mtime_ms = 1792603273920
 storage_uri = "gcs://replit-rams-assets-archer/rams/assets/repl:fce71e1d-6c2b-4e84-8d15-001075ea3502/fcff2a08-e172-4b20-947d-4d4492e45c83/8b7beaed-8047-44d7-b6b2-76b33a649644"
 storage_version_token = "1792604244122270"
 content_type = "application/octet-stream"
+
+[[outputs]]
+id = "wcAjldKyRZnVT-yUCnPnS"
+uri = "file://generated-artifacts/geit-vercel-import.env"
+type = "unspecified"
+title = "Download GEIT Vercel .env template"
+description = "Blank environment-variable template for private completion before importing into Vercel. No credentials included; fixture writes disabled."
+logical_id = "c05a2d77-9044-4b24-bf87-e7de8ab036d0"
+content_hash = "sha256:3e30032573e40d9a0bb37770eeb36a2de03f7a05ae3a1d4d0605baec1b72cea2"
+size = 793
+mtime_ms = 1792691686359
+storage_uri = "gcs://replit-rams-assets-archer/rams/assets/repl:fce71e1d-6c2b-4e84-8d15-001075ea3502/c05a2d77-9044-4b24-bf87-e7de8ab036d0/03e04215-e8d1-4740-9cba-6bb507af0dee"
+storage_version_token = "1792691696095646"
+content_type = "application/octet-stream"
