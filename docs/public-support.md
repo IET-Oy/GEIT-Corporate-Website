@@ -84,5 +84,21 @@ PORT=18414 BASE_PATH=/ pnpm --filter @workspace/geit-website run build
 The selected tests cover FAQ matching/search, unsupported questions, human
 escalation, failed adapter fallback, valid route targets, rendered accordion
 states, founder identity/role/portrait associations and all-language founder
-rendering. Source contracts check keyboard handlers and reduced-motion CSS;
-they are not a real-browser keyboard or screen-reader conformance test.
+rendering.
+
+`tests/public-support.interactions.test.mjs` also mounts the actual language
+provider, selector, FAQ and widget in JSDOM with React Testing Library and
+user-event. It covers all four languages and all 12 directed language switches:
+cleared searches, expanded panels, conversation messages and drafts; localized
+suggestions, related questions, answer statuses and links; FAQ-to-widget opening;
+unknown/account-specific escalation; reset and duplicate in-flight requests;
+Enter/Space opening, Tab/Shift+Tab wrapping, Escape and focus restoration; and
+English-source buttons sharing the persisted selector preference. Provider
+remounts verify that only the language preference survives, not conversations.
+The helper in `tests/helpers/support-runtime.mjs` controls answer timing through
+a test-only Vite module, resolving the real localized FAQ answers after a switch
+or reset. It does not configure a provider or alter production components.
+
+These are DOM interaction regressions, not real-browser layout, mobile virtual
+keyboard or screen-reader conformance tests. Source contracts also check the
+protected header selector slot and reduced-motion CSS.
