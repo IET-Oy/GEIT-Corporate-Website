@@ -70,3 +70,10 @@ mtime_ms = 1792691686359
 storage_uri = "gcs://replit-rams-assets-archer/rams/assets/repl:fce71e1d-6c2b-4e84-8d15-001075ea3502/c05a2d77-9044-4b24-bf87-e7de8ab036d0/03e04215-e8d1-4740-9cba-6bb507af0dee"
 storage_version_token = "1792691696095646"
 content_type = "application/octet-stream"
+
+[[outputs]]
+id = "QAJXA1RewJe3nZZkDyraY"
+uri = "file://artifacts/geit-energy-dt-film/public/audio/bg_music.mp3"
+type = "audio"
+title = "bg"
+description = "Generated music: Cinematic uplifting corporate electronic instrumental scoring a clean-energy technology brand film. Soft pulsing synth, light piano, warm strings, 100 BPM, patient intro, steady buil…"

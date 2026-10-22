@@ -1,0 +1,29 @@
+kind = "video"
+videoAspectRatio = "16:9"
+previewPath = "/geit-energy-dt-film/"
+title = "GEIT Energy DT — Animated Overview"
+description = "A 30-second animated overview of GEIT Energy DT, using existing GEIT branding and grounded descriptions of its energy analytics, solar and battery modelling, carbon calculations and reporting."
+version = "1.0.0"
+id = "artifacts/geit-energy-dt-film"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/geit-energy-dt-film/" ]
+localPort = 25313
+
+[services.development]
+run = "pnpm --filter @workspace/geit-energy-dt-film run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/geit-energy-dt-film", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/geit-energy-dt-film/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25313"
+BASE_PATH = "/geit-energy-dt-film/"
