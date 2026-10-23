@@ -76,13 +76,50 @@ validate saved-result signatures.
 
 ## Blocked checks — not passes
 
-Supabase DNS was checked again and returned `ENOTFOUND`. The preceding independent
-public DNS diagnostic returned `NXDOMAIN`. No alternative project was guessed.
+### Supabase staging endpoint investigation (2026-10-23)
 
-Staging preflight exited 1: the independently reviewed approval file is missing.
-`GEIT_ENVIRONMENT=staging`, the approved test project reference and approval-file
-path are not configured in this process. Fixture-write opt-in is not enabled.
-Therefore the current workspace is **not independently verified isolated staging**.
+The current workspace is **not configured as the separate staging application**.
+Its `.replit` shared configuration contains the existing protected project
+endpoint `https://toqtpvqpauqhduemwmve.supabase.co`; staging templates intentionally
+omit that value. `GEIT_ENVIRONMENT`, `GEIT_TEST_SUPABASE_PROJECT_REF` and the
+staging approval-file setting are absent from this process. The reference in
+`.replit` is also explicitly denylisted by the staging isolation guard, so it
+must not be treated as an approved staging target.
+
+The URL in `.replit` is syntactically canonical for the 20-character reference
+it contains, but that does not prove the project exists or that it is staging.
+Read-only DNS checks for that hostname returned DNS status 3 (`NXDOMAIN`) with no
+A or AAAA records from Google DNS and Cloudflare DNS; the local resolver returned
+no address. Unauthenticated GETs to the Auth health and REST root endpoints both
+failed with `ENOTFOUND`. No database connection, credentials, migrations,
+authentication, CRUD, or RLS checks were attempted.
+
+This establishes that the configured hostname did not resolve publicly at the
+time of checking. It does **not** distinguish a mistyped/obsolete project
+reference from a project that is not currently provisioned or otherwise has no
+published endpoint. The staging project's existence and actual reference cannot
+be independently confirmed from this workspace: the staging reference is not
+configured here, and a Supabase display name such as `geit-energy-saas-staging`
+is not itself a project reference. No hostname was guessed and no DNS or
+configuration change was made.
+
+**Next required action:** an operator with access to the newly created
+`geit-energy-saas-staging` project must open that project's Supabase dashboard
+and independently confirm that it exists and is active, then copy its exact
+project reference and API URL from the project's Connect/API settings. In the
+separate staging workspace only, set `SUPABASE_URL` to the dashboard-provided
+canonical endpoint and `GEIT_TEST_SUPABASE_PROJECT_REF` to the matching
+reference. Keep this workspace's shared `.replit` value and production
+configuration unchanged. Recheck DNS and the unauthenticated endpoint before
+creating the reviewed staging approval manifest. If the dashboard-provided
+endpoint still returns NXDOMAIN, stop and ask the Supabase project owner to
+resolve the project/endpoint status; do not try a different hostname.
+
+Staging preflight remains blocked because the independent approval file,
+staging reference and staging environment are not present in this workspace.
+Fixture-write opt-in is not enabled. The current workspace is **not independently
+verified isolated staging**, and the named staging project is **not confirmed to
+exist or resolve**.
 
 The four remote integration harness variants were intentionally not run. No SQL,
 fixture operations, schema migration, customer upload or real account operation
@@ -90,9 +127,10 @@ was attempted. Local success must not be reported as real Supabase success.
 
 ## Manual prerequisites before sign-off
 
-1. Confirm the active Supabase project and canonical endpoint with its operator.
-   Correct the intended environment only; do not copy production credentials to
-   staging or blindly replace credentials because DNS is failing.
+1. Have the staging project owner confirm the project is active and provide its
+   exact dashboard project reference and API endpoint. The current `.replit`
+   endpoint is protected and currently NXDOMAIN; do not reuse it or change it
+   here. Correct staging settings only after that independent confirmation.
 2. Independently provision/approve staging Supabase, its separate legacy database,
    signing secret, exact origin and approval file using `staging-setup-guide.md`.
 3. Keep fixture-write flags off in API deployments. After API/test identity checks
