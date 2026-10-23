@@ -76,50 +76,59 @@ validate saved-result signatures.
 
 ## Blocked checks — not passes
 
-### Supabase staging endpoint investigation (2026-10-23)
+### Supabase staging endpoint investigation (2026-10-23; updated)
 
-The current workspace is **not configured as the separate staging application**.
-Its `.replit` shared configuration contains the existing protected project
-endpoint `https://toqtpvqpauqhduemwmve.supabase.co`; staging templates intentionally
-omit that value. `GEIT_ENVIRONMENT`, `GEIT_TEST_SUPABASE_PROJECT_REF` and the
-staging approval-file setting are absent from this process. The reference in
-`.replit` is also explicitly denylisted by the staging isolation guard, so it
-must not be treated as an approved staging target.
+The replacement staging project is reported as `geit-energy-dt-staging`, with
+reference `hnowcjxvhgdecblkdnch`. That reference has the expected 20-character
+lowercase-alphanumeric format. The prepared staging source and this workspace
+do **not** contain a configured staging `SUPABASE_URL` or
+`GEIT_TEST_SUPABASE_PROJECT_REF`; both values remain blank in the staging
+environment template. This workspace also has no separate staging runtime
+environment. Therefore, I could not compare a configured staging URL against
+the supplied reference or verify the project display name in its dashboard.
 
-The URL in `.replit` is syntactically canonical for the 20-character reference
-it contains, but that does not prove the project exists or that it is staging.
-Read-only DNS checks for that hostname returned DNS status 3 (`NXDOMAIN`) with no
-A or AAAA records from Google DNS and Cloudflare DNS; the local resolver returned
-no address. Unauthenticated GETs to the Auth health and REST root endpoints both
-failed with `ENOTFOUND`. No database connection, credentials, migrations,
-authentication, CRUD, or RLS checks were attempted.
+For a non-destructive connectivity probe only, I used the canonical Supabase
+hostname derived from the supplied reference:
+`https://hnowcjxvhgdecblkdnch.supabase.co`. Google DNS and Cloudflare DNS both
+returned DNS status 0 with A records; the local resolver also resolved the host.
+No AAAA records were returned, which does not prevent IPv4 access. Unauthenticated
+GETs to `/auth/v1/health` and `/rest/v1/` each returned HTTP 401. These results
+show that the derived hostname resolves and an endpoint responds; the 401s are
+not authenticated tests and do not establish that the endpoint belongs to the
+named staging project. No credentials or database were used.
 
-This establishes that the configured hostname did not resolve publicly at the
-time of checking. It does **not** distinguish a mistyped/obsolete project
-reference from a project that is not currently provisioned or otherwise has no
-published endpoint. The staging project's existence and actual reference cannot
-be independently confirmed from this workspace: the staging reference is not
-configured here, and a Supabase display name such as `geit-energy-saas-staging`
-is not itself a project reference. No hostname was guessed and no DNS or
-configuration change was made.
+The earlier NXDOMAIN/ENOTFOUND finding applied to the different endpoint in the
+original workspace's shared `.replit` setting. That endpoint is still protected
+and denylisted by the isolation guard; it was not changed and must not be used
+as staging. The staging `.replit` template intentionally has no Supabase
+endpoint, and the original workspace's environment is not evidence of staging
+configuration.
 
-**Next required action:** an operator with access to the newly created
-`geit-energy-saas-staging` project must open that project's Supabase dashboard
-and independently confirm that it exists and is active, then copy its exact
-project reference and API URL from the project's Connect/API settings. In the
-separate staging workspace only, set `SUPABASE_URL` to the dashboard-provided
-canonical endpoint and `GEIT_TEST_SUPABASE_PROJECT_REF` to the matching
-reference. Keep this workspace's shared `.replit` value and production
-configuration unchanged. Recheck DNS and the unauthenticated endpoint before
-creating the reviewed staging approval manifest. If the dashboard-provided
-endpoint still returns NXDOMAIN, stop and ask the Supabase project owner to
-resolve the project/endpoint status; do not try a different hostname.
+The deleted display name `geit-energy-saas-staging` remains in staging
+documentation, not in the staging URL/ref fields. References were found in
+`docs/staging-setup-guide.md`, `docs/staging-isolation.md`, their copies in
+`generated-artifacts/geit-energy-dt-staging-source/docs/`, and the packaged
+`generated-artifacts/geit-energy-dt-staging-source.zip`. The old name also
+appeared in the earlier version of this report and is retained here only as
+historical context. The protected project reference in the original `.replit`
+and in the isolation denylist/tests is separate; there is no evidence in the
+available staging files that it was the deleted project's reference.
 
-Staging preflight remains blocked because the independent approval file,
-staging reference and staging environment are not present in this workspace.
-Fixture-write opt-in is not enabled. The current workspace is **not independently
-verified isolated staging**, and the named staging project is **not confirmed to
-exist or resolve**.
+**Next required action:** an operator with access to the Supabase dashboard must
+confirm that project `geit-energy-dt-staging` is active and that its displayed
+Project URL and reference match the supplied values. Then enter the verified
+`SUPABASE_URL` and `GEIT_TEST_SUPABASE_PROJECT_REF` in the separate staging
+workspace's secure configuration only. The expected URL from the supplied
+reference is `https://hnowcjxvhgdecblkdnch.supabase.co`; do not enter it unless
+the dashboard confirms it. Keep the original workspace `.replit`, secrets and
+production configuration unchanged. After staging configuration is populated,
+repeat the staging-specific checks and create a reviewed approval manifest.
+
+The endpoint is reachable, but project ownership/name and staging workspace
+configuration remain unverified. The independent approval file and staging
+environment are still absent here, so the application is **not independently
+verified isolated staging**. Fixture writes remain disabled. No migrations,
+authentication, CRUD, or RLS tests were run.
 
 The four remote integration harness variants were intentionally not run. No SQL,
 fixture operations, schema migration, customer upload or real account operation
@@ -127,10 +136,10 @@ was attempted. Local success must not be reported as real Supabase success.
 
 ## Manual prerequisites before sign-off
 
-1. Have the staging project owner confirm the project is active and provide its
-   exact dashboard project reference and API endpoint. The current `.replit`
-   endpoint is protected and currently NXDOMAIN; do not reuse it or change it
-   here. Correct staging settings only after that independent confirmation.
+1. Have the staging project owner confirm that the replacement project is active
+   and that its dashboard URL/reference match. Configure those values only in the
+   separate staging workspace. Do not reuse or change the original workspace's
+   protected `.replit` endpoint.
 2. Independently provision/approve staging Supabase, its separate legacy database,
    signing secret, exact origin and approval file using `staging-setup-guide.md`.
 3. Keep fixture-write flags off in API deployments. After API/test identity checks
