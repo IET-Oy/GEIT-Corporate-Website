@@ -10,11 +10,18 @@ export function resolvePlatformOrigin(env: Record<string, string | undefined>) {
 }
 export function checkProductionConfiguration(env: Record<string, string | undefined>) {
   if (env.NODE_ENV !== "production") return;
+  if (env.GEIT_ALLOW_TEST_FIXTURE_WRITES && env.GEIT_ALLOW_TEST_FIXTURE_WRITES !== "no") {
+    throw new Error("Test fixture writes must remain disabled in the production API process.");
+  }
   resolvePlatformOrigin(env);
   for (const name of ["SUPABASE_URL", "SUPABASE_PUBLISHABLE_KEY", "SESSION_SECRET"]) {
     if (!env[name]) throw new Error(`Required production configuration is missing: ${name}`);
   }
-  const url = new URL(env.SUPABASE_URL!);
-  if (url.protocol !== "https:" || url.username || url.password) throw new Error("SUPABASE_URL must be a credential-free HTTPS URL.");
+  try {
+    const url = new URL(env.SUPABASE_URL!);
+    if (url.protocol !== "https:" || url.username || url.password || url.pathname !== "/" || url.search || url.hash) throw new Error();
+  } catch {
+    throw new Error("SUPABASE_URL must be a credential-free HTTPS origin without a path, query or fragment.");
+  }
   if (env.SESSION_SECRET!.length < 32) throw new Error("SESSION_SECRET must contain at least 32 characters and must be securely generated.");
 }

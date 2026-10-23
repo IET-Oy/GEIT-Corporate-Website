@@ -147,7 +147,7 @@ export function Workspace({ title, path, children }: { title: string; path: stri
                 return (
                   <Link key={m.id} href={withOrg(m.path, active.id)} aria-current={here ? "page" : undefined} data-testid={`link-module-${m.id}`}
                     className={`flex shrink-0 items-center justify-between gap-3 border-l-2 px-3 py-2.5 text-[13px] font-semibold transition ${here ? "border-[#e8b64b] bg-[#e8f2ef] text-[#10243a]" : "border-transparent text-[#34495a] hover:bg-[#f2f5f7]"}`}>
-                    <span className="whitespace-nowrap">{NAV_LABELS[m.id] ?? m.title}</span>{m.readiness === "planned" && <PlannedBadge />}
+                    <span className="whitespace-nowrap">{NAV_LABELS[m.id] ?? m.title}</span>
                   </Link>
                 );
               })}
@@ -169,10 +169,10 @@ export function OverviewPage() {
           <h1 className="mt-3 text-3xl font-extrabold text-[#10243a]" data-testid="text-org-name">{org.name}</h1>
           <p className="mt-2 text-sm text-[#5d707c]">Signed in as {user.fullName}. Your role: <strong>{ROLE_LABELS[org.role]}</strong>. Time zone: {org.timezone}.</p>
         </header>
-        <Alert tone="info">Account and organisation management are live. Energy Management, four engineering modules (consulting, auditing, renewable energy, battery), Carbon Footprint and AI & Digital Energy are available. Projects and Reports is planned and does not hold data yet; no figures are shown until they are built.</Alert>
+        <Alert tone="info">Use Energy Management, the engineering modules, Carbon Footprint and Digital Energy to work with your organisation’s records. Projects and Reports brings saved work together; numerical results appear only after an analysis or scenario is saved.</Alert>
         <div className="grid gap-4 sm:grid-cols-2">
           <Link href={withOrg("/app/organisation-settings", org.id)} data-testid="link-overview-settings" className="flex items-start gap-4 border border-[#dce3e8] bg-white p-7 hover:bg-[#f2f5f7]"><Settings className="mt-1 text-[#168568]" size={20} aria-hidden="true" /><span><strong className="block text-[#10243a]">Organisation settings</strong><span className="text-sm text-[#5d707c]">Edit details and manage members.</span></span></Link>
-          <div className="flex items-start gap-4 border border-[#dce3e8] bg-white p-7"><LayoutGrid className="mt-1 text-[#6b7b87]" size={20} aria-hidden="true" /><span><strong className="block text-[#10243a]">Service modules</strong><span className="text-sm text-[#5d707c]">Energy Management, six engineering and sustainability modules are available. Projects and Reports is planned; use the side navigation to read its notice.</span></span></div>
+          <Link href={withOrg("/app/projects-reports", org.id)} className="flex items-start gap-4 border border-[#dce3e8] bg-white p-7 hover:bg-[#f2f5f7]"><LayoutGrid className="mt-1 text-[#6b7b87]" size={20} aria-hidden="true" /><span><strong className="block text-[#10243a]">Projects and Reports</strong><span className="text-sm text-[#5d707c]">Find saved projects, analyses and scenarios, then open their verified report and export options.</span></span></Link>
         </div>
       </div>)}
     </Workspace>

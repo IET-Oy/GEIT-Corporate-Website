@@ -26,7 +26,7 @@ catalog:
   tailwind-merge: ^3.3.1
   tailwindcss: ^4.1.14
   tsx: 4.23.13
-  vite: ^7.3.2
+  vite: ^7.3.7
   wouter: ^3.3.5
   zod: ^3.25.76
 
@@ -43,6 +43,7 @@ onlyBuiltDependencies:
   - unrs-resolver
 
 overrides:
+  typedoc>markdown-it: 14.3.3
   exceljs>uuid: 11.1.1
   '@tailwindcss/typography>postcss-selector-parser': 7.1.6
   '@esbuild-kit/esm-loader': npm:tsx@^4.21.0

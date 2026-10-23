@@ -14,10 +14,10 @@ test("the platform route contract preserves the ten requested sections in order"
   assert.equal(new Set(platformModules.map(module => module.path)).size, 10);
 });
 
-test("application routes (9 available, 1 planned) do not replace corporate routes or claim readiness", () => {
+test("all ten application routes preserve corporate routes without claiming production readiness", () => {
   for (const module of platformModules) {
     assert.match(module.path, /^\/app(?:\/[a-z-]+)?$/);
-    assert.equal(module.readiness, ["overview", "energy-management", "energy-consulting", "renewable-energy", "energy-auditing", "battery-flexibility", "digital-energy", "carbon-footprint", "organisation-settings"].includes(module.id) ? "available" : "planned");
+    assert.equal(module.readiness, "available");
   }
   const source = readFileSync(new URL("../src/App.tsx", import.meta.url), "utf8");
   for (const route of ["/", "/about", "/services", "/industries", "/digital-energy-solutions", "/insights", "/contact"]) {

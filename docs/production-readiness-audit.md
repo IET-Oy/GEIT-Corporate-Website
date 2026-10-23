@@ -1,5 +1,9 @@
 # GEIT SaaS production-readiness audit
 
+> Current assessment: see [Energy DT stabilization](energy-dt-stabilization.md),
+> dated 2026-10-23. The results below are historical and must not be treated as
+> current Supabase connectivity, staging-isolation or release verification.
+
 Date: 2026-10-18. **Decision: NO-GO for unrestricted production launch.**
 This audits the existing implementation, not a published deployment. Deployment metadata reports no active published application.
 

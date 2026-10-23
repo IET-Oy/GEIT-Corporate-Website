@@ -24,6 +24,25 @@ test("production requires account configuration and a sufficiently long signing 
   assert.throws(() => checkProductionConfiguration({ ...valid, SESSION_SECRET: "short" }));
   assert.throws(() => checkProductionConfiguration({ ...valid, SUPABASE_URL: "http://project.supabase.co" }));
 });
+test("production refuses fixture-write flags, including a compiled staging API; only the test process may opt in", () => {
+  const valid = { NODE_ENV: "production", PLATFORM_ORIGIN: "https://geit.example",
+    SUPABASE_URL: "https://project.supabase.co", SUPABASE_PUBLISHABLE_KEY: "synthetic-public-key",
+    SESSION_SECRET: "synthetic-test-signing-key-not-for-production" };
+  for (const flag of ["yes", "true", "1", "YES"]) {
+    assert.throws(() => checkProductionConfiguration({ ...valid, GEIT_ALLOW_TEST_FIXTURE_WRITES: flag }), /fixture writes must remain disabled/);
+    assert.throws(() => checkProductionConfiguration({ ...valid, GEIT_ENVIRONMENT: "staging", GEIT_ALLOW_TEST_FIXTURE_WRITES: flag }));
+  }
+  assert.doesNotThrow(() => checkProductionConfiguration({ ...valid, GEIT_ALLOW_TEST_FIXTURE_WRITES: "no" }));
+});
+test("production rejects malformed Supabase origins without echoing configuration contents", () => {
+  const valid = { NODE_ENV: "production", PLATFORM_ORIGIN: "https://geit.example",
+    SUPABASE_PUBLISHABLE_KEY: "synthetic-public-key", SESSION_SECRET: "synthetic-test-signing-key-not-for-production" };
+  for (const value of ["invalid-config-marker", "https://user:private-marker@project.supabase.co",
+    "https://project.supabase.co/rest/v1", "https://project.supabase.co?token=private-marker", "https://project.supabase.co/#private-marker"]) {
+    assert.throws(() => checkProductionConfiguration({ ...valid, SUPABASE_URL: value }), (error: Error) =>
+      error.message === "SUPABASE_URL must be a credential-free HTTPS origin without a path, query or fragment.");
+  }
+});
 test("energy authenticity binds the tenant, metadata, numerical outputs and complete source snapshot", () => {
   process.env.SESSION_SECRET ||= "synthetic-unit-test-signing-key-32-characters";
   const record = { organisation_id: "tenant-a", meter_id: "meter-a", tariff_id: null, name: "Saved",

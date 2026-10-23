@@ -9,6 +9,8 @@
     "serve": "vite preview --config vite.config.ts --host 0.0.0.0",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "check:localization": "node scripts/check-localization.mjs",
+    "test:reports": "node --test tests/reports-index.test.mjs",
+    "test:auth-ui": "node --test tests/platform-auth.interactions.test.mjs",
     "test:platform": "node --test --test-concurrency=1 tests/platform-manifest.test.mjs tests/site-navigation.test.mjs tests/founder-profiles.test.mjs tests/public-support.test.mjs tests/public-support.interactions.test.mjs tests/hero-light-field.test.mjs tests/service-images.test.mjs tests/industry-images.test.mjs tests/footer-socials.test.mjs tests/energy-dt-refinement.test.mjs"
   },
   "devDependencies": {

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useLocation } from "wouter";
-import { getGetPlatformSessionQueryKey, usePlatformAuth } from "@workspace/api-client-react";
+import { usePlatformAuth } from "@workspace/api-client-react";
 import { Alert, AuthFrame, Field, SubmitButton, TextLink, WRITE, apiMessage } from "./common";
 
 const MIN = 12, MAX = 128;
@@ -27,7 +27,12 @@ export function SignInPage() {
     setErrs(next);
     if (next.email || next.password) { focusInvalid(e, next.email ? "email" : "password"); return; }
     auth.mutate({ action: "signin", data: { email: email.trim(), password } }, {
-      onSuccess: async () => { await qc.invalidateQueries({ queryKey: getGetPlatformSessionQueryKey() }); navigate("/app"); },
+      onSuccess: () => {
+        // A successful sign-in may switch accounts after expiry or recovery.
+        // Do not retain the previous principal's cached tenant data or requests.
+        qc.clear();
+        navigate("/app");
+      },
     });
   }
   return (
@@ -57,7 +62,7 @@ export function RegisterPage() {
     auth.mutate({ action: "signup", data: { fullName: n, email: email.trim(), password } }, { onSuccess: (r) => { setDone(r.message); setPassword(""); } });
   }
   return (
-    <AuthFrame title="Create a workspace account" intro="Register to create or join an organisation workspace. Modules are being planned; account and organisation management are available now."
+    <AuthFrame title="Create a workspace account" intro="Register to create or join an organisation workspace for energy analysis, engineering scenarios, carbon calculations and saved reports."
       footer={<span>Already registered? <TextLink href="/app/sign-in" testId="link-signin">Sign in</TextLink></span>}>
       {done ? (
         <div className="space-y-4" data-testid="status-registered">
@@ -115,9 +120,9 @@ export function CallbackPage() {
     const recovery = params.get("flow") === "recovery";
     if (!code) { setMissing(true); return; }
     auth.mutate({ action: "callback", data: { code } }, {
-      onSuccess: async () => {
+      onSuccess: () => {
         window.history.replaceState(null, "", window.location.pathname);
-        await qc.invalidateQueries({ queryKey: getGetPlatformSessionQueryKey() });
+        qc.clear();
         navigate(recovery ? "/app/reset-password" : "/app", { replace: true });
       },
       onError: () => window.history.replaceState(null, "", window.location.pathname),

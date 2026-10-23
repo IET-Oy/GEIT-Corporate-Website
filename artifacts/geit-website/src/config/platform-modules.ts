@@ -11,7 +11,7 @@ export const platformModules = [
   { id: "battery-flexibility", title: "Battery Storage & Flexibility", path: "/app/battery-flexibility", readiness: "available" },
   { id: "digital-energy", title: "AI & Digital Energy Solutions", path: "/app/digital-energy", readiness: "available" },
   { id: "carbon-footprint", title: "Carbon Footprint", path: "/app/carbon-footprint", readiness: "available" },
-  { id: "projects-reports", title: "Projects and Reports", path: "/app/projects-reports", readiness: "planned" },
+  { id: "projects-reports", title: "Projects and Reports", path: "/app/projects-reports", readiness: "available" },
   { id: "organisation-settings", title: "Organisation Settings", path: "/app/organisation-settings", readiness: "available" },
 ] as const;
 

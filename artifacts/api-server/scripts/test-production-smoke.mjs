@@ -48,10 +48,22 @@ try {
   }
   checks++;
   const missing = spawn(process.execPath, ["dist/index.mjs"], {
-    cwd: new URL("../", import.meta.url), stdio: "ignore",
+    cwd: new URL("../", import.meta.url), stdio: ["ignore", "ignore", "pipe"],
     env: { ...process.env, NODE_ENV: "production", PORT: String(port), PLATFORM_ORIGIN: "" },
   });
+  let missingOriginError = "";
+  missing.stderr.on("data", chunk => { missingOriginError = (missingOriginError + chunk.toString()).slice(0, 8192); });
   const exit = await new Promise((resolve) => missing.on("exit", resolve));
-  assert.notEqual(exit, 0); checks++;
+  assert.notEqual(exit, 0);
+  assert.match(missingOriginError, /Set PLATFORM_ORIGIN to the HTTPS origin/); checks++;
+  const fixturesEnabled = spawn(process.execPath, ["dist/index.mjs"], {
+    cwd: new URL("../", import.meta.url), stdio: ["ignore", "ignore", "pipe"],
+    env: { ...process.env, NODE_ENV: "production", PORT: String(port), PLATFORM_ORIGIN: origin, GEIT_ALLOW_TEST_FIXTURE_WRITES: "yes" },
+  });
+  let fixtureError = "";
+  fixturesEnabled.stderr.on("data", chunk => { fixtureError = (fixtureError + chunk.toString()).slice(0, 8192); });
+  const fixtureExit = await new Promise((resolve) => fixturesEnabled.on("exit", resolve));
+  assert.notEqual(fixtureExit, 0);
+  assert.match(fixtureError, /Test fixture writes must remain disabled in the production API process/); checks++;
   console.log(`${checks} compiled-production smoke checks passed (local only; not a published-domain test).`);
 } finally { child.kill("SIGTERM"); }

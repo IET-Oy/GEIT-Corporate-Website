@@ -12,13 +12,14 @@ Use workspace Secrets for credentials and production configuration for non-secre
 | `SUPABASE_PUBLISHABLE_KEY` | Existing project's public/publishable API key; JWT/RLS still enforce access | Present |
 | `SUPABASE_DB_URL` | Privileged migration/metadata-audit connection; never expose to clients | Present |
 | `SESSION_SECRET` | Stable server-side engineering and energy result authentication key; securely generated, at least 32 characters in production | Present; compiled production startup passed its length check |
-| `PLATFORM_ORIGIN` | Exact published HTTPS origin, e.g. `https://your-confirmed-domain`; no path, query, userinfo or fragment | Missing |
-| `VITE_PUBLIC_SITE_URL` | Confirmed public/canonical site URL, needed at frontend build time | Missing |
+| `PLATFORM_ORIGIN` | Exact published HTTPS origin, e.g. `https://your-confirmed-domain`; no path, query, userinfo or fragment | Not set in the inspected development shell; independently verify production settings, do not infer them from development |
+| `VITE_PUBLIC_SITE_URL` | Confirmed public/canonical site URL, needed at frontend build time | Not set in the inspected build shell; sitemap generation skipped |
 | `DATABASE_URL` | Existing Replit-managed legacy corporate-enquiries database dependency, eagerly imported by the API | Runtime-managed; verify production provisioning |
 | `PORT` | Service listen/build port | Managed by artifact services; do not hardcode a public host |
 | `BASE_PATH` | Frontend artifact mount | Existing website is `/` |
 | `NODE_ENV` | Runtime mode | API production service explicitly sets `production` |
 | `LOG_LEVEL` | Optional log level | Default `info`; avoid sensitive debug payloads |
+| `GEIT_ALLOW_TEST_FIXTURE_WRITES` | Test-process opt-in only | Unset or `no` in API deployments; production API startup rejects any other non-empty value |
 
 Do not replace the existing Supabase database or repoint `DATABASE_URL` at it. The legacy corporate database and SaaS database are separate dependencies. Do not run a blind schema push against either production database.
 
@@ -55,6 +56,13 @@ The runner uses verified TLS, an advisory lock, a transaction and SHA-256 migrat
 
 The runner obtains the official Supabase database CA over verified HTTPS. Do not bypass TLS with `rejectUnauthorized=false`.
 
+**Approval boundary:** the migration command above writes schema and migration
+ledger entries. It was not run during finalization and must not be put in build
+or startup commands. First review and apply to independently verified staging;
+production application requires separate approval, a verified backup and a
+compatible release plan. The inspect/audit commands are read-only metadata checks,
+not proof that real cross-tenant access attempts have been denied.
+
 ## 4. Build and publishing configuration
 
 Run all commands in the audit reproduction section. Resolve any failures before release.
@@ -68,11 +76,31 @@ The existing artifact settings already define:
 For an all-workspace manual build:
 
 ```sh
-PORT=18414 BASE_PATH=/ pnpm run build
+pnpm install --frozen-lockfile
+pnpm run test:local
+NODE_ENV=production PORT=18414 BASE_PATH=/ pnpm run build
 pnpm --filter @workspace/api-server run test:production
 ```
 
-The second command starts a temporary compiled API in production mode on a local unused port. It verifies startup, JSON errors, unauthenticated denial, no wildcard platform CORS, authentication throttling and fail-closed missing-origin startup. It does **not** prove a published-domain flow.
+The last command starts a temporary compiled API in production mode on a local unused port. It verifies startup, JSON errors, unauthenticated denial, no wildcard platform CORS, authentication throttling and fail-closed missing-origin/fixture-write startup. It does **not** prove a published-domain flow.
+
+Outside the managed artifact process, the equivalent API startup is:
+
+```sh
+# Configure secrets securely first; never paste their values into this command.
+NODE_ENV=production pnpm --filter @workspace/api-server run start
+```
+
+Set `PORT` in the service environment and route `/api/*` to this process; serve
+the website's `dist/public` as static files with the existing SPA fallback.
+`/api/healthz` is process liveness, **not Supabase connectivity or release
+readiness**. Do not use `pnpm run dev` as the production startup.
+
+Staging may also compile with `NODE_ENV=production`, but must additionally set
+`GEIT_ENVIRONMENT=staging` and the independently approved staging configuration.
+Keep fixture-write opt-in unset/`no` in the staging API; set it only in a separately
+approved test process after API identity verification. The current workspace is
+not certified isolated staging and must not be used for remote fixture tests.
 
 In Replit Publishing:
 
@@ -101,3 +129,18 @@ Publishing reference: https://docs.replit.com/features/projects-and-artifacts/pr
 ## 6. Incident and rollback
 
 For a code-only incident, return to the last known working published build while retaining compatible additive schema. A code checkpoint is not a Supabase backup. Do not reverse migrations or drop customer tables casually. For data loss, use the approved isolated recovery procedure and explicit restore approval; coordinate downtime. After recovery, verify RLS, files, auth and report signatures before reopening access.
+
+Rollback checklist, requiring operator approval before deployment changes:
+
+1. Record the failing application release, configuration version and migration
+   ledger; preserve safe diagnostic logs without secrets or request bodies.
+2. Confirm the previous build supports the current additive schema and saved
+   result/signature format. Do not downgrade the schema to make old code fit.
+3. Restore only that approved application build and its compatible configuration.
+   Keep the stable `SESSION_SECRET` and tenant permissions intact.
+4. Check liveness, real staging acceptance and representative signed reports
+   before reopening traffic. If code rollback is incompatible, keep access
+   restricted and prepare an approved forward fix instead.
+5. Treat database/Storage restore as a separate recovery operation requiring
+   explicit approval and a verified isolated restore drill. No automated down
+   migration, production reset, signing-key rotation or live restore ran here.

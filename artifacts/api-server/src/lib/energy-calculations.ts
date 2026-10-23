@@ -39,6 +39,10 @@ export function calculateEnergy(
   const format = new Intl.DateTimeFormat("en-CA", {
     timeZone: timezone, year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23",
   });
+  // UTC has no offset transitions: hour boundaries are sufficient for both
+  // grouping keys. Preserve the minute partition for other zones (including
+  // fractional offsets and DST). This avoids 525,600 Intl calls for a UTC year.
+  const partitionMs = format.resolvedOptions().timeZone === "UTC" ? 3600000 : 60000;
   const days = new Map<string, { kwh: number; hours: number; peak: number }>();
   const hours = new Map<string, { kwh: number; hours: number }>();
   const months = new Map<string, number>();
@@ -50,10 +54,10 @@ export function calculateEnergy(
     previousEnd = e;
     const duration = (e - s) / 3600000, kw = reading.kwh / duration;
     kwh += reading.kwh; coveredHours += duration; peakKw = Math.max(peakKw, kw);
-    // Partition at minute boundaries, using actual UTC durations. This handles
-    // midnight, fractional-offset time zones and DST skipped/repeated hours.
+    // Partition using elapsed UTC durations, including partial boundary minutes
+    // or hours. Local-day and local-hour groups still conserve interval energy.
     for (let t = s; t < e;) {
-      const next = Math.min(e, (Math.floor(t / 60000) + 1) * 60000);
+      const next = Math.min(e, (Math.floor(t / partitionMs) + 1) * partitionMs);
       const parts = Object.fromEntries(format.formatToParts(t).map((p) => [p.type, p.value]));
       const date = `${parts.year}-${parts.month}-${parts.day}`, hour = parts.hour;
       const h = (next - t) / 3600000, energy = kw * h;
