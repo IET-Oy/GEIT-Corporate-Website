@@ -25,7 +25,7 @@ channel = "stable-25_05"
 [userenv]
 
 [userenv.shared]
-SUPABASE_URL = "https://toqtpvqpauqhduemwmve.supabase.co"
+SUPABASE_URL = "https://ahtoaubpffxbgkydguxi.supabase.co"
 
 [userenv.production]
 PLATFORM_ORIGIN = "https://geit-corporate-website.replit.app"
