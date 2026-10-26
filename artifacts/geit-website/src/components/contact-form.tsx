@@ -11,6 +11,7 @@ import {
   type ContactFormValues,
 } from "@/lib/contact-form-schema";
 import { useLanguage } from "@/lib/language-context";
+import { companyContact } from "@/config/company-contact";
 
 type FieldControlProps = {
   id: string;
@@ -116,6 +117,17 @@ export default function ContactForm() {
       >
         <strong className="block">{t("formUnavailableTitle")}</strong>
         <span>{t("formUnavailableCopy")}</span>
+        {companyContact.businessEmail && (
+          <p className="mt-2">
+            {t("emailGeitDirectly")}{" "}
+            <a
+              href={`mailto:${companyContact.businessEmail}`}
+              className="font-semibold underline underline-offset-2"
+            >
+              {companyContact.businessEmail}
+            </a>
+          </p>
+        )}
       </div>
 
       {submissionResult && (

@@ -18,7 +18,7 @@ export const founders: FounderProfile[] = [
     officialTitle: "Founder/CEO",
     biography: "Dr. Hyacinthe M. Nshuti founded GEIT Ltd in 2026 and serves as Founder/CEO.",
     portraitSrc: `${import.meta.env.BASE_URL}images/founders/hyacinthe-nshuti.webp`,
-    email: "dntechnologies.info@gmail.com",
+    email: "info.services@geit.rw",
     telephone: null,
   },
   {
@@ -27,7 +27,7 @@ export const founders: FounderProfile[] = [
     officialTitle: "Co-founder/General manager",
     biography: "Mr. Noel Dushimiyimana co-founded GEIT Ltd in 2026 and serves as Co-founder/General manager.",
     portraitSrc: `${import.meta.env.BASE_URL}images/founders/noel-dushimiyimana.webp`,
-    email: "dntechnologies.info@gmail.com",
+    email: "info.services@geit.rw",
     telephone: null,
   },
 ];

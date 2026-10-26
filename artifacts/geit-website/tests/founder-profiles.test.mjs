@@ -26,7 +26,7 @@ test("approved founder identities, titles and supplied portraits render across a
       ["Mr. Noel Dushimiyimana", "Co-founder/General manager"],
     ]);
     for (const founder of founders) {
-      assert.equal(founder.email, "dntechnologies.info@gmail.com");
+      assert.equal(founder.email, "info.services@geit.rw");
       assert.equal(founder.telephone, null, "No personal telephone number was supplied");
       const asset = path.join(root, "public", founder.portraitSrc.replace(/^\//, ""));
       const bytes = readFileSync(asset);
@@ -40,7 +40,7 @@ test("approved founder identities, titles and supplied portraits render across a
       const html = renderToStaticMarkup(createElement(LanguageProvider, { initialLanguage: language },
         createElement(FoundersLeadership)));
       assert.equal((html.match(/data-testid="card-founder-/g) ?? []).length, 2);
-      assert.equal((html.match(/mailto:dntechnologies.info@gmail.com/g) ?? []).length, 2);
+      assert.equal((html.match(/mailto:info.services@geit.rw/g) ?? []).length, 2);
       assert.ok(html.includes('alt="Dr. Hyacinthe M. Nshuti"'));
       assert.ok(html.includes('alt="Mr. Noel Dushimiyimana"'));
       assert.ok(html.includes("Founder/CEO"));

@@ -17,7 +17,7 @@ export const companyContact: CompanyContactConfig = {
   shortName: "GEIT Ltd.",
   country: "Rwanda",
   officeAddress: "Kigali, Rwanda",
-  businessEmail: "dntechnologies.info@gmail.com",
+  businessEmail: "info.services@geit.rw",
   businessTelephone: "+250 78 866567",
   socialProfiles: {
     linkedin: "https://www.linkedin.com/company/geit-ltd/",

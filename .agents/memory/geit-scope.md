@@ -45,6 +45,12 @@ Use global energy-and-technology positioning throughout visible homepage content
 
 **How to apply:** Keep homepage copy naturally global-facing across all four languages. Scope shared-footer positioning to Home; retain approved address and legal information elsewhere.
 
+GEIT's official public contact email is `info.services@geit.rw`.
+
+**Why:** The user explicitly confirmed this as the official email, replacing the previous contact address.
+
+**How to apply:** Use this address for the website's company contact methods, consultation fallback and founder contact links; do not restore the superseded email.
+
 Add subscription entitlements and billing only with a configured payment provider and verified webhooks.
 
 **Why:** The user explicitly set this condition for production-readiness work.
@@ -56,6 +62,12 @@ The customer-facing product is Energy DT — Energy Digital Twin. Preserve techn
 **Why:** The owner explicitly requested the product rename and silver link while preserving routing, authentication, integrations and functionality.
 
 **How to apply:** Preserve the approved homepage structure, image, animation, text and positions. The owner's later refinement expands transparent glass panels and subtle elevation to ALL corporate pages, including Home and both navigation bars, without moving content. Change green text throughout all pages to dark green (#123B2A), preserving button backgrounds, decorative colors and readable white hero text. The application may use a separate restrained, Apple-inspired interface, but navigation must only expose existing capabilities and mark planned destinations honestly.
+
+Keep the Energy DT navigation link visible while public workspace access is unavailable; clicking it should announce that the product is coming soon, and direct `/energy-saas` or `/app` visits should show the same status instead of opening a nonfunctional workspace.
+
+**Why:** The owner explicitly corrected an earlier suggestion to hide the link and asked to keep it while clearly explaining availability.
+
+**How to apply:** Preserve the existing `/energy-saas` destination and silver styling. Restore workspace routes only after the separate API and public sign-in flow are verified.
 
 Remove the white tint in corporate glass panels and navigation bars AND the light page backgrounds behind them.
 

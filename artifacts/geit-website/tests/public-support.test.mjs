@@ -49,7 +49,7 @@ test("public FAQ answers, fallbacks and rendered accessibility contracts", async
         assert.equal(answer.kind, "human");
         assert.ok(answer.links.some((link) => link.href === "/contact"));
       }
-      assert.equal(faq.humanContact().email, "dntechnologies.info@gmail.com");
+      assert.equal(faq.humanContact().email, "info.services@geit.rw");
     });
     await t.test("no provider is configured and failed future adapters fall back honestly", async () => {
       assert.equal(faq.configuredProvider, null);
@@ -91,6 +91,15 @@ test("public FAQ answers, fallbacks and rendered accessibility contracts", async
       assert.match(widget, /e\.key === "Escape"/);
       const css = readFileSync(path.join(root, "src/index.css"), "utf8");
       assert.match(css, /prefers-reduced-motion:\s*reduce[\s\S]*geit-headline-type/);
+    });
+    await t.test("consultation form states submissions are disabled and provides the approved email alternative", async () => {
+      const { default: ContactForm } = await server.ssrLoadModule("/src/components/contact-form.tsx");
+      const html = renderToStaticMarkup(createElement(LanguageProvider, { initialLanguage: "en" },
+        createElement(Router, { ssrPath: "/contact" }, createElement(ContactForm))));
+      assert.match(html, /Enquiry submission is not configured/);
+      assert.match(html, /Details entered here are not sent to GEIT or stored by this site/);
+      assert.match(html, /href="mailto:info\.services@geit\.rw"/);
+      assert.match(html, /info\.services@geit\.rw/);
     });
     await t.test("all locales share facts, route targets and complete translated copy", async () => {
       const { SaasFaqSection } = await server.ssrLoadModule("/src/components/saas-faq-section.tsx");

@@ -11,14 +11,18 @@ test("approved navigation has four primary and four secondary links in exact ord
   assert.equal(secondaryNavigation[2].label, "Energy DT");
 });
 
-test("language selector keeps its header slot and platform entry opens the existing application", () => {
+test("language selector keeps its header slot and Energy DT entry announces its temporary availability", () => {
   const header = readFileSync(new URL("../src/components/site-header.tsx", import.meta.url), "utf8");
   assert.equal((header.match(/<LanguageSelector \/>/g) ?? []).length, 1);
   assert.match(header, /<\/nav>\s*<LanguageSelector \/>\s*<button/);
   const workspace = readFileSync(new URL("../src/platform/app-routes.tsx", import.meta.url), "utf8");
   assert.match(workspace, /<SiteHeader \/>\s*<AppNav \/>/);
   const app = readFileSync(new URL("../src/App.tsx", import.meta.url), "utf8");
-  assert.ok(app.includes("if(location==='/energy-saas')return <Redirect to=\"/app\"/>"));
+  assert.ok(app.includes("EnergyDtComingSoonPage path={location}"));
+  assert.ok(app.includes("location==='/energy-saas'||location==='/app'||location.startsWith('/app/')"));
+  const appNav = readFileSync(new URL("../src/platform/app-nav.tsx", import.meta.url), "utf8");
+  assert.match(appNav, /preventDefault\(\); setComingSoon\(true\)/);
+  assert.match(appNav, /role="status" aria-live="polite" data-testid="energy-dt-coming-soon"/);
   assert.ok(readFileSync(new URL("../src/components/hero-headline.tsx", import.meta.url), "utf8").includes('c("Make smarter energy decisions.")') && app.includes("<HeroHeadline/>") && !app.includes("Build a more efficient, resilient and low-carbon future."));
   assert.ok(app.includes("Integrated consulting, project development, digital energy and carbon services—grounded in data, rigorous analysis and sound economics."));
 });

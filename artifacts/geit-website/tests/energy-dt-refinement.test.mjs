@@ -11,14 +11,18 @@ import { secondaryNavigation } from "../src/config/site-navigation.ts";
 
 const source = (path) => readFileSync(new URL(`../src/${path}`, import.meta.url), "utf8");
 
-test("Energy DT keeps the established destination and technical navigation identifier", () => {
+test("Energy DT keeps its navigation destination and announces coming soon instead of opening the workspace", () => {
   const product = secondaryNavigation.find((item) => item.href === "/energy-saas");
   assert.equal(product.label, "Energy DT");
   const navigation = source("platform/app-nav.tsx");
   assert.match(navigation, /geit-silver-link/);
   assert.match(navigation, /link-energy-saas/);
+  assert.match(navigation, /preventDefault\(\); setComingSoon\(true\)/);
+  assert.match(navigation, /role="status" aria-live="polite"/);
   const routes = source("App.tsx");
-  assert.ok(routes.includes("if(location==='/energy-saas')return <Redirect to=\"/app\"/>"));
+  assert.ok(routes.includes("location==='/energy-saas'||location==='/app'||location.startsWith('/app/')"));
+  assert.match(routes, /<EnergyDtComingSoonPage path=\{location\}\/>/);
+  assert.match(routes, /energyDtComingSoonCopy/);
 });
 
 test("silver-fluid control supports touch, focus, pressed and reduced-motion modes", () => {
@@ -144,7 +148,7 @@ test("all corporate pages share glass styling while retaining inner-page scope a
   try {
     const { SiteRoutes } = await server.ssrLoadModule("/src/App.tsx");
     const { LanguageProvider } = await server.ssrLoadModule("/src/lib/language-context.tsx");
-    for (const route of ["/", "/about", "/services", "/industries", "/digital-energy-solutions", "/insights", "/contact"]) {
+    for (const route of ["/", "/about", "/services", "/industries", "/digital-energy-solutions", "/insights", "/contact", "/energy-saas", "/app", "/app/sign-in"]) {
       const html = renderToStaticMarkup(createElement(LanguageProvider, { initialLanguage: "en" },
         createElement(Router, { ssrPath: route }, createElement(SiteRoutes))));
       assert.match(html, /class="grain min-h-\[100dvh\] geit-public/);
@@ -152,6 +156,11 @@ test("all corporate pages share glass styling while retaining inner-page scope a
       assert.match(html, /geit-silver-link/);
       assert.match(html, /data-testid="corporate-backdrop"/);
       assert.match(html, /href="\/energy-saas"/);
+      if (route === "/energy-saas" || route.startsWith("/app")) {
+        assert.match(html, /Energy DT is coming soon/);
+        assert.match(html, /The workspace is being prepared for public access/);
+        assert.doesNotMatch(html, /Sign in|Forgot password/);
+      }
       if (route !== "/") assert.match(html, /geit-glass/, `${route}: floating glass content`);
       else {
         assert.match(html, /data-testid="home-hero"/);
