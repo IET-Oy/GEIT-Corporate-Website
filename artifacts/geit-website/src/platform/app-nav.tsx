@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { useLanguage } from "@/lib/language-context";
 import { secondaryNavigation } from "@/config/site-navigation";
@@ -6,7 +5,6 @@ import { secondaryNavigation } from "@/config/site-navigation";
 export function AppNav() {
   const [path] = useLocation();
   const { t } = useLanguage();
-  const [comingSoon, setComingSoon] = useState(false);
   return (
     <div className="border-b border-[#dce3e8] bg-[#10243a] text-white" data-testid="nav-application">
       <nav aria-label="Secondary navigation" className="mx-auto flex max-w-[1320px] flex-wrap items-center justify-end gap-x-4 gap-y-2 px-3 py-3 text-[14px] leading-4 font-semibold sm:gap-x-6 sm:px-5 xl:px-8" data-testid="nav-secondary">
@@ -14,7 +12,6 @@ export function AppNav() {
           const platform = link.href === "/energy-saas";
           const active = platform ? path === "/energy-saas" || path === "/app" || path.startsWith("/app/") : path === link.href || path.startsWith(link.href + "/");
           return <Link key={link.href} href={link.href} aria-current={active ? "page" : undefined}
-            onClick={platform ? (event) => { event.preventDefault(); setComingSoon(true); } : undefined}
             data-secondary-start={link.href === "/industries" ? "" : undefined}
             data-testid={platform ? "link-energy-saas" : undefined}
             className={`inline-flex min-h-10 items-center whitespace-nowrap ${platform
@@ -24,11 +21,6 @@ export function AppNav() {
           </Link>;
         })}
       </nav>
-      {comingSoon && (
-        <p role="status" aria-live="polite" data-testid="energy-dt-coming-soon" className="mx-auto max-w-[1320px] px-4 pb-3 text-right text-sm text-white/85">
-          {t("energyDtComingSoonCopy")}
-        </p>
-      )}
     </div>
   );
 }

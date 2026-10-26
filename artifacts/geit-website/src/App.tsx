@@ -4,7 +4,7 @@ import FloatingConsultation from '@/components/floating-consultation';
 import ContactForm from '@/components/contact-form';
 import { SiteHeader } from '@/components/site-header';
 import { SiteFooter } from '@/components/site-footer';
-import { Link, Route, Switch, Router as WouterRouter, useLocation } from 'wouter';
+import { Link, Redirect, Route, Switch, Router as WouterRouter, useLocation } from 'wouter';
 import { ArrowRight, ArrowUpRight, BarChart3, BatteryCharging, Building2, Check, ChevronRight, Cpu, Globe2, Leaf, LineChart, Network, PlugZap, ShieldCheck, Sun, Zap } from 'lucide-react';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { Toaster } from '@/components/ui/toaster';
@@ -19,6 +19,7 @@ import { companyContact } from '@/config/company-contact';
 import { ContactMethods } from '@/components/contact-methods';
 import { PageMetadata as Meta } from '@/components/page-metadata';
 import { AppNav } from '@/platform/app-nav';
+import { AppRoutes } from '@/platform/app-routes';
 import { HeroHeadline } from '@/components/hero-headline';
 import { SaasFaqSection } from '@/components/saas-faq-section';
 import { SupportWidget } from '@/components/support-widget';
@@ -118,24 +119,6 @@ return <><Meta title="Energy Intelligence for Better Decisions" description="GEI
 function PageHero({eyebrow,title,description}: {eyebrow:string;title:string;description:string}){
   const { c } = useLanguage();
 return <section className="bg-[#10243a] text-white"><div className="mx-auto max-w-[1320px] px-5 py-16 lg:px-10 lg:py-20"><Eyebrow>{eyebrow}</Eyebrow><h1 className="max-w-4xl text-4xl font-extrabold leading-tight sm:text-5xl lg:text-6xl">{c(title)}</h1><p className="mt-6 max-w-2xl text-base leading-7 text-white/70">{c(description)}</p></div></section>}
-function EnergyDtComingSoonPage({path}: {path:string}) {
-  const { t } = useLanguage();
-  return <>
-    <Meta title={t("energyDtComingSoonTitle")} description={t("energyDtComingSoonCopy")} path={path}/>
-    <section className="bg-[#10243a] text-white" aria-labelledby="energy-dt-coming-soon-title">
-      <div className="mx-auto max-w-[1320px] px-5 py-16 lg:px-10 lg:py-20">
-        <Eyebrow>ENERGY DT</Eyebrow>
-        <h1 id="energy-dt-coming-soon-title" className="max-w-4xl text-4xl font-extrabold leading-tight sm:text-5xl lg:text-6xl">{t("energyDtComingSoonTitle")}</h1>
-        <div className="geit-glass mt-6 max-w-2xl p-6 sm:p-8">
-          <p role="status" className="text-base leading-7 text-white/90">{t("energyDtComingSoonCopy")}</p>
-          <Link href="/contact" className="mt-6 inline-flex min-h-11 items-center border border-white/35 px-5 py-3 text-sm font-bold text-white transition hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#e8b64b]">
-            {t("navContact")}
-          </Link>
-        </div>
-      </div>
-    </section>
-  </>;
-}
 function ServiceDetail({service}: {service:typeof services[number]}) {
   const { c } = useLanguage();
 
@@ -316,7 +299,38 @@ function LegalPage({kind}: {kind:'privacy'|'terms'}){
     ['Company details','Global Energy Innovation Technologies Ltd (GEIT Ltd), Rwanda. Registration/TIN: 157099400.'],
   ];
   return <><Meta title={title} description={privacy ? "Information about using the GEIT Ltd website and how enquiry information is handled." : "Information about using the GEIT Ltd website."} path={privacy?'/privacy-policy':'/terms-of-use'}/><PageHero eyebrow="COMPANY INFORMATION" title={title} description={privacy ? "Information about using the GEIT Ltd website and how enquiry information is handled." : "Information about using the GEIT Ltd website."}/><section className="bg-[#f2f5f7]"><div className="mx-auto max-w-4xl px-5 py-10 lg:px-10"><Breadcrumb items={[{label:'Home',href:'/'},{label:title}]}/><div className="space-y-8 bg-white geit-glass p-7 sm:p-10"><p className="text-sm leading-7 text-[#62737e]">{c("This page provides general information about the website of Global Energy Innovation Technologies Ltd (GEIT Ltd), a company registered in Rwanda under registration/TIN 157099400.")}</p>{(privacy?privacySections:termsSections).map(([heading,body])=><section key={heading}><h2 className="text-xl font-bold text-[#10243a]">{c(heading)}</h2><p className="mt-3 text-sm leading-7 text-[#62737e]">{c(body)}</p></section>)}<section lang="en" className="border-t border-[#d5dfe4] pt-8"><p className="text-xs font-semibold text-[#168568]">WORKSPACE NOTICE · ENGLISH · SUBJECT TO LEGAL REVIEW</p><h2 className="mt-3 text-xl font-bold text-[#10243a]">{privacy ? "Energy Intelligence account data" : "Energy Intelligence workspace use"}</h2><p className="mt-3 text-sm leading-7 text-[#62737e]">{privacy ? "The separate Energy Intelligence workspace uses Supabase to store account names, email addresses, protected password credentials, organisations, memberships and administrative audit events. Account data is used for sign-in and access control. Organisation members can see fellow members’ names and roles; membership email addresses are not listed. Session and temporary verification cookies are HttpOnly; tokens and account information are not saved in browser storage. Account and organisation records persist until removed; automated retention and self-service deletion are not yet implemented. Contact GEIT through the published contact channels for access, correction or deletion requests. Hosting location, retention periods and applicable processing terms must be confirmed before production use. These account practices do not change the disconnected enquiry form described above." : "Use only accounts and organisations you are authorised to access. Owners are responsible for granting appropriate membership roles. Account and organisation management are available; service modules marked Planned do not yet perform analysis, accept datasets or generate reports. Do not upload sensitive information or treat the workspace as a production engineering system during phased development. Calculations, reports, availability guarantees, subscription billing and automated account deletion are not currently provided. Formal processing and service terms require review before production use."}</p></section></div></div></section></>}
-function Router(){const [location]=useLocation();if(location==='/energy-saas'||location==='/app'||location.startsWith('/app/'))return <ErrorBoundary resetKey={location}><Shell><EnergyDtComingSoonPage path={location}/></Shell></ErrorBoundary>;return <ErrorBoundary resetKey={location}><Shell><Switch><Route path="/" component={HomePage}/><Route path="/about" component={AboutPage}/><Route path="/services" component={ServicesPage}/>{services.map(service=><Route key={service.slug} path={`/services/${service.slug}`}><ServiceDetail service={service}/></Route>)}<Route path="/industries" component={IndustriesPage}/><Route path="/digital-energy-solutions" component={DigitalPage}/><Route path="/carbon-footprint-services" component={CarbonPage}/><Route path="/insights" component={InsightsPage}/><Route path="/contact" component={ContactPage}/><Route path="/privacy-policy"><LegalPage kind="privacy"/></Route><Route path="/terms-of-use"><LegalPage kind="terms"/></Route><Route><NotFound/></Route></Switch></Shell></ErrorBoundary>}
+function Router() {
+  const [location] = useLocation();
+
+  if (location === "/energy-saas") {
+    return <ErrorBoundary resetKey={location}><Redirect to="/app" /></ErrorBoundary>;
+  }
+
+  if (location === "/app" || location.startsWith("/app/")) {
+    return <ErrorBoundary resetKey={location}><AppRoutes /></ErrorBoundary>;
+  }
+
+  return (
+    <ErrorBoundary resetKey={location}>
+      <Shell>
+        <Switch>
+          <Route path="/" component={HomePage}/>
+          <Route path="/about" component={AboutPage}/>
+          <Route path="/services" component={ServicesPage}/>
+          {services.map(service=><Route key={service.slug} path={`/services/${service.slug}`}><ServiceDetail service={service}/></Route>)}
+          <Route path="/industries" component={IndustriesPage}/>
+          <Route path="/digital-energy-solutions" component={DigitalPage}/>
+          <Route path="/carbon-footprint-services" component={CarbonPage}/>
+          <Route path="/insights" component={InsightsPage}/>
+          <Route path="/contact" component={ContactPage}/>
+          <Route path="/privacy-policy"><LegalPage kind="privacy"/></Route>
+          <Route path="/terms-of-use"><LegalPage kind="terms"/></Route>
+          <Route><NotFound/></Route>
+        </Switch>
+      </Shell>
+    </ErrorBoundary>
+  );
+}
 function App(){return <QueryClientProvider client={queryClient}><LanguageProvider><TooltipProvider><WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/,'')}><Router/></WouterRouter><Toaster/></TooltipProvider></LanguageProvider></QueryClientProvider>}
 export default App;
 export { Router as SiteRoutes };

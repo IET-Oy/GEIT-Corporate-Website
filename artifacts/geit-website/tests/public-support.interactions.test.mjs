@@ -15,7 +15,7 @@ const accountQuestions = {
   sw: "Nisaidie kuhusu akaunti yangu",
 };
 
-test("Energy DT navigation remains visible and announces its coming-soon state on click", async () => {
+test("Energy DT navigation remains visible and follows its workspace route on click", async () => {
   const r = await supportRuntime(root);
   const { render, within, user, cleanup, LanguageProvider, AppNav } = r;
   try {
@@ -24,8 +24,7 @@ test("Energy DT navigation remains visible and announces its coming-soon state o
     const link = within(document.body).getByRole("link", { name: "Energy DT" });
     assert.equal(link.getAttribute("href"), "/energy-saas");
     await user.click(link);
-    assert.match(within(document.body).getByRole("status").textContent, /coming soon/i);
-    assert.equal(window.location.pathname, "/");
+    assert.equal(window.location.pathname, "/energy-saas");
   } finally {
     cleanup();
     await r.close();

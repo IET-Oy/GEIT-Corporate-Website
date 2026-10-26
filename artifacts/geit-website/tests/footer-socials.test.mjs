@@ -38,5 +38,5 @@ test('shared public footer renders safe, labelled links with responsive targets 
   assert.match(footer, /focus-visible:outline-offset-4/);
   const app = readFileSync(new URL('../src/App.tsx', import.meta.url), 'utf8');
   assert.match(app, /function Shell[\s\S]*?<main>\{children\}<\/main><SiteFooter\/>/);
-  assert.match(app, /<Shell><Switch>/);
+  assert.match(app, /<Shell>[\s\S]*?<Switch>/);
 });

@@ -5,24 +5,28 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Router } from "wouter";
 import { createServer } from "vite";
 import { secondaryNavigation } from "../src/config/site-navigation.ts";
 
 const source = (path) => readFileSync(new URL(`../src/${path}`, import.meta.url), "utf8");
 
-test("Energy DT keeps its navigation destination and announces coming soon instead of opening the workspace", () => {
+test("Energy DT navigation opens the existing protected workspace routes", () => {
   const product = secondaryNavigation.find((item) => item.href === "/energy-saas");
   assert.equal(product.label, "Energy DT");
   const navigation = source("platform/app-nav.tsx");
   assert.match(navigation, /geit-silver-link/);
   assert.match(navigation, /link-energy-saas/);
-  assert.match(navigation, /preventDefault\(\); setComingSoon\(true\)/);
-  assert.match(navigation, /role="status" aria-live="polite"/);
+  assert.match(navigation, /href=\{link\.href\}/);
+  assert.doesNotMatch(navigation, /preventDefault|setComingSoon|energy-dt-coming-soon/);
   const routes = source("App.tsx");
-  assert.ok(routes.includes("location==='/energy-saas'||location==='/app'||location.startsWith('/app/')"));
-  assert.match(routes, /<EnergyDtComingSoonPage path=\{location\}\/>/);
-  assert.match(routes, /energyDtComingSoonCopy/);
+  assert.match(routes, /location === "\/energy-saas"[\s\S]*<Redirect to="\/app" \/>/);
+  assert.match(routes, /location === "\/app" \|\| location\.startsWith\("\/app\/"\)[\s\S]*<AppRoutes \/>/);
+  const appRoutes = source("platform/app-routes.tsx");
+  assert.match(appRoutes, /<Route path="\/app\/sign-in" component=\{SignInPage\} \/>/);
+  assert.match(appRoutes, /<Route path="\/app" component=\{OverviewPage\} \/>/);
+  assert.match(source("platform/workspace.tsx"), /data-testid="state-signed-out"/);
 });
 
 test("silver-fluid control supports touch, focus, pressed and reduced-motion modes", () => {
@@ -148,21 +152,26 @@ test("all corporate pages share glass styling while retaining inner-page scope a
   try {
     const { SiteRoutes } = await server.ssrLoadModule("/src/App.tsx");
     const { LanguageProvider } = await server.ssrLoadModule("/src/lib/language-context.tsx");
-    for (const route of ["/", "/about", "/services", "/industries", "/digital-energy-solutions", "/insights", "/contact", "/energy-saas", "/app", "/app/sign-in"]) {
+    for (const route of ["/", "/about", "/services", "/industries", "/digital-energy-solutions", "/insights", "/contact", "/app", "/app/sign-in"]) {
+      const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
       const html = renderToStaticMarkup(createElement(LanguageProvider, { initialLanguage: "en" },
-        createElement(Router, { ssrPath: route }, createElement(SiteRoutes))));
-      assert.match(html, /class="grain min-h-\[100dvh\] geit-public/);
-      assert.equal(/class="grain min-h-\[100dvh\] geit-public geit-corp"/.test(html), route !== "/", route);
+        createElement(QueryClientProvider, { client: queryClient },
+          createElement(Router, { ssrPath: route }, createElement(SiteRoutes)))));
+      const appRoute = route === "/app" || route.startsWith("/app/");
+      assert.equal(/class="grain min-h-\[100dvh\] geit-public/.test(html), !appRoute, route);
+      if (!appRoute) assert.equal(/class="grain min-h-\[100dvh\] geit-public geit-corp"/.test(html), route !== "/", route);
       assert.match(html, /geit-silver-link/);
-      assert.match(html, /data-testid="corporate-backdrop"/);
       assert.match(html, /href="\/energy-saas"/);
-      if (route === "/energy-saas" || route.startsWith("/app")) {
-        assert.match(html, /Energy DT is coming soon/);
-        assert.match(html, /The workspace is being prepared for public access/);
-        assert.doesNotMatch(html, /Sign in|Forgot password/);
+      if (appRoute) {
+        assert.match(html, /class="geit-app min-h-\[100dvh\] bg-\[#f2f5f7\]"/);
+        assert.match(html, /data-testid="nav-application"/);
+        assert.doesNotMatch(html, /Energy DT is coming soon/);
+        if (route === "/app/sign-in") assert.match(html, /Sign in to your workspace/);
+      } else {
+        assert.match(html, /data-testid="corporate-backdrop"/);
       }
-      if (route !== "/") assert.match(html, /geit-glass/, `${route}: floating glass content`);
-      else {
+      if (route !== "/" && !appRoute) assert.match(html, /geit-glass/, `${route}: floating glass content`);
+      if (route === "/") {
         assert.match(html, /data-testid="home-hero"/);
         assert.match(html, /homepage-background\.webp/);
         assert.match(html, /Make smarter energy decisions\./);

@@ -12,7 +12,7 @@ paths = [ "/" ]
 localPort = 18414
 
 [services.development]
-run = "pnpm --filter @workspace/geit-website run dev"
+run = "corepack pnpm --filter @workspace/geit-website run dev"
 
 [services.production]
 build = [ "corepack", "pnpm", "--filter", "@workspace/geit-website", "run", "build" ]
