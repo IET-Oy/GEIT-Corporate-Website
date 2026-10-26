@@ -15,7 +15,7 @@ localPort = 18414
 run = "pnpm --filter @workspace/geit-website run dev"
 
 [services.production]
-build = [ "pnpm", "--filter", "@workspace/geit-website", "run", "build" ]
+build = [ "corepack", "pnpm", "--filter", "@workspace/geit-website", "run", "build" ]
 serve = "static"
 publicDir = "artifacts/geit-website/dist/public"
 
