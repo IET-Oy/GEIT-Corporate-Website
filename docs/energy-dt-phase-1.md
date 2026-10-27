@@ -45,6 +45,22 @@ Verification remains incomplete. A grouped platform test invocation and an isola
 
 Execution-limit observations on 2026-10-27: the cgroup reported `pids.current=1105` against `pids.max=1152`; after the timed-out test it reported 1106/1152. `pids.events` increased from `max 29` to `max 30`, confirming a task-limit event occurred during that interval. Memory usage was 7,254,999,040 of 8,589,934,592 bytes, `/proc/meminfo` reported `MemAvailable: 0 kB`, and `memory.events` showed `oom=0`, `oom_kill=11`, and `oom_group_kill=2`; those OOM counters did not change across the test attempt. A minimal `ShellExec` probe succeeded, so a current shell/PTY startup failure was not observed. These measurements establish task-limit pressure and low available memory, but do not prove the precise cause of each earlier CodeExecution disconnection or that the timed-out test was OOM-killed. Do not interpret disconnected or timed-out commands as test or build passes.
 
+### Recheck after workspace reset
+
+The website and API workflows were reported as running. The pre-test resource check still showed `pids.current=1107` of `pids.max=1152`, `memory.current=7,187,177,472` of `memory.max=8,589,934,592`, and `MemAvailable: 0 kB`. `pids.events` remained at `max 30`; `memory.events` remained `oom=0`, `oom_kill=11`, and `oom_group_kill=2`. Because task headroom was below 4% and available memory was zero, no additional tests or build were launched after this check.
+
+Current check status:
+
+| Check | Status | Result |
+|---|---|---|
+| `public-support.interactions.test.mjs` | Inconclusive | Prior isolated run timed out after 90 seconds with exit `-1` and no output; not retried after reset. |
+| Energy DT refinement | Not run after edits | Stopped at resource preflight. |
+| Hero-light-field | Not run after edits | Stopped at resource preflight. |
+| Authentication | Not run after edits | Stopped at resource preflight. |
+| Reports | Not run after edits | Stopped at resource preflight. |
+| Localization | Not run after edits | Stopped at resource preflight. |
+| Vite production build | Inconclusive | Prior attempt disconnected without an exit status; not retried after reset. |
+
 Phase 2 staging setup has not started: no new staging project identity has been provided or independently verified. No staging credentials, database migrations, Auth settings, or Storage policies were changed.
 
 The signed-in interface, live Supabase connectivity, organisation isolation, RLS, private storage permissions, and external providers were not revalidated against staging. Do not use this phase as evidence that those systems are production-ready.
