@@ -61,6 +61,16 @@ Current check status:
 | Localization | Not run after edits | Stopped at resource preflight. |
 | Vite production build | Inconclusive | Prior attempt disconnected without an exit status; not retried after reset. |
 
+### Process inspection and recovery
+
+No process was terminated. The final resource sample during this inspection was `pids.current=1107` of `pids.max=1152`, `memory.current=7,173,853,184` of `memory.max=8,589,934,592`, and `MemAvailable: 0 kB`. `pids.events` remained at `max 30`; `memory.events` remained `oom=0`, `oom_kill=11`, and `oom_group_kill=2`.
+
+The process list contained 96 Node `MainThread` processes accounting for 1,032 threads. A large, long-lived, sleeping parent-child chain ran under a ShellExec cgroup; another visible runtime-owned shell/Node branch included a sleeping Node process with about 687 MB RSS. The inspected processes were still parented to live runtime processes, and their ownership as test jobs or abandoned tasks could not be established from safe process metadata. No explicit `--test` or `*.test.mjs` process was identified by the sanitized command scan. Therefore none of these workers was safe to terminate by PID. RSS values are per-process and may include shared pages, so they should not be summed as physical memory.
+
+The website workflow's visible process chain was `pnpm-native` → shell → Node → esbuild, consistent with its running Vite service; it was preserved. The API workflow was also reported running and was preserved. No second Vite server was confidently identified. The `ss -lptn` check could not run because `ss` is not installed, so this inspection did not independently map listening ports.
+
+No cleanup was performed, so there is no post-cleanup measurement. Because a workspace reset did not restore safe headroom and no worker could be safely attributed to a disposable test, do not reset again or kill processes blindly. Replit's troubleshooting guidance is to contact Support for runtime-level recovery when high resource use remains after restart, providing the project URL and these process/resource findings: [Troubleshooting guides](https://docs.replit.com/help/troubleshooting/overview).
+
 Phase 2 staging setup has not started: no new staging project identity has been provided or independently verified. No staging credentials, database migrations, Auth settings, or Storage policies were changed.
 
 The signed-in interface, live Supabase connectivity, organisation isolation, RLS, private storage permissions, and external providers were not revalidated against staging. Do not use this phase as evidence that those systems are production-ready.
