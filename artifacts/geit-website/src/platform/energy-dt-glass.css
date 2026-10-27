@@ -4,7 +4,7 @@
 }
 
 body:has(.energy-dt-glass-page) {
-  background: #a9bec3;
+  background: transparent;
 }
 
 .geit-app:has(.energy-dt-glass-page) {
@@ -15,76 +15,55 @@ body:has(.energy-dt-glass-page) {
   position: fixed;
   z-index: -1;
   inset: 0;
-  background:
-    radial-gradient(ellipse at 12% 12%, rgba(50, 113, 130, 0.28), transparent 36%),
-    radial-gradient(ellipse at 88% 82%, rgba(45, 104, 75, 0.24), transparent 38%),
-    linear-gradient(135deg, #9db7be 0%, #b3c5bf 52%, #9eb5bf 100%);
+  background: transparent;
   content: "";
   pointer-events: none;
 }
 
 .energy-dt-glass-content {
-  border: 1px solid rgba(236, 245, 242, 0.28);
+  border: 1px solid rgba(92, 101, 106, 0.18);
   border-radius: 22px;
-  background: rgba(24, 64, 76, 0.08);
-  box-shadow: 0 20px 50px -38px rgba(16, 36, 58, 0.44);
-  -webkit-backdrop-filter: blur(20px) saturate(1.12);
-  backdrop-filter: blur(20px) saturate(1.12);
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow: 0 20px 50px -38px rgba(28, 34, 38, 0.3);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
 }
 
 .energy-dt-glass-page .bg-white,
 .geit-app .energy-dt-glass-page .bg-white {
-  border-color: rgba(236, 245, 242, 0.3) !important;
-  background-color: rgba(24, 64, 76, 0.08) !important;
-  box-shadow: 0 16px 38px -30px rgba(16, 36, 58, 0.4);
-  -webkit-backdrop-filter: blur(18px) saturate(1.1);
-  backdrop-filter: blur(18px) saturate(1.1);
+  border-color: rgba(92, 101, 106, 0.18) !important;
+  background-color: rgba(255, 255, 255, 0.07) !important;
+  box-shadow: 0 16px 38px -30px rgba(28, 34, 38, 0.24);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
 }
 
 .energy-dt-glass-page .bg-white:hover,
 .geit-app .energy-dt-glass-page .bg-white:hover {
-  background-color: rgba(24, 64, 76, 0.14) !important;
+  background-color: rgba(255, 255, 255, 0.11) !important;
 }
 
-.energy-dt-glass-page :is(
-  [class~="bg-[#dfe7ea]"],
-  [class~="bg-[#eaf1f5]"],
-  [class~="bg-[#edf0f2]"],
-  [class~="bg-[#f2f5f7]"]
-) {
-  background-color: rgba(24, 64, 76, 0.08) !important;
+.energy-dt-glass-page :is(main, section, article, aside, form, div)[class*="bg-[#"]:not([role="alert"]):not([role="status"]):not([data-chart]) {
+  background-color: rgba(255, 255, 255, 0.07) !important;
   -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
 }
 
-.energy-dt-glass-page [class~="bg-[#e8f2ef]"] {
-  background-color: rgba(25, 100, 73, 0.11) !important;
-  -webkit-backdrop-filter: blur(14px);
-  backdrop-filter: blur(14px);
-}
-
-.energy-dt-glass-page :is([class~="bg-[#fff9e9]"], [class~="bg-[#fdf4dc]"]) {
-  background-color: rgba(143, 107, 25, 0.12) !important;
-  -webkit-backdrop-filter: blur(14px);
-  backdrop-filter: blur(14px);
-}
-
-.energy-dt-glass-page [class~="bg-[#fbeeeb]"] {
-  background-color: rgba(144, 40, 29, 0.1) !important;
-  -webkit-backdrop-filter: blur(14px);
-  backdrop-filter: blur(14px);
+.energy-dt-glass-page :is(main, section, article, aside, form, div)[class*="bg-gradient-"]:not([role="alert"]):not([role="status"]):not([data-chart]) {
+  background-image: none !important;
+  background-color: rgba(255, 255, 255, 0.07) !important;
 }
 
 .energy-dt-glass-page .form-input {
-  border-color: rgba(30, 69, 80, 0.34);
-  background-color: rgba(24, 64, 76, 0.08) !important;
+  border-color: rgba(92, 101, 106, 0.24);
+  background-color: rgba(255, 255, 255, 0.1) !important;
   color: #10243a;
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
 }
 
 .energy-dt-glass-page .form-input:focus {
-  background-color: rgba(24, 64, 76, 0.13) !important;
+  background-color: rgba(255, 255, 255, 0.14) !important;
 }
 
 @media (max-width: 1023px) {
@@ -97,17 +76,8 @@ body:has(.energy-dt-glass-page) {
   .energy-dt-glass-content,
   .energy-dt-glass-page .bg-white,
   .energy-dt-glass-page .form-input,
-  .energy-dt-glass-page :is(
-    [class~="bg-[#dfe7ea]"],
-    [class~="bg-[#eaf1f5]"],
-    [class~="bg-[#edf0f2]"],
-    [class~="bg-[#f2f5f7]"],
-    [class~="bg-[#e8f2ef]"],
-    [class~="bg-[#fff9e9]"],
-    [class~="bg-[#fdf4dc]"],
-    [class~="bg-[#fbeeeb]"]
-  ) {
-    background-color: rgba(24, 64, 76, 0.2) !important;
+  .energy-dt-glass-page :is(main, section, article, aside, form, div)[class*="bg-[#"]:not([role="alert"]):not([role="status"]):not([data-chart]) {
+    background-color: rgba(238, 239, 240, 0.92) !important;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
   }
