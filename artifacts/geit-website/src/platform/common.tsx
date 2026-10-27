@@ -1,6 +1,7 @@
 import { useEffect, useId, type ReactNode } from "react";
 import { Link, useLocation, useSearch } from "wouter";
 import { AlertTriangle, CircleDashed, Loader2 } from "lucide-react";
+import "./energy-dt-glass.css";
 
 export const WRITE = { request: { headers: { "X-GEIT-Request": "1" } } } as const;
 
@@ -74,14 +75,14 @@ export function SubmitButton({ pending, children, testId, tone = "primary", disa
 export function AuthFrame({ title, intro, children, footer }: { title: string; intro: string; children: ReactNode; footer?: ReactNode }) {
   usePageMeta(title);
   return (
-    <div className="mx-auto grid max-w-[1120px] gap-10 px-5 py-12 lg:grid-cols-[.9fr_1.1fr] lg:px-10 lg:py-20">
+    <div className="energy-dt-glass-page mx-auto grid max-w-[1120px] gap-10 px-5 py-12 lg:grid-cols-[.9fr_1.1fr] lg:px-10 lg:py-20">
       <div className="page-reveal">
         <p className="mb-5 flex items-center gap-3 text-[11px] font-bold tracking-[.19em] text-[#168568]"><span className="h-[2px] w-7 bg-[#e8b64b]" />ENERGY DT — ENERGY DIGITAL TWIN</p>
         <h1 className="text-3xl font-extrabold leading-tight text-[#10243a] sm:text-4xl">{title}</h1>
         <p className="mt-5 max-w-md text-sm leading-7 text-[#5d707c]">{intro}</p>
         <p className="mt-8 max-w-md border-l-2 border-[#e8b64b] pl-4 text-xs leading-5 text-[#6b7b87]">The workspace is currently available in English only. Corporate pages remain available in every supported language.</p>
       </div>
-      <div className="page-reveal border border-[#dce3e8] bg-white p-6 sm:p-9" style={{ animationDelay: ".08s" }}>
+      <div className="energy-dt-glass-content page-reveal border border-[#dce3e8] bg-white p-6 sm:p-9" style={{ animationDelay: ".08s" }}>
         {children}
         {footer && <div className="mt-7 border-t border-[#edf0f2] pt-5 text-sm text-[#5d707c]">{footer}</div>}
       </div>

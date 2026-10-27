@@ -56,7 +56,7 @@ function OrgPicker({ orgs, path }: { orgs: PlatformOrganisation[]; path: string 
   const qc = useQueryClient(); const [, navigate] = useLocation();
   const create = useCreatePlatformOrganisation(WRITE);
   return (
-    <div className="mx-auto grid max-w-[1000px] gap-10 px-5 py-12 lg:grid-cols-2 lg:px-8">
+    <div className="energy-dt-glass-page mx-auto grid max-w-[1000px] gap-10 px-5 py-12 lg:grid-cols-2 lg:px-8">
       <section className="page-reveal" aria-labelledby="pick-h">
         <h1 id="pick-h" className="text-3xl font-extrabold text-[#10243a]">{orgs.length ? "Choose an organisation" : "Set up your first organisation"}</h1>
         <p className="mt-4 text-sm leading-7 text-[#5d707c]">{orgs.length ? "The selection is kept in the page address, so you can bookmark or reload it." : "You are not a member of any organisation yet. Create one to start, or ask an owner to add you by your registered email."}</p>
@@ -99,11 +99,11 @@ export function Workspace({ title, path, children }: { title: string; path: stri
   const solo = orgs.length === 1 && !orgParam && !choose ? orgs[0] : null;
   useEffect(() => { if (solo && session.data?.user) navigate(withOrg(path, solo.id), { replace: true }); }, [solo, session.data?.user, path, navigate]);
 
-  if (session.isLoading) return <Skeleton label="Loading your session" />;
+  if (session.isLoading) return <div className="energy-dt-glass-page"><Skeleton label="Loading your session" /></div>;
   if (session.isError) {
     const expired = apiStatus(session.error) === 401;
     return (
-      <div className="mx-auto max-w-xl space-y-5 px-5 py-16" data-testid="state-session-error">
+      <div className="energy-dt-glass-page mx-auto max-w-xl space-y-5 px-5 py-16" data-testid="state-session-error">
         <Alert>{expired ? "Your session has expired. Sign in again to continue." : apiMessage(session.error, "We could not check your session.")}</Alert>
         <div className="flex gap-4">{expired ? <Link href="/app/sign-in" className="bg-[#168568] px-5 py-3 text-sm font-bold text-white">Sign in</Link> : <button type="button" onClick={() => session.refetch()} className="bg-[#168568] px-5 py-3 text-sm font-bold text-white" data-testid="button-retry">Try again</button>}</div>
       </div>
@@ -112,20 +112,20 @@ export function Workspace({ title, path, children }: { title: string; path: stri
   const user = session.data?.user;
   if (!user) {
     return (
-      <div className="mx-auto max-w-xl px-5 py-20 page-reveal" data-testid="state-signed-out">
+      <div className="energy-dt-glass-page mx-auto max-w-xl px-5 py-20 page-reveal" data-testid="state-signed-out">
         <h1 className="text-3xl font-extrabold text-[#10243a]">Sign in to open the workspace</h1>
         <p className="mt-4 text-sm leading-7 text-[#5d707c]">Energy DT — Energy Digital Twin is for registered members of an organisation.</p>
         <div className="mt-7 flex flex-wrap gap-4"><Link href="/app/sign-in" data-testid="link-signin" className="bg-[#168568] px-6 py-3 text-sm font-bold text-white">Sign in</Link><Link href="/app/register" data-testid="link-register" className="border border-[#10243a] px-6 py-3 text-sm font-bold text-[#10243a]">Create account</Link></div>
       </div>
     );
   }
-  if (!active) return solo ? <Skeleton label="Opening organisation" /> : <>
+  if (!active) return solo ? <div className="energy-dt-glass-page"><Skeleton label="Opening organisation" /></div> : <>
     {orgParam && orgs.length > 0 && <div className="mx-auto max-w-[1000px] px-5 pt-8"><Alert>That organisation was not found in your account. Choose one below.</Alert></div>}
     <OrgPicker orgs={orgs} path={path} />
   </>;
 
   return (
-    <div className="mx-auto grid w-full min-w-0 max-w-[1320px] grid-cols-1 gap-0 lg:grid-cols-[270px_minmax(0,1fr)]">
+    <div className="energy-dt-glass-page mx-auto grid w-full min-w-0 max-w-[1320px] grid-cols-1 gap-0 lg:grid-cols-[270px_minmax(0,1fr)]">
       <aside className="min-w-0 border-b border-[#dce3e8] bg-white lg:min-h-[calc(100dvh-84px)] lg:border-b-0 lg:border-r">
         <div className="px-5 pt-5">
           <p className="mb-5 border-b border-[#edf0f2] pb-4 text-sm font-bold tracking-tight text-[#10243a]" data-testid="text-app-brand">Energy DT <span className="block text-[11px] font-medium text-[#6b7b87]">Energy Digital Twin</span></p>
@@ -155,7 +155,7 @@ export function Workspace({ title, path, children }: { title: string; path: stri
           ))}
         </nav>
       </aside>
-      <div className="min-w-0 px-5 py-8 lg:px-10 lg:py-10">{children({ user, org: active })}</div>
+      <div className="energy-dt-glass-content min-w-0 px-5 py-8 lg:px-10 lg:py-10">{children({ user, org: active })}</div>
     </div>
   );
 }
