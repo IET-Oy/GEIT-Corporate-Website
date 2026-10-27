@@ -88,11 +88,13 @@ credentials into source, shell arguments, screenshots or reports.
    reference and computes non-secret target fingerprints **without connecting**.
    A database target fingerprint hashes host, port, user and database, never
    its password. URI parameters that could override the target are rejected.
-2. An operator independently verifies in the Supabase dashboard that the
-   reference, endpoint and key belong to `geit-energy-saas-staging`. Separately
-   verify that the legacy database was newly provisioned in the staging
-   application and contains no customer data. Verify the application origin.
-   Do not read or transfer production credentials to perform this review.
+2. An operator independently verifies in the Supabase dashboard that the new,
+   dedicated non-production project's reference, endpoint and key belong
+   together. Do not use the deleted `geit-energy-saas-staging` project or any of
+   its credentials. Separately verify that the legacy database was newly
+   provisioned in the staging application and contains no customer data. Verify
+   the application origin. Do not read or transfer production credentials to
+   perform this review.
 3. Copy `config/staging-approval.example.json` to a local
    `config/staging-approval.json`. Fill the reviewed identity fields from the
    candidate, assign a new non-secret random 32-hex `isolationId`, and only

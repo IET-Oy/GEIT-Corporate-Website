@@ -51,10 +51,12 @@ This package does not create or register them in a remote workspace.
 
 ### 2. Provision only new non-production dependencies
 
-Use the independently created Supabase project `geit-energy-saas-staging`.
-Obtain its actual project reference from its dashboard: the display name is not
-the reference. Confirm the endpoint, publishable key and database connection
-belong to that project, not to the protected existing project.
+Use only a newly provisioned, dedicated non-production Supabase project whose
+identity has been independently confirmed in its dashboard. Do not reuse the
+deleted `geit-energy-saas-staging` project, its reference, endpoint, keys, or
+database credentials. The display name is not the project reference. Confirm the
+new project's endpoint, publishable key and database connection independently,
+and verify they do not belong to a protected or production project.
 
 In the new Replit application, provision a **new empty non-production legacy
 database** so the managed `DATABASE_URL` is supplied there. Do not copy or manually

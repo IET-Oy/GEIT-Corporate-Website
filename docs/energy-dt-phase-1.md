@@ -71,7 +71,7 @@ The website workflow's visible process chain was `pnpm-native` → shell → Nod
 
 No cleanup was performed, so there is no post-cleanup measurement. Because a workspace reset did not restore safe headroom and no worker could be safely attributed to a disposable test, do not reset again or kill processes blindly. Replit's troubleshooting guidance is to contact Support for runtime-level recovery when high resource use remains after restart, providing the project URL and these process/resource findings: [Troubleshooting guides](https://docs.replit.com/help/troubleshooting/overview).
 
-Phase 2 staging setup has not started: no new staging project identity has been provided or independently verified. No staging credentials, database migrations, Auth settings, or Storage policies were changed.
+Phase 2 staging setup is not independently configured or verified in this application. Do not reuse the deleted staging project or its credentials. No staging credentials, database migrations, Auth settings, or Storage policies were changed.
 
 The signed-in interface, live Supabase connectivity, organisation isolation, RLS, private storage permissions, and external providers were not revalidated against staging. Do not use this phase as evidence that those systems are production-ready.
 
