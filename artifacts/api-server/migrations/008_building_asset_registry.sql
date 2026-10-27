@@ -90,7 +90,7 @@ language plpgsql set search_path='' as $$
 begin
   if new.organisation_id is distinct from old.organisation_id
      or new.is_demo is distinct from old.is_demo
-     or new.created_by is distinct from old.created_by then
+     or (new.created_by is distinct from old.created_by and new.created_by is not null) then
     raise exception 'Registry ownership fields cannot be changed' using errcode='42501';
   end if;
   new.updated_at := now();
@@ -104,9 +104,49 @@ create trigger geit_energy_assets_updated_at
 before update on public.geit_energy_assets
 for each row execute function public.geit_energy_registry_updated_at();
 
+create function public.geit_energy_registry_parent_guard() returns trigger
+language plpgsql set search_path='' as $$
+declare parent_archived boolean;
+begin
+  if not new.archived then
+    select archived into parent_archived
+      from public.geit_energy_sites
+      where id = new.site_id and organisation_id = new.organisation_id and is_demo = new.is_demo;
+    if not found or parent_archived then
+      raise exception 'Restore the parent site before activating this record' using errcode='23514';
+    end if;
+  end if;
+
+  if tg_table_name = 'geit_energy_buildings' then
+    if tg_op = 'UPDATE' and new.archived and not old.archived and exists (
+      select 1 from public.geit_energy_assets
+      where organisation_id = new.organisation_id and building_id = new.id and not archived
+    ) then
+      raise exception 'Archive active assets before archiving the building' using errcode='23514';
+    end if;
+  elsif not new.archived and new.building_id is not null then
+    select archived into parent_archived
+      from public.geit_energy_buildings
+      where id = new.building_id and organisation_id = new.organisation_id
+        and site_id = new.site_id and is_demo = new.is_demo
+      for update;
+    if not found or parent_archived then
+      raise exception 'Restore the parent building before activating this asset' using errcode='23514';
+    end if;
+  end if;
+  return new;
+end $$;
+
+create trigger geit_energy_buildings_parent_guard
+before insert or update on public.geit_energy_buildings
+for each row execute function public.geit_energy_registry_parent_guard();
+create trigger geit_energy_assets_parent_guard
+before insert or update on public.geit_energy_assets
+for each row execute function public.geit_energy_registry_parent_guard();
+
 revoke all on function public.geit_energy_registry_metadata_valid(jsonb) from public, anon;
 grant execute on function public.geit_energy_registry_metadata_valid(jsonb) to authenticated;
-revoke all on function public.geit_energy_registry_updated_at() from public, anon, authenticated;
+revoke all on function public.geit_energy_registry_updated_at(), public.geit_energy_registry_parent_guard() from public, anon, authenticated;
 
 alter table public.geit_energy_buildings enable row level security;
 alter table public.geit_energy_assets enable row level security;

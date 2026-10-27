@@ -33,18 +33,28 @@
 
 ## API and current limits
 
-The registry follows the current Energy Management API convention:
+The registry follows the current Energy Management session and organisation
+authorization model:
 
-- `GET /api/platform/energy/{orgId}` returns the tenant-scoped workspace,
-  including sites, buildings, meters, assets, tariffs, rules, imports, analyses,
-  and alerts.
-- `POST /api/platform/energy/{orgId}/records` creates or updates a record by
-  `kind` (`building` or `asset` for this registry). Setting `archived` performs
-  a soft archive or restore.
+- `GET /api/platform/energy/{orgId}/buildings` returns a paginated list. It
+  accepts `siteId`, `search`, `limit` (1–100) and `offset` (0–100,000).
+- `GET /api/platform/energy/{orgId}/buildings/{id}` returns the building and its
+  associated assets.
+- `POST`, `PATCH`, and `DELETE` on the building collection/item paths create,
+  update, and soft-archive buildings. Delete does not physically remove rows;
+  active assets must be archived first.
+- `GET /api/platform/energy/{orgId}/assets` returns a paginated list and accepts
+  `siteId`, `buildingId`, `status`, `search`, `limit` and `offset`.
+- `GET`, `POST`, `PATCH`, and `DELETE` on `/assets/{id}` or `/assets` view,
+  create, update, and soft-archive assets.
+- The existing `GET /api/platform/energy/{orgId}` workspace response and
+  `POST /records` save operation remain available for the current UI. The
+  workspace includes sites, buildings, meters, assets, tariffs, rules, imports,
+  analyses, and alerts.
 
-Lists remain subject to the existing maximum of 250 rows per resource. Search is
-client-side over the loaded records; server pagination and dedicated
-single-record endpoints are not implemented in this milestone.
+Registry API lists support server-side pagination and search by record name.
+The existing workspace response remains limited to 250 rows per resource, and
+the UI currently uses that workspace response with client-side search.
 
 ## Migration and verification status
 

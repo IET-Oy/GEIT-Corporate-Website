@@ -146,6 +146,8 @@ test("building and asset migration declares tenant-bound parents and RLS writes"
   assert.match(sql, /public\.geit_energy_manage\(organisation_id\)/);
   assert.match(sql, /public\.geit_role\(organisation_id\) is not null/);
   assert.match(sql, /grant select, insert, update on public\.geit_energy_buildings, public\.geit_energy_assets to authenticated/i);
+  assert.match(sql, /geit_energy_registry_parent_guard/);
+  assert.match(sql, /for update/i);
   assert.doesNotMatch(sql, /grant\s+[^;]*delete\s+on\s+public\.geit_energy_(?:buildings|assets)/i);
 });
 
@@ -155,4 +157,14 @@ test("registry API retains identity, membership, organisation and parent-scope g
   assert.match(route, /rpc\("geit_role",\s*\{\s*org\s*\}\)/);
   assert.match(route, /\.eq\("organisation_id",\s*c\.org\)/);
   assert.match(route, /building\.site_id !== site\.id/);
+  assert.match(route, /router\.get\("\/buildings"/);
+  assert.match(route, /router\.get\("\/buildings\/:id"/);
+  assert.match(route, /router\.post\("\/buildings"/);
+  assert.match(route, /router\.patch\("\/buildings\/:id"/);
+  assert.match(route, /router\.delete\("\/buildings\/:id"/);
+  assert.match(route, /router\.get\("\/assets"/);
+  assert.match(route, /router\.get\("\/assets\/:id"/);
+  assert.match(route, /router\.post\("\/assets"/);
+  assert.match(route, /router\.patch\("\/assets\/:id"/);
+  assert.match(route, /router\.delete\("\/assets\/:id"/);
 });

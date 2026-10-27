@@ -18,7 +18,9 @@ The visible workspace destinations cover the dashboard; organisations and sites;
 
 ## Security and backend boundaries
 
-The existing Express API is shared with the corporate website and was not modified.
+The existing Express API remains shared with the corporate website. Its session,
+organisation, and RLS model was preserved; the Energy router has now been
+extended with Buildings & Assets registry routes.
 
 - Platform account and organisation routes use the request identity/session layer in `artifacts/api-server/src/lib/platform-session.ts` and `routes/platform.ts`.
 - Energy and engineering route handlers call the session identity layer and check organisation membership/role using the `geit_role` RPC; requests use organisation-scoped filters.
@@ -89,32 +91,35 @@ headroom.
 
 ### Integrated master-plan continuation
 
-The Energy DT overview now describes the workspace as part of the existing GEIT
-application and no longer implies that a dedicated staging project is required.
-Its destination card now links to the existing Energy Management workspace for
-sites, buildings, meters and assets. The source implementation is present, but
-its types, browser flow, migration and tenant controls still require focused
-verification before the capability can be described as operational.
+The Energy DT overview describes the workspace as part of the existing GEIT
+application and links to its existing Energy Management area. A Buildings &
+Assets registry is now implemented in that area: migration 008 defines the
+persisted entities and database guards; the shared API includes tenant-scoped
+list/detail/create/update/soft-archive endpoints; and the UI includes forms,
+search, pagination over the loaded workspace records, and building-to-asset
+summaries. OpenAPI and the registry documentation describe the endpoints.
 
-A scoped search of migrations, API route definitions and the platform module
-configuration found no persisted building/asset entities or corresponding API
-routes. This identifies a Phase 4 registry gap; it is not evidence about every UI
-component. No schema, API or customer data changes were made for that gap.
+Migration 008 remains unapplied. The registry UI and API have not been type
+checked, run through an end-to-end browser flow, or tested against PostgreSQL.
+The new endpoints and migration guards are source changes only; tenant isolation,
+RLS, database constraints, concurrent behavior, and user-role permissions are
+not verified.
 
-The latest resource check reported `pids.current=1106` of `pids.max=1152` and
-`memory.current=7674884096` of `memory.max=8589934592` bytes. This single
-reading does not establish the cause of the Orval process abort. Registry
-schema validation, static migration-structure and API-scope tests were added
-but not run; no application build or authenticated database/RLS tests were run.
-`git diff --check` completed with exit code 0. Previous test/build results
-above remain historical and do not verify the recent role, overview, or
-registry changes.
+The latest recorded resource check, before the registry route and UI extensions,
+reported `pids.current=1106` of `pids.max=1152` and
+`memory.current=7674884096` of `memory.max=8589934592` bytes. No new resource
+measurement was taken during the registry continuation. Registry schema,
+endpoint, and role-scope assertions exist in the test source but have not been
+run. No application build or authenticated database/RLS test was run for the
+registry. A lightweight `git diff --check` after these edits passed with exit
+code 0; that only checks whitespace and patch formatting. Historical test/build
+results above do not verify the recent role, overview, or registry changes.
 
-**Next verification milestone:** validate the new Buildings & Assets registry
-schema and UI types with isolated checks, then run the focused local tests when
-execution capacity allows. Do not apply migration 008 until an operator
-approves a verified non-production target. Authenticated database/RLS tests
-remain blocked until that target is independently confirmed.
+**Next verification milestone:** after safe execution headroom is restored,
+run isolated type and route tests, then verify migration 008, CRUD, tenant
+isolation, and RLS against an independently approved non-production database.
+Do not apply migration 008 until an operator approves a verified non-production
+target.
 
 See [Buildings & Assets Registry](geit-buildings-assets.md) for the implemented
 workflow, authorization model, API convention, limits, and unverified checks.

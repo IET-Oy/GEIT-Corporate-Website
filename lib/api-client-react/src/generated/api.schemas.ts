@@ -409,6 +409,25 @@ export interface EnergyAsset {
   updated_at: string;
 }
 
+export interface EnergyBuildingPage {
+  items: EnergyBuilding[];
+  count: number;
+  limit: number;
+  offset: number;
+}
+
+export interface EnergyAssetPage {
+  items: EnergyAsset[];
+  count: number;
+  limit: number;
+  offset: number;
+}
+
+export interface EnergyBuildingDetail {
+  building: EnergyBuilding;
+  assets: EnergyAsset[];
+}
+
 export interface DigitalTwinSources {
   meters: EnergyMeter[];
   sites: EnergySite[];

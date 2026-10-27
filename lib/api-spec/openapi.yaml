@@ -159,6 +159,166 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/EnergyWorkspace" }
+  /platform/energy/{orgId}/buildings:
+    get:
+      operationId: listEnergyBuildings
+      parameters:
+        - $ref: "#/components/parameters/EnergyOrg"
+        - in: query
+          name: siteId
+          schema: { type: string, format: uuid }
+        - in: query
+          name: search
+          schema: { type: string, maxLength: 120 }
+        - in: query
+          name: limit
+          schema: { type: integer, minimum: 1, maximum: 100, default: 50 }
+        - in: query
+          name: offset
+          schema: { type: integer, minimum: 0, maximum: 100000, default: 0 }
+      responses:
+        "200":
+          description: Paginated tenant-scoped building list
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/EnergyBuildingPage" }
+    post:
+      operationId: createEnergyBuilding
+      parameters:
+        - $ref: "#/components/parameters/EnergyOrg"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/EnergyRecordInput" }
+      responses:
+        "201":
+          description: Building created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PlatformMessage" }
+  /platform/energy/{orgId}/buildings/{id}:
+    get:
+      operationId: getEnergyBuilding
+      parameters:
+        - $ref: "#/components/parameters/EnergyOrg"
+        - $ref: "#/components/parameters/EnergyId"
+      responses:
+        "200":
+          description: Tenant-scoped building and its associated assets
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/EnergyBuildingDetail" }
+    patch:
+      operationId: updateEnergyBuilding
+      parameters:
+        - $ref: "#/components/parameters/EnergyOrg"
+        - $ref: "#/components/parameters/EnergyId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/EnergyRecordInput" }
+      responses:
+        "200":
+          description: Building updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PlatformMessage" }
+    delete:
+      operationId: archiveEnergyBuilding
+      parameters:
+        - $ref: "#/components/parameters/EnergyOrg"
+        - $ref: "#/components/parameters/EnergyId"
+      responses:
+        "200":
+          description: Building soft-archived; active assets must be archived first
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PlatformMessage" }
+  /platform/energy/{orgId}/assets:
+    get:
+      operationId: listEnergyAssets
+      parameters:
+        - $ref: "#/components/parameters/EnergyOrg"
+        - in: query
+          name: siteId
+          schema: { type: string, format: uuid }
+        - in: query
+          name: buildingId
+          schema: { type: string, format: uuid }
+        - in: query
+          name: status
+          schema: { type: string, enum: [planned, operational, maintenance, retired] }
+        - in: query
+          name: search
+          schema: { type: string, maxLength: 120 }
+        - in: query
+          name: limit
+          schema: { type: integer, minimum: 1, maximum: 100, default: 50 }
+        - in: query
+          name: offset
+          schema: { type: integer, minimum: 0, maximum: 100000, default: 0 }
+      responses:
+        "200":
+          description: Paginated tenant-scoped asset list
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/EnergyAssetPage" }
+    post:
+      operationId: createEnergyAsset
+      parameters:
+        - $ref: "#/components/parameters/EnergyOrg"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/EnergyRecordInput" }
+      responses:
+        "201":
+          description: Asset created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PlatformMessage" }
+  /platform/energy/{orgId}/assets/{id}:
+    get:
+      operationId: getEnergyAsset
+      parameters:
+        - $ref: "#/components/parameters/EnergyOrg"
+        - $ref: "#/components/parameters/EnergyId"
+      responses:
+        "200":
+          description: Tenant-scoped asset
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/EnergyAsset" }
+    patch:
+      operationId: updateEnergyAsset
+      parameters:
+        - $ref: "#/components/parameters/EnergyOrg"
+        - $ref: "#/components/parameters/EnergyId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/EnergyRecordInput" }
+      responses:
+        "200":
+          description: Asset updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PlatformMessage" }
+    delete:
+      operationId: archiveEnergyAsset
+      parameters:
+        - $ref: "#/components/parameters/EnergyOrg"
+        - $ref: "#/components/parameters/EnergyId"
+      responses:
+        "200":
+          description: Asset soft-archived
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PlatformMessage" }
   /platform/energy/{orgId}/records:
     post:
       operationId: saveEnergyRecord
@@ -1131,6 +1291,34 @@ components:
         acknowledged: { type: boolean }
         created_at: { type: string }
         is_demo: { type: boolean }
+    EnergyBuildingPage:
+      type: object
+      required: [items, count, limit, offset]
+      properties:
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/EnergyBuilding" }
+        count: { type: integer }
+        limit: { type: integer }
+        offset: { type: integer }
+    EnergyAssetPage:
+      type: object
+      required: [items, count, limit, offset]
+      properties:
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/EnergyAsset" }
+        count: { type: integer }
+        limit: { type: integer }
+        offset: { type: integer }
+    EnergyBuildingDetail:
+      type: object
+      required: [building, assets]
+      properties:
+        building: { $ref: "#/components/schemas/EnergyBuilding" }
+        assets:
+          type: array
+          items: { $ref: "#/components/schemas/EnergyAsset" }
     EnergyWorkspace:
       type: object
       required: [sites, buildings, assets, meters, tariffs, rules, imports, analyses, alerts]
