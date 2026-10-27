@@ -69,6 +69,8 @@ router.get("/", async (_req, res) => {
   const c: Context = res.locals.energy;
   const selects: Record<string, string> = {
     sites: "id,name,timezone,area_m2,is_demo,archived",
+    buildings: "id,name,site_id,building_type,address,latitude,longitude,timezone,floor_area,area_unit,description,metadata,is_demo,archived,created_by,created_at,updated_at",
+    assets: "id,name,site_id,building_id,asset_type,identifier,description,manufacturer,model,serial_number,commissioning_date,status,capacity,capacity_unit,metadata,is_demo,archived,created_by,created_at,updated_at",
     meters: "id,name,site_id,unit,is_demo,archived",
     tariffs: "id,name,currency,energy_rate,daily_charge,demand_rate,is_demo,archived",
     rules: "id,name,meter_id,metric,threshold,is_demo,archived",
@@ -87,12 +89,77 @@ router.get("/", async (_req, res) => {
 });
 router.post("/records", async (req, res) => {
   const c: Context = res.locals.energy, input = parsed(SaveEnergyRecordBody.strict(), req.body);
-  const table = { site: "sites", meter: "meters", tariff: "tariffs", rule: "rules" }[input.kind];
+  const table = { site: "sites", building: "buildings", asset: "assets", meter: "meters", tariff: "tariffs", rule: "rules" }[input.kind];
   const existing = input.id ? await entity(c, table, input.id) : null;
   const name = input.name.trim();
   if (name.length < 2) throw new PlatformError(400, "Use a name of at least two characters.");
   const data: Record<string, unknown> = { organisation_id: c.org, name, archived: input.archived ?? existing?.archived ?? false };
   if (input.kind === "site") Object.assign(data, { timezone: zone(required(input.timezone)), area_m2: input.areaM2 ?? null });
+  if (input.kind === "building") {
+    const site = await entity(c, "sites", required(input.siteId));
+    if (site.is_demo) throw new PlatformError(400, "Building records are not available in the synthetic demo dataset.");
+    if (existing && existing.site_id !== site.id) throw new PlatformError(400, "A building cannot be moved between sites.");
+    if (site.archived && !(existing && data.archived)) throw new PlatformError(400, "Restore the site before adding or restoring a building.");
+    const buildingType = required(input.buildingType).trim();
+    if (buildingType.length < 2) throw new PlatformError(400, "Choose a building type.");
+    if ((input.latitude == null) !== (input.longitude == null)) {
+      throw new PlatformError(400, "Enter both latitude and longitude, or leave both blank.");
+    }
+    Object.assign(data, {
+      site_id: site.id,
+      building_type: buildingType,
+      address: input.address?.trim() || null,
+      latitude: input.latitude ?? null,
+      longitude: input.longitude ?? null,
+      timezone: zone(input.timezone?.trim() || String(site.timezone)),
+      floor_area: input.floorArea ?? null,
+      area_unit: input.areaUnit ?? existing?.area_unit ?? "m2",
+      description: input.description?.trim() || null,
+      metadata: input.metadata ?? existing?.metadata ?? {},
+      is_demo: false,
+      ...(existing ? {} : { created_by: c.user.id }),
+    });
+  }
+  if (input.kind === "asset") {
+    const site = await entity(c, "sites", required(input.siteId));
+    if (site.is_demo) throw new PlatformError(400, "Asset records are not available in the synthetic demo dataset.");
+    const building = input.buildingId ? await entity(c, "buildings", input.buildingId) : null;
+    if (building && building.site_id !== site.id) throw new PlatformError(400, "Choose a building that belongs to the selected site.");
+    if (site.archived && !(existing && data.archived)) throw new PlatformError(400, "Restore the site before adding or restoring an asset.");
+    if (building?.archived && !(existing && data.archived)) throw new PlatformError(400, "Restore the building before adding or restoring an asset.");
+    const assetType = required(input.assetType).trim();
+    if (assetType.length < 2) throw new PlatformError(400, "Choose an asset type.");
+    if (input.capacity != null && !input.capacityUnit?.trim()) {
+      throw new PlatformError(400, "Add a capacity unit when entering capacity.");
+    }
+    if (input.capacity == null && input.capacityUnit?.trim()) {
+      throw new PlatformError(400, "Add a capacity value when entering a capacity unit.");
+    }
+    let commissioningDate: string | null = input.commissioningDate ?? null;
+    if (commissioningDate) {
+      const parsedDate = new Date(`${commissioningDate}T00:00:00Z`);
+      if (!Number.isFinite(parsedDate.getTime()) || parsedDate.toISOString().slice(0, 10) !== commissioningDate) {
+        throw new PlatformError(400, "Enter a valid commissioning date.");
+      }
+    }
+    Object.assign(data, {
+      site_id: site.id,
+      building_id: building?.id ?? null,
+      asset_type: assetType,
+      identifier: input.identifier?.trim() || null,
+      description: input.description?.trim() || null,
+      manufacturer: input.manufacturer?.trim() || null,
+      model: input.model?.trim() || null,
+      serial_number: input.serialNumber?.trim() || null,
+      commissioning_date: commissioningDate,
+      status: input.status ?? existing?.status ?? "planned",
+      capacity: input.capacity ?? null,
+      capacity_unit: input.capacityUnit?.trim() || null,
+      metadata: input.metadata ?? existing?.metadata ?? {},
+      is_demo: false,
+      ...(existing ? {} : { created_by: c.user.id }),
+    });
+  }
   if (input.kind === "meter") {
     const site = await entity(c, "sites", required(input.siteId));
     if (site.archived && (!existing || !data.archived)) throw new PlatformError(400, "Restore the site first.");
@@ -108,12 +175,20 @@ router.post("/records", async (req, res) => {
     if (input.threshold === undefined) throw new PlatformError(400, "A threshold is required.");
     Object.assign(data, { meter_id: meter.id, metric: required(input.metric), threshold: input.threshold, is_demo: meter.is_demo });
   }
+  if (input.kind === "building" && existing && !existing.archived && data.archived) {
+    const activeAssets = await c.client.from("geit_energy_assets").select("id")
+      .eq("organisation_id", c.org).eq("building_id", existing.id).eq("archived", false).limit(1);
+    failure(activeAssets.error);
+    if (activeAssets.data?.length) throw new PlatformError(409, "Archive the building's active assets before archiving the building.");
+  }
   const result = existing
     ? await c.client.from(`geit_energy_${table}`).update(data).eq("organisation_id", c.org).eq("id", existing.id).select("id")
     : await c.client.from(`geit_energy_${table}`).insert(data).select("id");
+  if (result.error?.code === "23505") throw new PlatformError(409, "An active building name or asset identifier is already in use.");
+  if (result.error?.code === "23503") throw new PlatformError(400, "Choose a site and building that belong to this organisation.");
   failure(result.error);
   if (!result.data?.length) throw new PlatformError(403, "Record was not saved.");
-  res.json({ message: "Energy record saved." });
+  res.json({ message: `${input.kind === "building" ? "Building" : input.kind === "asset" ? "Asset" : "Energy record"} saved.` });
 });
 async function readingRows(c: Context, meter: string, start: string, end: string, overlap = false) {
   const rows: Record<string, unknown>[] = [];

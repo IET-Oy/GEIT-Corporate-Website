@@ -352,6 +352,63 @@ export interface EnergySite {
   archived: boolean;
 }
 
+export interface EnergyBuilding {
+  id: string;
+  site_id: string;
+  name: string;
+  building_type: string;
+  /** @nullable */
+  address: string | null;
+  /** @nullable */
+  latitude: number | null;
+  /** @nullable */
+  longitude: number | null;
+  timezone: string;
+  /** @nullable */
+  floor_area: number | null;
+  area_unit: 'm2' | 'ft2';
+  /** @nullable */
+  description: string | null;
+  metadata: Record<string, string | number | boolean | null>;
+  is_demo: boolean;
+  archived: boolean;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface EnergyAsset {
+  id: string;
+  site_id: string;
+  /** @nullable */
+  building_id: string | null;
+  name: string;
+  asset_type: string;
+  /** @nullable */
+  identifier: string | null;
+  /** @nullable */
+  description: string | null;
+  /** @nullable */
+  manufacturer: string | null;
+  /** @nullable */
+  model: string | null;
+  /** @nullable */
+  serial_number: string | null;
+  /** @nullable */
+  commissioning_date: string | null;
+  status: 'planned' | 'operational' | 'maintenance' | 'retired';
+  /** @nullable */
+  capacity: number | null;
+  /** @nullable */
+  capacity_unit: string | null;
+  metadata: Record<string, string | number | boolean | null>;
+  is_demo: boolean;
+  archived: boolean;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface DigitalTwinSources {
   meters: EnergyMeter[];
   sites: EnergySite[];
@@ -887,6 +944,8 @@ export type EnergyRecordInputKind = typeof EnergyRecordInputKind[keyof typeof En
 
 export const EnergyRecordInputKind = {
   site: 'site',
+  building: 'building',
+  asset: 'asset',
   meter: 'meter',
   tariff: 'tariff',
   rule: 'rule',
@@ -909,6 +968,7 @@ export interface EnergyRecordInput {
      */
   name: string;
   siteId?: string;
+  buildingId?: string;
   meterId?: string;
   /** @maxLength 80 */
   timezone?: string;
@@ -918,6 +978,36 @@ export interface EnergyRecordInput {
      * @nullable
      */
   areaM2?: number | null;
+  buildingType?: string;
+  /** @maxLength 400 @nullable */
+  address?: string | null;
+  /** @minimum -90 @maximum 90 @nullable */
+  latitude?: number | null;
+  /** @minimum -180 @maximum 180 @nullable */
+  longitude?: number | null;
+  /** @exclusiveMinimum 0 @maximum 1000000000 @nullable */
+  floorArea?: number | null;
+  areaUnit?: 'm2' | 'ft2';
+  /** @maxLength 2000 @nullable */
+  description?: string | null;
+  assetType?: string;
+  /** @maxLength 120 @nullable */
+  identifier?: string | null;
+  /** @maxLength 120 @nullable */
+  manufacturer?: string | null;
+  /** @maxLength 120 @nullable */
+  model?: string | null;
+  /** @maxLength 120 @nullable */
+  serialNumber?: string | null;
+  /** @format date @nullable */
+  commissioningDate?: string | null;
+  status?: 'planned' | 'operational' | 'maintenance' | 'retired';
+  /** @exclusiveMinimum 0 @maximum 1000000000000 @nullable */
+  capacity?: number | null;
+  /** @minLength 1 @maxLength 32 @nullable */
+  capacityUnit?: string | null;
+  /** @maxProperties 30 */
+  metadata?: Record<string, string | number | boolean | null>;
   unit?: EnergyUnit;
   /** @pattern ^[A-Z]{3}$ */
   currency?: string;
@@ -1097,6 +1187,8 @@ export interface EnergyAlert {
 
 export interface EnergyWorkspace {
   sites: EnergySite[];
+  buildings: EnergyBuilding[];
+  assets: EnergyAsset[];
   meters: EnergyMeter[];
   tariffs: EnergyTariff[];
   rules: EnergyRule[];

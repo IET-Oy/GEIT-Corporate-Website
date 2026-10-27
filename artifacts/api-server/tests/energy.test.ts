@@ -1,6 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import ExcelJS from "exceljs";
+import { SaveEnergyRecordBody } from "@workspace/api-zod";
 import { calculateEnergy, normalizeReading, instant } from "../src/lib/energy-calculations";
 import { parseEnergyImport } from "../src/lib/energy-import";
 import { csvCell } from "../src/lib/energy-reports";
@@ -95,4 +97,62 @@ test("malformed headers and file types fail explicitly", async () => {
 test("CSV export neutralises spreadsheet formula prefixes", () => {
   assert.match(csvCell("=SUM(A1)"), /^"'/); assert.match(csvCell("@formula"), /^"'/);
   assert.equal(csvCell('name "quoted"'), '"name ""quoted"""');
+});
+
+test("building registry inputs validate locations, areas and flat metadata", () => {
+  const valid = SaveEnergyRecordBody.strict().safeParse({
+    kind: "building",
+    name: "Main office",
+    siteId: "11111111-1111-4111-8111-111111111111",
+    buildingType: "Office",
+    timezone: "Europe/Helsinki",
+    address: "1 Example Street",
+    latitude: 60.17,
+    longitude: 24.94,
+    floorArea: 1200,
+    areaUnit: "m2",
+    metadata: { floorCount: 4, note: "North wing", verified: true },
+  });
+  assert.equal(valid.success, true);
+  assert.equal(SaveEnergyRecordBody.safeParse({
+    kind: "building", name: "Main office", siteId: "11111111-1111-4111-8111-111111111111",
+    buildingType: "Office", latitude: 92, longitude: 24,
+  }).success, false);
+  assert.equal(SaveEnergyRecordBody.safeParse({
+    kind: "building", name: "Main office", siteId: "11111111-1111-4111-8111-111111111111",
+    buildingType: "Office", metadata: { nested: { invalid: true } },
+  }).success, false);
+});
+
+test("asset registry inputs bound commissioning and capacity fields", () => {
+  assert.equal(SaveEnergyRecordBody.strict().safeParse({
+    kind: "asset", name: "Roof inverter", siteId: "11111111-1111-4111-8111-111111111111",
+    buildingId: "22222222-2222-4222-8222-222222222222", assetType: "Solar inverter",
+    identifier: "INV-01", status: "operational", capacity: 20, capacityUnit: "kW",
+    commissioningDate: "2025-04-30", metadata: { phase: 3 },
+  }).success, true);
+  assert.equal(SaveEnergyRecordBody.safeParse({
+    kind: "asset", name: "Roof inverter", assetType: "Solar inverter", capacity: -1,
+  }).success, false);
+  assert.equal(SaveEnergyRecordBody.safeParse({
+    kind: "asset", name: "Roof inverter", assetType: "Solar inverter", status: "unknown",
+  }).success, false);
+});
+
+test("building and asset migration declares tenant-bound parents and RLS writes", async () => {
+  const sql = await readFile(new URL("../migrations/008_building_asset_registry.sql", import.meta.url), "utf8");
+  assert.match(sql, /foreign key \(site_id, organisation_id, is_demo\)\s+references public\.geit_energy_sites/);
+  assert.match(sql, /foreign key \(building_id, organisation_id, site_id, is_demo\)\s+references public\.geit_energy_buildings/);
+  assert.match(sql, /public\.geit_energy_manage\(organisation_id\)/);
+  assert.match(sql, /public\.geit_role\(organisation_id\) is not null/);
+  assert.match(sql, /grant select, insert, update on public\.geit_energy_buildings, public\.geit_energy_assets to authenticated/i);
+  assert.doesNotMatch(sql, /grant\s+[^;]*delete\s+on\s+public\.geit_energy_(?:buildings|assets)/i);
+});
+
+test("registry API retains identity, membership, organisation and parent-scope guards", async () => {
+  const route = await readFile(new URL("../src/routes/energy.ts", import.meta.url), "utf8");
+  assert.match(route, /identity\(req,\s*res\)/);
+  assert.match(route, /rpc\("geit_role",\s*\{\s*org\s*\}\)/);
+  assert.match(route, /\.eq\("organisation_id",\s*c\.org\)/);
+  assert.match(route, /building\.site_id !== site\.id/);
 });

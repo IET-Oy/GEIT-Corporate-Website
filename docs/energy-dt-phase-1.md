@@ -91,26 +91,33 @@ headroom.
 
 The Energy DT overview now describes the workspace as part of the existing GEIT
 application and no longer implies that a dedicated staging project is required.
-Its destination card is labelled **Sites & Meters** and explicitly states that
-building and separate asset records are not available yet.
+Its destination card now links to the existing Energy Management workspace for
+sites, buildings, meters and assets. The source implementation is present, but
+its types, browser flow, migration and tenant controls still require focused
+verification before the capability can be described as operational.
 
 A scoped search of migrations, API route definitions and the platform module
 configuration found no persisted building/asset entities or corresponding API
 routes. This identifies a Phase 4 registry gap; it is not evidence about every UI
 component. No schema, API or customer data changes were made for that gap.
 
-The latest resource-gated source inspection reported `pids.current=1106` of
-`pids.max=1152` and `memory.current=7452688384` of
-`memory.max=8589934592` bytes. This single reading does not establish the cause
-of the Orval process abort. No tests or application build were run after the
-role or overview changes. Previous test/build results above remain historical
-and do not verify these changes.
+The latest resource check reported `pids.current=1106` of `pids.max=1152` and
+`memory.current=7674884096` of `memory.max=8589934592` bytes. This single
+reading does not establish the cause of the Orval process abort. Registry
+schema validation, static migration-structure and API-scope tests were added
+but not run; no application build or authenticated database/RLS tests were run.
+`git diff --check` completed with exit code 0. Previous test/build results
+above remain historical and do not verify the recent role, overview, or
+registry changes.
 
-**Next implementation milestone:** add an organisation-scoped Buildings &
-Assets registry using a new additive migration, tenant RLS, authenticated API
-CRUD and a workspace UI. Keep the migration unapplied until an operator approves
-a verified non-production target. Add focused tests and run them individually
-after execution capacity recovers.
+**Next verification milestone:** validate the new Buildings & Assets registry
+schema and UI types with isolated checks, then run the focused local tests when
+execution capacity allows. Do not apply migration 008 until an operator
+approves a verified non-production target. Authenticated database/RLS tests
+remain blocked until that target is independently confirmed.
+
+See [Buildings & Assets Registry](geit-buildings-assets.md) for the implemented
+workflow, authorization model, API convention, limits, and unverified checks.
 
 ## Next phase recommendation
 

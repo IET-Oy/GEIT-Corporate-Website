@@ -19,8 +19,8 @@ const destinations = [
   },
   {
     id: "assets-meters",
-    title: "Sites & Meters",
-    description: "Manage sites and meters in Energy Management. Building and separate asset records are not available yet.",
+    title: "Sites, Buildings & Assets",
+    description: "Register sites, buildings, meters and equipment assets in the Energy Management workspace.",
     href: "/app/energy-management",
     status: "Existing workspace",
   },

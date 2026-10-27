@@ -171,7 +171,7 @@ paths:
             schema: { $ref: "#/components/schemas/EnergyRecordInput" }
       responses:
         "200":
-          description: Site, meter, tariff or alert rule saved
+          description: Site, building, asset, meter, tariff or alert rule saved
           content:
             application/json:
               schema: { $ref: "#/components/schemas/PlatformMessage" }
@@ -882,13 +882,39 @@ components:
       additionalProperties: false
       required: [kind, name]
       properties:
-        kind: { type: string, enum: [site, meter, tariff, rule] }
+        kind: { type: string, enum: [site, building, asset, meter, tariff, rule] }
         id: { type: string, format: uuid }
         name: { type: string, minLength: 2, maxLength: 120 }
         siteId: { type: string, format: uuid }
+        buildingId: { type: string, format: uuid }
         meterId: { type: string, format: uuid }
         timezone: { type: string, maxLength: 80 }
         areaM2: { type: ["number", "null"], exclusiveMinimum: 0, maximum: 1000000000 }
+        buildingType: { type: string, minLength: 2, maxLength: 80 }
+        address: { type: ["string", "null"], maxLength: 400 }
+        latitude: { type: ["number", "null"], minimum: -90, maximum: 90 }
+        longitude: { type: ["number", "null"], minimum: -180, maximum: 180 }
+        floorArea: { type: ["number", "null"], exclusiveMinimum: 0, maximum: 1000000000 }
+        areaUnit: { type: string, enum: [m2, ft2] }
+        description: { type: ["string", "null"], maxLength: 2000 }
+        assetType: { type: string, minLength: 2, maxLength: 80 }
+        identifier: { type: ["string", "null"], maxLength: 120 }
+        manufacturer: { type: ["string", "null"], maxLength: 120 }
+        model: { type: ["string", "null"], maxLength: 120 }
+        serialNumber: { type: ["string", "null"], maxLength: 120 }
+        commissioningDate: { type: ["string", "null"], format: date }
+        status: { type: string, enum: [planned, operational, maintenance, retired] }
+        capacity: { type: ["number", "null"], exclusiveMinimum: 0, maximum: 1000000000000 }
+        capacityUnit: { type: ["string", "null"], minLength: 1, maxLength: 32 }
+        metadata:
+          type: object
+          maxProperties: 30
+          additionalProperties:
+            oneOf:
+              - { type: string, maxLength: 250 }
+              - { type: number }
+              - { type: boolean }
+              - { type: "null" }
         unit: { $ref: "#/components/schemas/EnergyUnit" }
         currency: { type: string, pattern: "^[A-Z]{3}$" }
         energyRate: { type: number, minimum: 0, maximum: 1000000 }
@@ -907,6 +933,67 @@ components:
         area_m2: { type: ["number", "null"] }
         is_demo: { type: boolean }
         archived: { type: boolean }
+    EnergyBuilding:
+      type: object
+      required: [id, site_id, name, building_type, address, latitude, longitude, timezone, floor_area, area_unit, description, metadata, is_demo, archived, created_by, created_at, updated_at]
+      properties:
+        id: { type: string }
+        site_id: { type: string }
+        name: { type: string }
+        building_type: { type: string }
+        address: { type: ["string", "null"] }
+        latitude: { type: ["number", "null"] }
+        longitude: { type: ["number", "null"] }
+        timezone: { type: string }
+        floor_area: { type: ["number", "null"] }
+        area_unit: { type: string, enum: [m2, ft2] }
+        description: { type: ["string", "null"] }
+        metadata:
+          type: object
+          maxProperties: 30
+          additionalProperties:
+            oneOf:
+              - { type: string, maxLength: 250 }
+              - { type: number }
+              - { type: boolean }
+              - { type: "null" }
+        is_demo: { type: boolean }
+        archived: { type: boolean }
+        created_by: { type: ["string", "null"] }
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+    EnergyAsset:
+      type: object
+      required: [id, site_id, building_id, name, asset_type, identifier, description, manufacturer, model, serial_number, commissioning_date, status, capacity, capacity_unit, metadata, is_demo, archived, created_by, created_at, updated_at]
+      properties:
+        id: { type: string }
+        site_id: { type: string }
+        building_id: { type: ["string", "null"] }
+        name: { type: string }
+        asset_type: { type: string }
+        identifier: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        manufacturer: { type: ["string", "null"] }
+        model: { type: ["string", "null"] }
+        serial_number: { type: ["string", "null"] }
+        commissioning_date: { type: ["string", "null"], format: date }
+        status: { type: string, enum: [planned, operational, maintenance, retired] }
+        capacity: { type: ["number", "null"] }
+        capacity_unit: { type: ["string", "null"] }
+        metadata:
+          type: object
+          maxProperties: 30
+          additionalProperties:
+            oneOf:
+              - { type: string, maxLength: 250 }
+              - { type: number }
+              - { type: boolean }
+              - { type: "null" }
+        is_demo: { type: boolean }
+        archived: { type: boolean }
+        created_by: { type: ["string", "null"] }
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
     EnergyMeter:
       type: object
       required: [id, name, site_id, unit, is_demo, archived]
@@ -1046,11 +1133,17 @@ components:
         is_demo: { type: boolean }
     EnergyWorkspace:
       type: object
-      required: [sites, meters, tariffs, rules, imports, analyses, alerts]
+      required: [sites, buildings, assets, meters, tariffs, rules, imports, analyses, alerts]
       properties:
         sites:
           type: array
           items: { $ref: "#/components/schemas/EnergySite" }
+        buildings:
+          type: array
+          items: { $ref: "#/components/schemas/EnergyBuilding" }
+        assets:
+          type: array
+          items: { $ref: "#/components/schemas/EnergyAsset" }
         meters:
           type: array
           items: { $ref: "#/components/schemas/EnergyMeter" }
