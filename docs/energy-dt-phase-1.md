@@ -71,10 +71,47 @@ The website workflow's visible process chain was `pnpm-native` → shell → Nod
 
 No cleanup was performed, so there is no post-cleanup measurement. Because a workspace reset did not restore safe headroom and no worker could be safely attributed to a disposable test, do not reset again or kill processes blindly. Replit's troubleshooting guidance is to contact Support for runtime-level recovery when high resource use remains after restart, providing the project URL and these process/resource findings: [Troubleshooting guides](https://docs.replit.com/help/troubleshooting/overview).
 
-Phase 2 staging setup is not independently configured or verified in this application. Do not reuse the deleted staging project or its credentials. No staging credentials, database migrations, Auth settings, or Storage policies were changed.
+An approved non-production test target is not independently configured or verified. A separate Energy DT application or production Supabase project is not required; keep the platform integrated in this GEIT application. Do not reuse deleted project credentials. No staging credentials, database migrations, Auth settings, or Storage policies were changed.
 
 The signed-in interface, live Supabase connectivity, organisation isolation, RLS, private storage permissions, and external providers were not revalidated against staging. Do not use this phase as evidence that those systems are production-ready.
 
+The role model is being consolidated to `owner`, `admin`, `editor`, `analyst` and
+`reader`. Migration `007_editor_role.sql` maps existing `energy_manager` and
+`consultant` memberships to `editor` and updates the database permission
+functions and private Storage policies. The migration is prepared but has not
+been applied; no database access or role/RLS tests were run.
+
+The OpenAPI schema was updated for the new role set. Orval generation was
+attempted once and exited with code 134 without output; the cause is unconfirmed.
+The affected generated role enums were synchronized manually. Code generation
+and type checking still need to be rerun when the workspace has safe execution
+headroom.
+
+### Integrated master-plan continuation
+
+The Energy DT overview now describes the workspace as part of the existing GEIT
+application and no longer implies that a dedicated staging project is required.
+Its destination card is labelled **Sites & Meters** and explicitly states that
+building and separate asset records are not available yet.
+
+A scoped search of migrations, API route definitions and the platform module
+configuration found no persisted building/asset entities or corresponding API
+routes. This identifies a Phase 4 registry gap; it is not evidence about every UI
+component. No schema, API or customer data changes were made for that gap.
+
+The latest resource-gated source inspection reported `pids.current=1106` of
+`pids.max=1152` and `memory.current=7452688384` of
+`memory.max=8589934592` bytes. This single reading does not establish the cause
+of the Orval process abort. No tests or application build were run after the
+role or overview changes. Previous test/build results above remain historical
+and do not verify these changes.
+
+**Next implementation milestone:** add an organisation-scoped Buildings &
+Assets registry using a new additive migration, tenant RLS, authenticated API
+CRUD and a workspace UI. Keep the migration unapplied until an operator approves
+a verified non-production target. Add focused tests and run them individually
+after execution capacity recovers.
+
 ## Next phase recommendation
 
-After the separate staging project and environment have been independently verified, run authenticated tests against staging only: sign-in and recovery, tenant and role isolation, database RLS, private storage access, core module workflows, and failure handling. Keep production configuration and data out of those tests. Do not migrate, deploy, or enable fixture writes until the staging target is confirmed.
+After an approved non-production test target and its environment have been independently verified, run authenticated tests there: sign-in and recovery, tenant and role isolation, database RLS, private storage access, core module workflows, and failure handling. Keep production configuration and data out of those tests. Do not migrate, deploy, or enable fixture writes until the test target is confirmed.

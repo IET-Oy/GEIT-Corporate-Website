@@ -1110,7 +1110,7 @@ components:
         timezone: { type: string, minLength: 1, maxLength: 80 }
     PlatformRole:
       type: string
-      enum: [owner, admin, energy_manager, consultant, analyst, reader]
+      enum: [owner, admin, editor, analyst, reader]
     PlatformOrganisation:
       type: object
       required: [id, name, timezone, role]

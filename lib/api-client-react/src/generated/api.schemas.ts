@@ -1141,8 +1141,7 @@ export type PlatformRole = typeof PlatformRole[keyof typeof PlatformRole];
 export const PlatformRole = {
   owner: 'owner',
   admin: 'admin',
-  energy_manager: 'energy_manager',
-  consultant: 'consultant',
+  editor: 'editor',
   analyst: 'analyst',
   reader: 'reader',
 } as const;

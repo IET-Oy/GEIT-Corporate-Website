@@ -1722,7 +1722,7 @@ export const GetPlatformSessionResponse = zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "timezone": zod.string(),
-  "role": zod.enum(['owner', 'admin', 'energy_manager', 'consultant', 'analyst', 'reader'])
+  "role": zod.enum(['owner', 'admin', 'editor', 'analyst', 'reader'])
 }))
 })
 
@@ -1771,7 +1771,7 @@ export const CreatePlatformOrganisationResponse = zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "timezone": zod.string(),
-  "role": zod.enum(['owner', 'admin', 'energy_manager', 'consultant', 'analyst', 'reader'])
+  "role": zod.enum(['owner', 'admin', 'editor', 'analyst', 'reader'])
 })
 
 
@@ -1795,7 +1795,7 @@ export const UpdatePlatformOrganisationResponse = zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "timezone": zod.string(),
-  "role": zod.enum(['owner', 'admin', 'energy_manager', 'consultant', 'analyst', 'reader'])
+  "role": zod.enum(['owner', 'admin', 'editor', 'analyst', 'reader'])
 })
 
 
@@ -1806,7 +1806,7 @@ export const GetPlatformMembersParams = zod.object({
 export const GetPlatformMembersResponseItem = zod.object({
   "userId": zod.string(),
   "fullName": zod.string(),
-  "role": zod.enum(['owner', 'admin', 'energy_manager', 'consultant', 'analyst', 'reader'])
+  "role": zod.enum(['owner', 'admin', 'editor', 'analyst', 'reader'])
 })
 export const GetPlatformMembersResponse = zod.array(GetPlatformMembersResponseItem)
 
@@ -1821,7 +1821,7 @@ export const addPlatformMemberBodyEmailMax = 254;
 
 export const AddPlatformMemberBody = zod.object({
   "email": zod.string().email().max(addPlatformMemberBodyEmailMax),
-  "role": zod.enum(['owner', 'admin', 'energy_manager', 'consultant', 'analyst', 'reader'])
+  "role": zod.enum(['owner', 'admin', 'editor', 'analyst', 'reader'])
 })
 
 export const AddPlatformMemberResponse = zod.object({

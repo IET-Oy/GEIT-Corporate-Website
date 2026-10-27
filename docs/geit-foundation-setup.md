@@ -11,8 +11,11 @@ The foundation uses actual Supabase Auth, PostgreSQL and Storage. There is no
 development login bypass, fake account endpoint or service-role runtime client.
 The application shell starts at `/app`; its account pages include registration,
 sign-in, recovery and a PKCE callback. Organisation creation, switching, settings
-and membership management are implemented. Business-analysis modules are not
-part of this foundation and remain marked Planned.
+and membership management are implemented. Energy Management, engineering,
+sustainability, Digital Energy and saved reports are integrated workspace
+modules. Their live authentication, persistence, tenant isolation, RLS and
+private-file behavior still require the verification described in
+`energy-dt-phase-1.md`; a route or local test is not proof of live service access.
 
 ## Required configuration
 
@@ -87,7 +90,7 @@ proves the redirect allowlist is correct.
 - `geit_profiles`: account ID and display name; visible only to self or members
   of a shared organisation.
 - `geit_organisations`: names, IANA time zones and IDs; visible only to members.
-- `geit_memberships`: composite organisation/user identity and one of six roles.
+- `geit_memberships`: composite organisation/user identity and one of five roles.
 - `geit_audit_events`: administrative events; readable by tenant owners/admins.
 - `geit_schema_migrations`: private migration ledger, with no API-role grants.
 
@@ -101,13 +104,17 @@ demoting the final owner. Client-provided owner IDs are never trusted.
 | --- | --- | --- | --- | --- | --- |
 | Owner | Yes | Yes | Yes | Yes | Any in tenant |
 | Administrator | Yes | Yes | No | Yes | Any in tenant |
-| Energy manager | Yes | No | No | Yes | Own uploads |
-| Consultant | Yes | No | No | Yes | Own uploads |
+| Editor | Yes | No | No | Yes | Own uploads |
 | Analyst | Yes | No | No | Yes | Own uploads |
 | Reader | Yes | No | No | No | No |
 
 These are foundation permissions, not claims that future service workflows are
 implemented. Role labels do not grant access to another tenant.
+
+Migration `007_editor_role.sql` maps existing Energy Manager and Consultant
+memberships to `editor`. Editor combines their permitted operational capabilities:
+site/meter/tariff/rule management, energy work and owned-file operations. It does
+not grant organisation or membership administration.
 
 ## Private Storage configuration
 

@@ -5,8 +5,8 @@ import { AlertTriangle, CircleDashed, Loader2 } from "lucide-react";
 export const WRITE = { request: { headers: { "X-GEIT-Request": "1" } } } as const;
 
 export const ROLE_LABELS: Record<string, string> = {
-  owner: "Owner", admin: "Administrator", energy_manager: "Energy manager",
-  consultant: "Consultant", analyst: "Analyst", reader: "Reader",
+  owner: "Owner", admin: "Administrator", editor: "Editor",
+  analyst: "Analyst", reader: "Reader",
 };
 
 export function apiMessage(error: unknown, fallback = "Something went wrong. Please try again."): string {

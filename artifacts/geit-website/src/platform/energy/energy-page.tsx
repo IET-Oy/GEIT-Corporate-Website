@@ -46,7 +46,7 @@ function EnergyBody({ org }: { org: PlatformOrganisation }) {
         <div className="flex flex-wrap items-center justify-between gap-4 border border-[#b8c9d3] bg-[#eaf1f5] px-5 py-4" data-testid="banner-demo">
           <div><DemoBadge /><p className="mt-2 text-sm leading-6 text-[#2b4a60]">Everything shown is synthetic and kept apart from your customer data. It illustrates the workflow only.</p></div>
           {perm.manage && !hasDemo && <Btn tone="primary" testId="button-create-demo" disabled={seed.isPending} onClick={() => seed.mutate({ orgId: org.id, data: {} }, { onSuccess: () => qc.invalidateQueries({ queryKey: getGetEnergyWorkspaceQueryKey(org.id) }) })}>{seed.isPending ? "Creating demo" : "Create synthetic demo"}</Btn>}
-          {!perm.manage && !hasDemo && <p className="text-xs text-[#2b4a60]">An owner, administrator or energy manager can create the demo.</p>}
+          {!perm.manage && !hasDemo && <p className="text-xs text-[#2b4a60]">An owner, administrator or editor can create the demo.</p>}
         </div>
       )}
       {seed.isError && <Alert testId="error-demo">{apiMessage(seed.error)}</Alert>}

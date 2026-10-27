@@ -166,7 +166,7 @@ rate limits, password/session policies, Site URL and exact callback allowlist:
 - `<staging-origin>/app/auth/callback`
 - `<staging-origin>/app/auth/callback?flow=recovery`
 
-Later-approved migrations 001–006 create application tables, RLS/RPC policies
+Later-approved migrations 001–007 create application tables, RLS/RPC policies
 and `geit-private-documents`. Do not manually pre-create the bucket. Database
 and Storage-byte backup/recovery configuration also needs separate review.
 

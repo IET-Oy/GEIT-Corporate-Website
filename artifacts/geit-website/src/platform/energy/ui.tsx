@@ -3,8 +3,8 @@ import { FlaskConical } from "lucide-react";
 
 export type Perm = { manage: boolean; work: boolean };
 export function permsFor(role: string): Perm {
-  const manage = ["owner", "admin", "energy_manager"].includes(role);
-  return { manage, work: manage || ["consultant", "analyst"].includes(role) };
+  const manage = ["owner", "admin", "editor"].includes(role);
+  return { manage, work: manage || role === "analyst" };
 }
 export const UNITS = ["Wh", "kWh", "MWh", "MJ", "GJ", "W", "kW", "MW"] as const;
 

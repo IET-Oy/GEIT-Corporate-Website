@@ -1,6 +1,6 @@
 ---
 name: GEIT scope and identity
-description: User decisions about the header identity and enquiry infrastructure.
+description: User decisions about GEIT website identity, platform scope and access roles.
 ---
 
 Use the official logo alone in the header, without an additional company-name text block beside it.
@@ -39,6 +39,12 @@ The user approved the full phased Energy Intelligence SaaS extension, including 
 
 **How to apply:** Follow the brief’s phased delivery and use Supabase unless an appropriate production-ready backend already exists. Do not silently migrate the legacy database. Keep the public consultation form honest and disconnected until its intake workflow is explicitly implemented; SaaS approval is not evidence that enquiries are already delivered. No paid provider or automatic publishing is authorized.
 
+Keep Energy DT integrated in the existing GEIT website and repository. A separate production application or production Supabase project is not required; an approved non-production environment is only a safety boundary for remote testing.
+
+**Why:** The user explicitly clarified that Energy DT is integrated in the website and approved the master plan's instruction not to create a separate production application or project.
+
+**How to apply:** Continue implementation in the existing React/Vite website and Express API. Do not block independent code work on staging setup, and never use an unverified environment for database writes or authenticated tests.
+
 Use global energy-and-technology positioning throughout visible homepage content, including the homepage footer. Do not apply this as a site-wide removal of company location facts.
 
 **Why:** The user requested that Home contain no Rwanda or Kigali references and position GEIT for international markets, while explicitly preserving registration details, legal information and contact addresses on other pages.
@@ -56,6 +62,12 @@ Add subscription entitlements and billing only with a configured payment provide
 **Why:** The user explicitly set this condition for production-readiness work.
 
 **How to apply:** Leave billing disabled without that provider evidence. Do not create a fake paid tier, activate access from a browser checkout redirect, or claim untested payment behaviour is production-ready.
+
+Use `owner`, `admin`, `editor`, `analyst` and `reader` as the Energy DT role set. `editor` consolidates the former Energy Manager and Consultant roles and receives their combined operational permissions, but not organisation or membership administration.
+
+**Why:** The user chose to replace the specialist roles with Editor.
+
+**How to apply:** Keep database/RLS, Storage, API validation, server authorization, UI permissions, generated API types and documentation aligned. Migration 007 maps existing specialist memberships to `editor`; do not apply it to any database without the required migration approval.
 
 The customer-facing product is Energy DT — Energy Digital Twin. Preserve technical routes and identifiers when updating its name. Its navigation entry uses a square-edged silver-fluid design, not the former green highlight.
 

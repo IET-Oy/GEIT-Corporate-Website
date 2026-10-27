@@ -47,8 +47,8 @@ router.use(async (req, res, next) => {
   if (!role.data) throw new PlatformError(403, "This organisation is not available to your account.");
   res.locals.energy = { ...current, org, role: role.data };
   if (req.method !== "GET" && role.data === "reader") throw new PlatformError(403, "Readers cannot change energy data.");
-  if ((req.path === "/records" || req.path === "/demo") && !["owner", "admin", "energy_manager"].includes(role.data)) {
-    throw new PlatformError(403, "Only owners, administrators and energy managers can manage these records.");
+  if ((req.path === "/records" || req.path === "/demo") && !["owner", "admin", "editor"].includes(role.data)) {
+    throw new PlatformError(403, "Only owners, administrators and editors can manage these records.");
   }
   next();
 });

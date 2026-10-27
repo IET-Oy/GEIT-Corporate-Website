@@ -40,7 +40,7 @@ The migration runner applies the new engineering migration after the existing id
 ## Customer workflow
 
 1. Sign in with a confirmed Supabase account and select the correct organisation.
-2. Open the desired module. Readers can inspect projects/reports; owners, admins, energy managers, consultants and analysts can write.
+2. Open the desired module. Readers can inspect projects/reports; owners, admins, editors and analysts can write.
 3. Create a project: name, facility/boundary, client problem, assessment scope, currency and status.
 4. Gather measured inputs and explicitly document sources, dates, boundaries and limitations in **Source notes**. Blank measured values are not replaced with fabricated data. The UI labels editable discount/horizon/performance defaults as assumptions.
 5. Enter inputs in the displayed units. Correct inline errors, then choose **Save scenario and calculate**. The server revalidates inputs, calculates results and atomically saves the scenario plus an audit event.

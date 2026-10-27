@@ -51,7 +51,7 @@ export function RecordsPanel({ orgId, ws, perm, demo }: { orgId: string; ws: Ene
   return (
     <div className="space-y-6">
       {demo && <Alert tone="info">Synthetic demo records are read-only. Switch to customer data to create or change your own records.</Alert>}
-      {!perm.manage && !demo && <Alert tone="info">Your role can view records but not change them. Owners, administrators and energy managers manage sites, meters, tariffs and rules.</Alert>}
+      {!perm.manage && !demo && <Alert tone="info">Your role can view records but not change them. Owners, administrators and editors manage sites, meters, tariffs and rules.</Alert>}
       {notice && <Alert tone="success" testId="status-record">{notice}</Alert>}
       {KINDS.map(({ kind, title, plural }) => {
         const items = lists[kind];

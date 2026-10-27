@@ -1,4 +1,4 @@
-- [GEIT scope and identity](geit-scope.md) — approved two-bar nav, protected language selector, hero boxes, global Home; phased SaaS extension approved.
+- [GEIT scope and identity](geit-scope.md) — Energy DT stays integrated; approved two-bar nav, phased SaaS and unified Editor role.
 - [Hero visual verification](webgl-verification.md) — photograph and animation share the hero without dark-blue treatment; decorative-only and GPU verification limits.
 - [GEIT language review](geit-language-review.md) — complete translation drafts are allowed, but must be labelled as awaiting human review.
 - [Supabase preview trust](supabase-preview.md) — database CA, preview cookies, real email-link boundaries and isolated test-session cleanup.

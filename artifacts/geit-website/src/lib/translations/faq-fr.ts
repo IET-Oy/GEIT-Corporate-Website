@@ -15,7 +15,7 @@ export const frFaq: Record<string, FaqTranslation> = {
   },
   who: {
     question: "Qui peut utiliser la plateforme ?",
-    answer: "Les utilisateurs inscrits appartenant à une organisation, avec les rôles de propriétaire, administrateur, responsable énergie, consultant, analyste ou lecteur. Les autorisations varient selon le rôle. Vérifiez votre adresse e-mail après l’inscription, avant de vous connecter. Les visiteurs déconnectés voient la page de connexion, pas les données clients.",
+    answer: "Les utilisateurs inscrits appartenant à une organisation, avec les rôles de propriétaire, administrateur, éditeur, analyste ou lecteur. Les autorisations varient selon le rôle. Vérifiez votre adresse e-mail après l’inscription, avant de vous connecter. Les visiteurs déconnectés voient la page de connexion, pas les données clients.",
     statusNote: "Le contrôle d’accès par rôle est mis en œuvre.", keywords: ["utilisateurs", "rôles", "inscription", "compte", "connexion", "organisation", "lecteur", "analyste"],
   },
   data: {

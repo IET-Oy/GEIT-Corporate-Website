@@ -97,7 +97,7 @@ Credentials are written only to a mode-0600 temporary file, not source or logs.
 
 ## Demo workflow
 
-Choose **Synthetic demo** and, as an owner, administrator or energy manager,
+Choose **Synthetic demo** and, as an owner, administrator or editor,
 choose **Create synthetic demo**. This idempotently creates a separate site,
 meter, flat tariff and **168 persisted hourly readings, 1–7 January 2026 UTC**.
 The values are artificial illustrations, not clients, verified savings or GEIT
@@ -150,13 +150,13 @@ grant additional permissions.
 
 ## Permissions and security
 
-| Action | Owner / admin / energy manager | Consultant / analyst | Reader |
-|---|---|---|---|
-| Read own-organisation records, charts, reports | Yes | Yes | Yes |
-| Manage site/meter/tariff/rule; seed demo | Yes | No | No |
-| Validate/commit import; save analysis; acknowledge | Yes | Yes | No |
-| Change organisation memberships | Existing owner-only foundation rules | No | No |
-| Read or mutate another tenant's energy data | No | No | No |
+| Action | Owner / admin | Editor | Analyst | Reader |
+|---|---|---|---|---|
+| Read own-organisation records, charts, reports | Yes | Yes | Yes | Yes |
+| Manage site/meter/tariff/rule; seed demo | Yes | Yes | No | No |
+| Validate/commit import; save analysis; acknowledge | Yes | Yes | Yes | No |
+| Change organisation memberships | Existing owner-only foundation rules | No | No | No |
+| Read or mutate another tenant's energy data | No | No | No | No |
 
 Runtime requests use the signed-in user's JWT, RLS and exact-origin/custom-header
 CSRF checks. Reading writes are RPC-only; immutable time intervals cannot be

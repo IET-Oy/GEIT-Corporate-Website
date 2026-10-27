@@ -19,8 +19,8 @@ const destinations = [
   },
   {
     id: "assets-meters",
-    title: "Assets & Meters",
-    description: "Open Energy Management and use its Records area for site and meter records.",
+    title: "Sites & Meters",
+    description: "Manage sites and meters in Energy Management. Building and separate asset records are not available yet.",
     href: "/app/energy-management",
     status: "Existing workspace",
   },
@@ -125,9 +125,10 @@ export function EnergyDtOverviewPage() {
       >
         <h2 className="font-bold text-[#10243a]">Development status</h2>
         <p className="mt-2">
-          Existing workspace routes and API integrations are retained. This phase does not verify live sign-in,
-          tenant isolation, database persistence, storage permissions or Row-Level Security against a dedicated
-          staging project. Do not treat this page as staging or production verification.
+          Energy DT is part of this GEIT application. This overview does not verify live sign-in, tenant isolation,
+          database persistence, private-file permissions or Row-Level Security. Those workflows still require
+          verification against an approved non-production test environment; this page is not a security or
+          production sign-off.
         </p>
       </aside>
 

@@ -101,8 +101,8 @@ make deduplication constraints explicit. Save immutable calculation inputs,
 algorithm versions, output records, factor versions and assumptions.
 
 Enable RLS on every tenant table and private storage bucket. Enforce permissions
-both server-side and in RLS. Scope owners, administrators, energy managers,
-consultants, analysts and readers explicitly; permission labels alone are not
+both server-side and in RLS. Scope owners, administrators, editors, analysts
+and readers explicitly; permission labels alone are not
 authorization. Create an organisation and its initial owner atomically with the
 verified identity; never trust a submitted owner ID. Prevent self-promotion,
 cross-tenant parent IDs and removal of the last owner.

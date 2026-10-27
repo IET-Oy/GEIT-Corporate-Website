@@ -53,7 +53,7 @@ export const saasFaq: FaqItem[] = [
     id: "who",
     question: "Who can use the platform?",
     answer:
-      "Registered users who belong to an organisation, with roles of owner, administrator, energy manager, consultant, analyst or reader. Permissions differ by role. Verify your email after registration before signing in. Signed-out visitors see the sign-in gate, not customer records.",
+      "Registered users who belong to an organisation, with roles of owner, administrator, editor, analyst or reader. Permissions differ by role. Verify your email after registration before signing in. Signed-out visitors see the sign-in gate, not customer records.",
     status: "available",
     statusNote: "Role-based access is implemented.",
     keywords: ["who", "users", "roles", "register", "account", "sign in", "login", "organisation", "reader", "analyst"],

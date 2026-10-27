@@ -170,7 +170,7 @@ settings, API availability, backup retention/PITR and Storage-byte recovery.
 No real users, production factors, uploaded files or customer rows are copied.
 
 After **separate migration approval**, follow `geit-foundation-setup.md` and
-`production-deployment.md` to apply migrations 001–006 with the repository runner,
+`production-deployment.md` to apply migrations 001–007 with the repository runner,
 then inspect checksums, RLS, RPC grants and bucket privacy with `audit:database`.
 Do not run `db push`, reset commands or the post-merge hook for Supabase.
 These migrations do not prepare the legacy enquiry table. That table requires
