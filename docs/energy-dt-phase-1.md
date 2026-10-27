@@ -33,7 +33,17 @@ No Energy DT-specific intake form was found in the existing `src/platform` imple
 
 ## Verification boundaries
 
-Before the Phase 1 edits, the website typecheck passed and the Energy DT refinement test passed 11/11 cases. Post-edit verification did not complete: the workspace execution worker disconnected, and the website workflow then aborted while spawning a thread with `Resource temporarily unavailable`. Therefore the changed application has not passed a post-edit typecheck, test suite, production build, or visual preview.
+Post-edit checks completed:
+
+- Website TypeScript check: passed.
+- `platform-manifest.test.mjs`: 3/3 passed after updating expectations for the explicitly planned Recommendations route.
+- `site-navigation.test.mjs`: 5/5 passed after updating the expected Energy DT overview route.
+- Founder profile, public-support, service-image, industry-image, and footer-social tests passed in isolated runs.
+- Vite started on port 18414; `/`, `/energy-dt`, `/app`, and `/app/sign-in` returned HTTP 200, and the React entry plus changed Energy DT modules transformed successfully.
+
+Verification remains incomplete. A grouped platform test invocation disconnected before returning a result, and an isolated `public-support.interactions.test.mjs` run also disconnected. `hero-light-field.test.mjs`, the Energy DT refinement suite, auth/report tests, localization check, and production build have not been confirmed after the edits. The screenshot browser failed to open, so visual rendering was not independently checked. Earlier diagnostics showed the workspace task count near its cgroup limit; do not interpret worker disconnections as test passes.
+
+Phase 2 staging setup has not started: no new staging project identity has been provided or independently verified. No staging credentials, database migrations, Auth settings, or Storage policies were changed.
 
 The signed-in interface, live Supabase connectivity, organisation isolation, RLS, private storage permissions, and external providers were not revalidated against staging. Do not use this phase as evidence that those systems are production-ready.
 

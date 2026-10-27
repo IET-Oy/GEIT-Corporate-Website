@@ -11,14 +11,14 @@ test("approved navigation has four primary and four secondary links in exact ord
   assert.equal(secondaryNavigation[2].label, "Energy DT");
 });
 
-test("language selector keeps its header slot and Energy DT entry opens the protected workspace", () => {
+test("language selector keeps its header slot and Energy DT entry opens its overview", () => {
   const header = readFileSync(new URL("../src/components/site-header.tsx", import.meta.url), "utf8");
   assert.equal((header.match(/<LanguageSelector \/>/g) ?? []).length, 1);
   assert.match(header, /<\/nav>\s*<LanguageSelector \/>\s*<button/);
   const workspace = readFileSync(new URL("../src/platform/app-routes.tsx", import.meta.url), "utf8");
   assert.match(workspace, /<SiteHeader \/>\s*<AppNav \/>/);
   const app = readFileSync(new URL("../src/App.tsx", import.meta.url), "utf8");
-  assert.match(app, /location === "\/energy-saas"[\s\S]*<Redirect to="\/app" \/>/);
+  assert.match(app, /location === "\/energy-saas"[\s\S]*<Redirect to="\/energy-dt" \/>/);
   assert.match(app, /location === "\/app" \|\| location\.startsWith\("\/app\/"\)[\s\S]*<AppRoutes \/>/);
   const appNav = readFileSync(new URL("../src/platform/app-nav.tsx", import.meta.url), "utf8");
   assert.match(appNav, /href=\{link\.href\}/);
