@@ -12,6 +12,7 @@ export const platformModules = [
   { id: "digital-energy", title: "AI & Digital Energy Solutions", path: "/app/digital-energy", readiness: "available" },
   { id: "carbon-footprint", title: "Carbon Footprint", path: "/app/carbon-footprint", readiness: "available" },
   { id: "projects-reports", title: "Projects and Reports", path: "/app/projects-reports", readiness: "available" },
+  { id: "recommendations", title: "Recommendations", path: "/app/recommendations", readiness: "planned" },
   { id: "organisation-settings", title: "Organisation Settings", path: "/app/organisation-settings", readiness: "available" },
 ] as const;
 

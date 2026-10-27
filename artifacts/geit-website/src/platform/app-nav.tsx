@@ -10,7 +10,9 @@ export function AppNav() {
       <nav aria-label="Secondary navigation" className="mx-auto flex max-w-[1320px] flex-wrap items-center justify-end gap-x-4 gap-y-2 px-3 py-3 text-[14px] leading-4 font-semibold sm:gap-x-6 sm:px-5 xl:px-8" data-testid="nav-secondary">
         {secondaryNavigation.map((link) => {
           const platform = link.href === "/energy-saas";
-          const active = platform ? path === "/energy-saas" || path === "/app" || path.startsWith("/app/") : path === link.href || path.startsWith(link.href + "/");
+          const active = platform
+            ? path === "/energy-saas" || path === "/energy-dt" || path.startsWith("/energy-dt/") || path === "/app" || path.startsWith("/app/")
+            : path === link.href || path.startsWith(link.href + "/");
           return <Link key={link.href} href={link.href} aria-current={active ? "page" : undefined}
             data-secondary-start={link.href === "/industries" ? "" : undefined}
             data-testid={platform ? "link-energy-saas" : undefined}

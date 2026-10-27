@@ -4,3 +4,4 @@
 - [Supabase preview trust](supabase-preview.md) — database CA, preview cookies, real email-link boundaries and isolated test-session cleanup.
 - [Engineering result provenance](engineering-result-provenance.md) — exposed Supabase RPCs require output authenticity checks, not just tenant isolation and input hashes.
 - [Corepack workflow launches](corepack-workflow-launches.md) — use Corepack in workflow commands to avoid pnpm self-bootstrap failures before the server opens its port.
+- [Workspace thread limits](workspace-thread-limits.md) — near the task cap, Vite may abort on thread creation; check headroom and avoid parallel retries.

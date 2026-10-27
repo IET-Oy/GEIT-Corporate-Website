@@ -303,10 +303,10 @@ function Router() {
   const [location] = useLocation();
 
   if (location === "/energy-saas") {
-    return <ErrorBoundary resetKey={location}><Redirect to="/app" /></ErrorBoundary>;
+    return <ErrorBoundary resetKey={location}><Redirect to="/energy-dt" /></ErrorBoundary>;
   }
 
-  if (location === "/app" || location.startsWith("/app/")) {
+  if (location === "/energy-dt" || location.startsWith("/energy-dt/") || location === "/app" || location.startsWith("/app/")) {
     return <ErrorBoundary resetKey={location}><AppRoutes /></ErrorBoundary>;
   }
 

@@ -1,11 +1,12 @@
-import { Link, Route, Switch } from "wouter";
+import { Link, Redirect, Route, Switch } from "wouter";
 import { SiteHeader } from "@/components/site-header";
 import { AppNav } from "./app-nav";
 import { CallbackPage, ForgotPasswordPage, RegisterPage, ResetPasswordPage, SignInPage } from "./auth-pages";
-import { OverviewPage, SettingsPage } from "./workspace";
+import { OverviewPage, PlannedPage, SettingsPage } from "./workspace";
 import { EnergyPage } from "./energy/energy-page";
 import { lazy, Suspense } from "react";
 import { MODULE_PATH, type EngModule } from "./engineering/model-forms";
+import { EnergyDtOverviewPage } from "./energy-dt-overview";
 
 const EngineeringPage = lazy(() => import("./engineering/engineering-page").then((m) => ({ default: m.EngineeringPage })));
 const SustainabilityPage = lazy(() => import("./sustainability/sustainability-page").then((m) => ({ default: m.SustainabilityPage })));
@@ -19,6 +20,15 @@ export function AppRoutes() {
       <AppNav />
       <main id="app-main">
         <Switch>
+          <Route path="/energy-dt" component={EnergyDtOverviewPage} />
+          <Route path="/energy-dt/sign-in"><Redirect to="/app/sign-in" /></Route>
+          <Route path="/energy-dt/register"><Redirect to="/app/register" /></Route>
+          <Route path="/energy-dt/forgot-password"><Redirect to="/app/forgot-password" /></Route>
+          <Route path="/energy-dt/reset-password"><Redirect to="/app/reset-password" /></Route>
+          <Route path="/energy-dt/auth/callback"><Redirect to="/app/auth/callback" /></Route>
+          <Route path="/energy-dt/workspace"><Redirect to="/app" /></Route>
+          <Route path="/energy-dt/privacy-policy"><Redirect to="/privacy-policy" /></Route>
+          <Route path="/energy-dt/terms-of-use"><Redirect to="/terms-of-use" /></Route>
           <Route path="/app" component={OverviewPage} />
           <Route path="/app/sign-in" component={SignInPage} />
           <Route path="/app/register" component={RegisterPage} />
@@ -31,6 +41,7 @@ export function AppRoutes() {
           <Route path="/app/carbon-footprint"><Suspense fallback={<div className="p-8 text-sm" role="status">Loading module</div>}><SustainabilityPage moduleId="carbon-footprint" /></Suspense></Route>
           <Route path="/app/digital-energy"><Suspense fallback={<div className="p-8 text-sm" role="status">Loading module</div>}><SustainabilityPage moduleId="digital-energy" /></Suspense></Route>
           <Route path="/app/projects-reports"><Suspense fallback={<div className="p-8 text-sm" role="status">Loading reports</div>}><ReportsPage /></Suspense></Route>
+          <Route path="/app/recommendations"><PlannedPage moduleId="recommendations" /></Route>
           <Route><div className="mx-auto max-w-xl px-5 py-20"><h1 className="text-3xl font-extrabold text-[#10243a]">Page not found</h1><Link href="/app" className="mt-5 inline-block font-bold text-[#168568] underline">Back to the workspace</Link></div></Route>
         </Switch>
       </main>

@@ -10,13 +10,13 @@ import {
 import { platformModules } from "@/config/platform-modules";
 import { Alert, Field, PlannedBadge, ROLE_LABELS, Skeleton, SubmitButton, TextLink, WRITE, apiMessage, apiStatus, useOrgParam, usePageMeta, withOrg } from "./common";
 
-const NAV_LABELS: Record<string, string> = { "energy-management": "Energy Analysis", "digital-energy": "Digital Twin", "projects-reports": "Reports" };
+const NAV_LABELS: Record<string, string> = { "energy-management": "Energy Management", "digital-energy": "Digital Twin", "projects-reports": "Reports & Documents" };
 const NAV_GROUPS = [
   { label: "Overview", ids: ["overview"] },
   { label: "Analysis", ids: ["energy-management", "digital-energy"] },
   { label: "Engineering", ids: ["energy-consulting", "renewable-energy", "energy-auditing", "battery-flexibility"] },
   { label: "Sustainability", ids: ["carbon-footprint"] },
-  { label: "Reports", ids: ["projects-reports"] },
+  { label: "Projects", ids: ["projects-reports", "recommendations"] },
   { label: "Settings", ids: ["organisation-settings"] },
 ] as const;
 

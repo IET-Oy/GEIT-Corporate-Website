@@ -21,12 +21,30 @@ test("Energy DT navigation opens the existing protected workspace routes", () =>
   assert.match(navigation, /href=\{link\.href\}/);
   assert.doesNotMatch(navigation, /preventDefault|setComingSoon|energy-dt-coming-soon/);
   const routes = source("App.tsx");
-  assert.match(routes, /location === "\/energy-saas"[\s\S]*<Redirect to="\/app" \/>/);
+  assert.match(routes, /location === "\/energy-saas"[\s\S]*<Redirect to="\/energy-dt" \/>/);
+  assert.match(routes, /location === "\/energy-dt" \|\| location\.startsWith\("\/energy-dt\/"\)/);
   assert.match(routes, /location === "\/app" \|\| location\.startsWith\("\/app\/"\)[\s\S]*<AppRoutes \/>/);
   const appRoutes = source("platform/app-routes.tsx");
   assert.match(appRoutes, /<Route path="\/app\/sign-in" component=\{SignInPage\} \/>/);
   assert.match(appRoutes, /<Route path="\/app" component=\{OverviewPage\} \/>/);
   assert.match(source("platform/workspace.tsx"), /data-testid="state-signed-out"/);
+});
+
+test("Energy DT has a distinct overview, honest status and usable workspace destinations", () => {
+  const overview = source("platform/energy-dt-overview.tsx");
+  for (const label of [
+    "Dashboard", "Organisations & Sites", "Assets & Meters",
+    "Digital Twin, Forecasting & Anomaly Detection", "Engineering & Simulations",
+    "Tariffs, Costs & Savings", "Carbon Footprint", "Reports & Documents",
+    "Projects & Recommendations", "Settings & Organisation Management",
+  ]) assert.ok(overview.includes(label), `missing destination: ${label}`);
+  assert.match(overview, /not verify live sign-in,[\s\S]*Row-Level Security against a dedicated staging project/);
+  assert.match(overview, /href="\/app\/sign-in"/);
+  assert.match(overview, /href="\/app\/register"/);
+  assert.match(overview, /href="\/privacy-policy"/);
+  assert.match(overview, /href="\/terms-of-use"/);
+  assert.match(source("platform/app-routes.tsx"), /path="\/app\/recommendations"><PlannedPage moduleId="recommendations"/);
+  assert.match(source("config/platform-modules.ts"), /id: "recommendations"[\s\S]*readiness: "planned"/);
 });
 
 test("silver-fluid control supports touch, focus, pressed and reduced-motion modes", () => {
@@ -152,12 +170,12 @@ test("all corporate pages share glass styling while retaining inner-page scope a
   try {
     const { SiteRoutes } = await server.ssrLoadModule("/src/App.tsx");
     const { LanguageProvider } = await server.ssrLoadModule("/src/lib/language-context.tsx");
-    for (const route of ["/", "/about", "/services", "/industries", "/digital-energy-solutions", "/insights", "/contact", "/app", "/app/sign-in"]) {
+    for (const route of ["/", "/about", "/services", "/industries", "/digital-energy-solutions", "/insights", "/contact", "/energy-dt", "/app", "/app/sign-in", "/app/recommendations"]) {
       const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
       const html = renderToStaticMarkup(createElement(LanguageProvider, { initialLanguage: "en" },
         createElement(QueryClientProvider, { client: queryClient },
           createElement(Router, { ssrPath: route }, createElement(SiteRoutes)))));
-      const appRoute = route === "/app" || route.startsWith("/app/");
+      const appRoute = route === "/energy-dt" || route.startsWith("/energy-dt/") || route === "/app" || route.startsWith("/app/");
       assert.equal(/class="grain min-h-\[100dvh\] geit-public/.test(html), !appRoute, route);
       if (!appRoute) assert.equal(/class="grain min-h-\[100dvh\] geit-public geit-corp"/.test(html), route !== "/", route);
       assert.match(html, /geit-silver-link/);
@@ -167,6 +185,7 @@ test("all corporate pages share glass styling while retaining inner-page scope a
         assert.match(html, /data-testid="nav-application"/);
         assert.doesNotMatch(html, /Energy DT is coming soon/);
         if (route === "/app/sign-in") assert.match(html, /Sign in to your workspace/);
+        if (route === "/energy-dt") assert.match(html, /data-testid="energy-dt-overview"/);
       } else {
         assert.match(html, /data-testid="corporate-backdrop"/);
       }
