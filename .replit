@@ -29,3 +29,7 @@ SUPABASE_URL = "https://ahtoaubpffxbgkydguxi.supabase.co"
 
 [userenv.production]
 PLATFORM_ORIGIN = "https://geit-corporate-website.replit.app"
+
+[[ports]]
+localPort = 18414
+externalPort = 80
