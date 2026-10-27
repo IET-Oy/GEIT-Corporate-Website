@@ -78,7 +78,7 @@ const destinations = [
 
 export function EnergyDtOverviewPage() {
   return (
-    <div className="energy-dt-glass-page mx-auto max-w-[1320px] px-5 py-10 lg:px-10 lg:py-14" data-testid="energy-dt-overview">
+    <div className="energy-dt-glass-page energy-dt-glass-content mx-auto max-w-[1320px] px-5 py-10 lg:px-10 lg:py-14" data-testid="energy-dt-overview">
       <PageMetadata
         title="Energy DT — Energy Digital Twin"
         description="An overview of the existing Energy DT workspace, its routes and current development status."

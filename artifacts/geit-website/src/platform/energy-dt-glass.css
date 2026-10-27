@@ -4,7 +4,7 @@
 }
 
 body:has(.energy-dt-glass-page) {
-  background: transparent;
+  background: #e7e7e7;
 }
 
 .geit-app:has(.energy-dt-glass-page) {
@@ -23,7 +23,7 @@ body:has(.energy-dt-glass-page) {
 .energy-dt-glass-content {
   border: 1px solid rgba(92, 101, 106, 0.18);
   border-radius: 22px;
-  background: rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.22);
   box-shadow: 0 20px 50px -38px rgba(28, 34, 38, 0.3);
   -webkit-backdrop-filter: blur(18px);
   backdrop-filter: blur(18px);
@@ -32,7 +32,7 @@ body:has(.energy-dt-glass-page) {
 .energy-dt-glass-page .bg-white,
 .geit-app .energy-dt-glass-page .bg-white {
   border-color: rgba(92, 101, 106, 0.18) !important;
-  background-color: rgba(255, 255, 255, 0.07) !important;
+  background-color: rgba(255, 255, 255, 0.2) !important;
   box-shadow: 0 16px 38px -30px rgba(28, 34, 38, 0.24);
   -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
@@ -40,30 +40,30 @@ body:has(.energy-dt-glass-page) {
 
 .energy-dt-glass-page .bg-white:hover,
 .geit-app .energy-dt-glass-page .bg-white:hover {
-  background-color: rgba(255, 255, 255, 0.11) !important;
+  background-color: rgba(255, 255, 255, 0.24) !important;
 }
 
 .energy-dt-glass-page :is(main, section, article, aside, form, div)[class*="bg-[#"]:not([role="alert"]):not([role="status"]):not([data-chart]) {
-  background-color: rgba(255, 255, 255, 0.07) !important;
+  background-color: rgba(255, 255, 255, 0.14) !important;
   -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
 }
 
 .energy-dt-glass-page :is(main, section, article, aside, form, div)[class*="bg-gradient-"]:not([role="alert"]):not([role="status"]):not([data-chart]) {
   background-image: none !important;
-  background-color: rgba(255, 255, 255, 0.07) !important;
+  background-color: rgba(255, 255, 255, 0.14) !important;
 }
 
 .energy-dt-glass-page .form-input {
   border-color: rgba(92, 101, 106, 0.24);
-  background-color: rgba(255, 255, 255, 0.1) !important;
+  background-color: rgba(255, 255, 255, 0.18) !important;
   color: #10243a;
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
 }
 
 .energy-dt-glass-page .form-input:focus {
-  background-color: rgba(255, 255, 255, 0.14) !important;
+  background-color: rgba(255, 255, 255, 0.24) !important;
 }
 
 @media (max-width: 1023px) {
