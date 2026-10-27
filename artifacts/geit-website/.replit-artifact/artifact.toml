@@ -26,3 +26,4 @@ to = "/index.html"
 [services.env]
 PORT = "18414"
 BASE_PATH = "/"
+RAYON_NUM_THREADS = "1"
