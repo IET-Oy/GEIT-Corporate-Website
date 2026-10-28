@@ -64,6 +64,7 @@ export const MEASURE_SPECS: Spec[] = [
 export const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 export const CSV_HEADER = "start,end,loadKwh,solarKwh,importRatePerKwh,exportRatePerKwh";
 export const EV_CSV_HEADER = "start,end,siteLoadKwh,solarKwh,importRatePerKwh,exportRatePerKwh";
+export const EV_SESSION_CSV_HEADER = "sessionId,chargerId,availableFrom,departureAt,actualStart,actualEnd,energyKwh";
 
 export const blankMeasure = (): Record<string, string> => ({ name: "", powerUnit: "kW", quantity: "", baselinePower: "", proposedPower: "", hoursPerYear: "", capex: "", annualOpexDelta: "" });
 export const blankSession = (): Record<string, string> => ({ sessionId: "", chargerId: "", availableFrom: "", departureAt: "", actualStart: "", actualEnd: "", energyKwh: "" });
@@ -141,6 +142,52 @@ function parseIntervalCsv(text: string, header: string): ParsedCsv {
 }
 export const parseCsv = (text: string): ParsedCsv => parseIntervalCsv(text, CSV_HEADER);
 export const parseEvCsv = (text: string): ParsedCsv => parseIntervalCsv(text, EV_CSV_HEADER);
+
+export function parseEvSessionCsv(text: string): ParsedCsv {
+  const lines = text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+  const errors: string[] = [];
+  const rows: ParsedCsv["rows"] = [];
+  if (!lines.length) return { rows, errors: ["CSV is empty."] };
+  if (lines[0].replace(/\s/g, "") !== EV_SESSION_CSV_HEADER) {
+    errors.push(`Line 1: header must be exactly ${EV_SESSION_CSV_HEADER}`);
+  }
+  const body = lines.slice(1);
+  if (body.length > 1000) errors.push("At most 1000 session rows are allowed.");
+  const seen = new Set<string>();
+  body.forEach((line, index) => {
+    const lineNumber = index + 2;
+    const cells = line.split(",").map((cell) => cell.trim());
+    if (cells.length !== 7) {
+      errors.push(`Line ${lineNumber}: expected 7 comma-separated columns; quoted values are not supported.`);
+      return;
+    }
+    const [sessionId, chargerId, availableFrom, departureAt, actualStart, actualEnd, rawEnergy] = cells;
+    if (sessionId.length < 2 || sessionId.length > 80) errors.push(`Line ${lineNumber}: sessionId must be 2 to 80 characters.`);
+    if (chargerId.length < 2 || chargerId.length > 80) errors.push(`Line ${lineNumber}: chargerId must be 2 to 80 characters.`);
+    const duplicateSessionId = seen.has(sessionId);
+    if (duplicateSessionId) errors.push(`Line ${lineNumber}: duplicate sessionId "${sessionId}".`);
+    seen.add(sessionId);
+    for (const [field, value] of [["availableFrom", availableFrom], ["departureAt", departureAt], ["actualStart", actualStart], ["actualEnd", actualEnd]]) {
+      if (!ISO.test(value) || !Number.isFinite(Date.parse(value))) errors.push(`Line ${lineNumber}: ${field} must be ISO 8601 with Z or a UTC offset.`);
+    }
+    const a = Date.parse(availableFrom), d = Date.parse(departureAt), chargeStart = Date.parse(actualStart), chargeEnd = Date.parse(actualEnd);
+    if ([a, d, chargeStart, chargeEnd].every(Number.isFinite) && !(a < d && a <= chargeStart && chargeStart < chargeEnd && chargeEnd <= d)) {
+      errors.push(`Line ${lineNumber}: require arrival ≤ actual charge start < actual charge end ≤ departure.`);
+    }
+    const energyKwh = rawEnergy === "" ? NaN : Number(rawEnergy);
+    if (!Number.isFinite(energyKwh) || energyKwh <= 0 || energyKwh > 1e6) {
+      errors.push(`Line ${lineNumber}: energyKwh must be greater than 0 and at most 1000000.`);
+    }
+    if ([sessionId.length < 2 || sessionId.length > 80, chargerId.length < 2 || chargerId.length > 80,
+      duplicateSessionId, !Number.isFinite(energyKwh) || energyKwh <= 0 || energyKwh > 1e6].some(Boolean)) return;
+    if (![availableFrom, departureAt, actualStart, actualEnd].every((value) => ISO.test(value) && Number.isFinite(Date.parse(value)))) return;
+    if (!(a < d && a <= chargeStart && chargeStart < chargeEnd && chargeEnd <= d)) return;
+    rows.push({ sessionId, chargerId, availableFrom, departureAt, actualStart, actualEnd, energyKwh });
+  });
+  if (!body.length) errors.push("Add at least one session row under the header.");
+  if (errors.length) return { rows: [], errors };
+  return { rows, errors };
+}
 
 export function buildInputs(model: Model, st: FormState): { inputs?: EngineeringInputs; errors: Errors } {
   const errors: Errors = {}; const v = st.v;

@@ -139,10 +139,9 @@ async function saveRecord(c: Context, input: EnergyRecordInput) {
     if (input.capacity == null && input.capacityUnit?.trim()) {
       throw new PlatformError(400, "Add a capacity value when entering a capacity unit.");
     }
-    let commissioningDate: string | null = input.commissioningDate ?? null;
+    let commissioningDate: Date | null = input.commissioningDate ?? null;
     if (commissioningDate) {
-      const parsedDate = new Date(`${commissioningDate}T00:00:00Z`);
-      if (!Number.isFinite(parsedDate.getTime()) || parsedDate.toISOString().slice(0, 10) !== commissioningDate) {
+      if (!Number.isFinite(commissioningDate.getTime())) {
         throw new PlatformError(400, "Enter a valid commissioning date.");
       }
     }
@@ -155,7 +154,7 @@ async function saveRecord(c: Context, input: EnergyRecordInput) {
       manufacturer: input.manufacturer?.trim() || null,
       model: input.model?.trim() || null,
       serial_number: input.serialNumber?.trim() || null,
-      commissioning_date: commissioningDate,
+      commissioning_date: commissioningDate?.toISOString().slice(0, 10) ?? null,
       status: input.status ?? existing?.status ?? "planned",
       capacity: input.capacity ?? null,
       capacity_unit: input.capacityUnit?.trim() || null,
@@ -241,7 +240,7 @@ function rowInput(kind: "building" | "asset", row: Record<string, unknown>, arch
     assetType: String(row.asset_type), identifier: row.identifier as string | null,
     description: row.description as string | null, manufacturer: row.manufacturer as string | null,
     model: row.model as string | null, serialNumber: row.serial_number as string | null,
-    commissioningDate: row.commissioning_date as string | null, status: row.status as EnergyRecordInput["status"],
+    commissioningDate: row.commissioning_date == null ? null : new Date(`${String(row.commissioning_date).slice(0, 10)}T00:00:00.000Z`), status: row.status as EnergyRecordInput["status"],
     capacity: row.capacity == null ? null : Number(row.capacity),
     capacityUnit: row.capacity_unit as string | null, metadata: row.metadata as EnergyRecordInput["metadata"], archived,
   };

@@ -2,7 +2,7 @@ import { useState, type ChangeEvent } from "react";
 import { Plus, Trash2, Download, Upload } from "lucide-react";
 import { Field } from "../common";
 import { Btn } from "../energy/ui";
-import { CSV_HEADER, EV_CSV_HEADER, MEASURE_SPECS, MONTHS, SCALARS, blankMeasure, blankSession, cu, parseCsv, parseEvCsv, type Errors, type FormState, type Model, type Spec } from "./model-forms";
+import { CSV_HEADER, EV_CSV_HEADER, EV_SESSION_CSV_HEADER, MEASURE_SPECS, MONTHS, SCALARS, blankMeasure, blankSession, cu, parseCsv, parseEvCsv, parseEvSessionCsv, type Errors, type FormState, type Model, type Spec } from "./model-forms";
 
 const inp = "form-input min-w-0";
 type Setter = (f: (s: FormState) => FormState) => void;
@@ -20,6 +20,8 @@ export function ScenarioForm({ model, st, setSt, errors, cur, disabled }: { mode
   const setV = (k: string, val: string) => setSt((s) => ({ ...s, v: { ...s.v, [k]: val } }));
   const specs = SCALARS[model].map((sp) => sp.key === "baselineEnergy" || sp.key === "proposedEnergy" ? { ...sp, unit: st.v.energyUnit || "kWh" } : sp);
   const [csvNote, setCsvNote] = useState<string | null>(null);
+  const [sessionCsvNote, setSessionCsvNote] = useState<string | null>(null);
+  const [sessionCsvErrors, setSessionCsvErrors] = useState<string[]>([]);
   const parsed = model === "battery" ? parseCsv(st.csv) : model === "ev-charging" ? parseEvCsv(st.csv) : null;
   const csvHeader = model === "ev-charging" ? EV_CSV_HEADER : CSV_HEADER;
 
@@ -28,9 +30,39 @@ export function ScenarioForm({ model, st, setSt, errors, cur, disabled }: { mode
     if (f.size > 2_000_000) { setCsvNote("File is larger than 2 MB."); return; }
     const text = await f.text(); setSt((s) => ({ ...s, csv: text })); setCsvNote(`Loaded ${f.name}.`); e.target.value = "";
   }
+  async function uploadSessions(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    e.target.value = "";
+    if (file.size > 2_000_000) {
+      setSessionCsvErrors(["File is larger than 2 MB."]);
+      setSessionCsvNote("Session import was not applied.");
+      return;
+    }
+    const parsedSessions = parseEvSessionCsv(await file.text());
+    if (parsedSessions.errors.length) {
+      setSessionCsvErrors(parsedSessions.errors.slice(0, 20));
+      setSessionCsvNote("Session import was not applied; correct the listed rows and upload again.");
+      return;
+    }
+    setSessionCsvErrors([]);
+    setSessionCsvNote(`Imported ${parsedSessions.rows.length} validated sessions from ${file.name}. Existing session rows were replaced.`);
+    setSt((state) => ({
+      ...state,
+      sessions: parsedSessions.rows.map((row) => Object.fromEntries(Object.entries(row).map(([key, value]) => [key, String(value)]))),
+    }));
+  }
   function template() {
     const url = URL.createObjectURL(new Blob([csvHeader + "\n"], { type: "text/csv" }));
     const a = document.createElement("a"); a.href = url; a.download = model === "ev-charging" ? "ev-site-intervals-template.csv" : "battery-intervals-template.csv"; a.click(); URL.revokeObjectURL(url);
+  }
+  function sessionTemplate() {
+    const url = URL.createObjectURL(new Blob([EV_SESSION_CSV_HEADER + "\n"], { type: "text/csv" }));
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = "ev-charging-sessions-template.csv";
+    anchor.click();
+    URL.revokeObjectURL(url);
   }
 
   return (
@@ -130,6 +162,20 @@ export function ScenarioForm({ model, st, setSt, errors, cur, disabled }: { mode
               Include the connection window and measured charging window for each session. Use ISO 8601 timestamps with Z or an offset.
               The schedule screen only places charge in complete site intervals within the connection window.
             </p>
+            <div className="flex flex-wrap items-center gap-3">
+              <Btn testId="button-download-ev-session-template" onClick={sessionTemplate}>
+                <Download size={14} aria-hidden="true" />Session CSV template
+              </Btn>
+              <label className={`inline-flex min-h-[38px] cursor-pointer items-center gap-2 border border-[#10243a] px-4 text-xs font-bold text-[#10243a] hover:bg-[#10243a] hover:text-white ${disabled ? "pointer-events-none opacity-50" : ""}`}>
+                <Upload size={14} aria-hidden="true" />Import sessions CSV
+                <input type="file" accept=".csv,text/csv,text/plain" className="sr-only" onChange={uploadSessions}
+                  disabled={disabled} data-testid="input-ev-session-csv" aria-label="Import EV charging sessions from CSV" />
+              </label>
+            </div>
+            {sessionCsvNote && <p role={sessionCsvErrors.length ? "alert" : "status"} className={`text-xs ${sessionCsvErrors.length ? "text-[#9b2c1b]" : "text-[#1c5946]"}`} data-testid="status-ev-session-csv">{sessionCsvNote}</p>}
+            {sessionCsvErrors.length > 0 && <ul className="list-disc pl-5 text-xs text-[#9b2c1b]" data-testid="list-ev-session-csv-errors">
+              {sessionCsvErrors.map((error, index) => <li key={index}>{error}</li>)}
+            </ul>}
             {errors.sessions && <p role="alert" className="text-xs font-semibold text-[#9b2c1b]">{errors.sessions}</p>}
             {st.sessions.map((session, index) => {
               const update = (key: string, value: string) => setSt((state) => ({
