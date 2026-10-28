@@ -5,6 +5,7 @@ export const REPORT_MODULES = [
   { id: "energy-auditing", title: "Energy Efficiency & Auditing", path: "/app/energy-auditing" },
   { id: "renewable-energy", title: "Renewable Energy Advisory", path: "/app/renewable-energy" },
   { id: "battery-flexibility", title: "Battery Storage & Flexibility", path: "/app/battery-flexibility" },
+  { id: "ev-charging", title: "EV Charging Infrastructure", path: "/app/ev-charging" },
   { id: "carbon-footprint", title: "Carbon Footprint", path: "/app/carbon-footprint" },
   { id: "digital-energy", title: "AI & Digital Energy Solutions", path: "/app/digital-energy" },
 ] as const satisfies readonly { id: EngineeringModule; title: string; path: string }[];

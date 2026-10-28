@@ -7,6 +7,8 @@
  */
 import type { EnergyAlert } from './energyAlert';
 import type { EnergyAnalysisSummary } from './energyAnalysisSummary';
+import type { EnergyAsset } from './energyAsset';
+import type { EnergyBuilding } from './energyBuilding';
 import type { EnergyImport } from './energyImport';
 import type { EnergyMeter } from './energyMeter';
 import type { EnergyRule } from './energyRule';
@@ -15,6 +17,8 @@ import type { EnergyTariff } from './energyTariff';
 
 export interface EnergyWorkspace {
   sites: EnergySite[];
+  buildings: EnergyBuilding[];
+  assets: EnergyAsset[];
   meters: EnergyMeter[];
   tariffs: EnergyTariff[];
   rules: EnergyRule[];

@@ -9,6 +9,7 @@ export const platformModules = [
   { id: "renewable-energy", title: "Renewable Energy Advisory", path: "/app/renewable-energy", readiness: "available" },
   { id: "energy-auditing", title: "Energy Efficiency & Auditing", path: "/app/energy-auditing", readiness: "available" },
   { id: "battery-flexibility", title: "Battery Storage & Flexibility", path: "/app/battery-flexibility", readiness: "available" },
+  { id: "ev-charging", title: "EV Charging Infrastructure", path: "/app/ev-charging", readiness: "available" },
   { id: "digital-energy", title: "AI & Digital Energy Solutions", path: "/app/digital-energy", readiness: "available" },
   { id: "carbon-footprint", title: "Carbon Footprint", path: "/app/carbon-footprint", readiness: "available" },
   { id: "projects-reports", title: "Projects and Reports", path: "/app/projects-reports", readiness: "available" },
@@ -28,7 +29,7 @@ export const serviceModuleMap = {
   "renewable-energy-advisory": "renewable-energy",
   "energy-efficiency-auditing": "energy-auditing",
   "battery-energy-storage-flexibility": "battery-flexibility",
-  "ev-charging-infrastructure": "energy-consulting",
+  "ev-charging-infrastructure": "ev-charging",
   "ai-energy-analytics-digital-solutions": "digital-energy",
   "carbon-footprint-services": "carbon-footprint",
 } as const satisfies Record<string, PlatformModuleId>;

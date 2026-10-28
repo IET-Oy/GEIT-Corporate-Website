@@ -11,6 +11,8 @@ export type EnergyRecordInputKind = typeof EnergyRecordInputKind[keyof typeof En
 
 export const EnergyRecordInputKind = {
   site: 'site',
+  building: 'building',
+  asset: 'asset',
   meter: 'meter',
   tariff: 'tariff',
   rule: 'rule',

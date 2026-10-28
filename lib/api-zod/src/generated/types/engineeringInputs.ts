@@ -9,7 +9,8 @@ import type { AuditingInputs } from './auditingInputs';
 import type { BatteryInputs } from './batteryInputs';
 import type { CarbonInputs } from './carbonInputs';
 import type { ConsultingInputs } from './consultingInputs';
+import type { EvChargingInputs } from './evChargingInputs';
 import type { SolarInputs } from './solarInputs';
 import type { TwinInputs } from './twinInputs';
 
-export type EngineeringInputs = ConsultingInputs | AuditingInputs | SolarInputs | BatteryInputs | CarbonInputs | TwinInputs;
+export type EngineeringInputs = ConsultingInputs | AuditingInputs | SolarInputs | BatteryInputs | EvChargingInputs | CarbonInputs | TwinInputs;

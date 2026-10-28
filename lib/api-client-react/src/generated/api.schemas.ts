@@ -13,6 +13,7 @@ export const EngineeringModule = {
   'energy-auditing': 'energy-auditing',
   'renewable-energy': 'renewable-energy',
   'battery-flexibility': 'battery-flexibility',
+  'ev-charging': 'ev-charging',
   'carbon-footprint': 'carbon-footprint',
   'digital-energy': 'digital-energy',
 } as const;
@@ -350,82 +351,6 @@ export interface EnergySite {
   area_m2: number | null;
   is_demo: boolean;
   archived: boolean;
-}
-
-export interface EnergyBuilding {
-  id: string;
-  site_id: string;
-  name: string;
-  building_type: string;
-  /** @nullable */
-  address: string | null;
-  /** @nullable */
-  latitude: number | null;
-  /** @nullable */
-  longitude: number | null;
-  timezone: string;
-  /** @nullable */
-  floor_area: number | null;
-  area_unit: 'm2' | 'ft2';
-  /** @nullable */
-  description: string | null;
-  metadata: Record<string, string | number | boolean | null>;
-  is_demo: boolean;
-  archived: boolean;
-  created_by: string | null;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface EnergyAsset {
-  id: string;
-  site_id: string;
-  /** @nullable */
-  building_id: string | null;
-  name: string;
-  asset_type: string;
-  /** @nullable */
-  identifier: string | null;
-  /** @nullable */
-  description: string | null;
-  /** @nullable */
-  manufacturer: string | null;
-  /** @nullable */
-  model: string | null;
-  /** @nullable */
-  serial_number: string | null;
-  /** @nullable */
-  commissioning_date: string | null;
-  status: 'planned' | 'operational' | 'maintenance' | 'retired';
-  /** @nullable */
-  capacity: number | null;
-  /** @nullable */
-  capacity_unit: string | null;
-  metadata: Record<string, string | number | boolean | null>;
-  is_demo: boolean;
-  archived: boolean;
-  created_by: string | null;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface EnergyBuildingPage {
-  items: EnergyBuilding[];
-  count: number;
-  limit: number;
-  offset: number;
-}
-
-export interface EnergyAssetPage {
-  items: EnergyAsset[];
-  count: number;
-  limit: number;
-  offset: number;
-}
-
-export interface EnergyBuildingDetail {
-  building: EnergyBuilding;
-  assets: EnergyAsset[];
 }
 
 export interface DigitalTwinSources {
@@ -872,7 +797,156 @@ export interface BatteryInputs {
   intervals: BatteryInterval[];
 }
 
-export type EngineeringInputs = ConsultingInputs | AuditingInputs | SolarInputs | BatteryInputs | CarbonInputs | TwinInputs;
+export interface EvChargingInterval {
+  /** @maxLength 40 */
+  start: string;
+  /** @maxLength 40 */
+  end: string;
+  /**
+     * @minimum 0
+     * @maximum 1000000000
+     */
+  siteLoadKwh: number;
+  /**
+     * @minimum 0
+     * @maximum 1000000000
+     */
+  solarKwh: number;
+  /**
+     * @minimum 0
+     * @maximum 1000000
+     */
+  importRatePerKwh: number;
+  /**
+     * @minimum 0
+     * @maximum 1000000
+     */
+  exportRatePerKwh: number;
+}
+
+export interface EvChargingSession {
+  /**
+     * @minLength 2
+     * @maxLength 80
+     */
+  sessionId: string;
+  /**
+     * @minLength 2
+     * @maxLength 80
+     */
+  chargerId: string;
+  /** @maxLength 40 */
+  availableFrom: string;
+  /** @maxLength 40 */
+  departureAt: string;
+  /** @maxLength 40 */
+  actualStart: string;
+  /** @maxLength 40 */
+  actualEnd: string;
+  /**
+     * @maximum 1000000
+     * @exclusiveMinimum 0
+     */
+  energyKwh: number;
+}
+
+export interface EvChargingBattery {
+  /**
+     * @maximum 10000000
+     * @exclusiveMinimum 0
+     */
+  capacityKwh: number;
+  /**
+     * @minimum 0
+     * @maximum 100
+     */
+  minSocPercent: number;
+  /**
+     * @minimum 0
+     * @maximum 100
+     */
+  maxSocPercent: number;
+  /**
+     * @minimum 0
+     * @maximum 100
+     */
+  initialSocPercent: number;
+  /**
+     * @maximum 10000000
+     * @exclusiveMinimum 0
+     */
+  maxChargeKw: number;
+  /**
+     * @maximum 10000000
+     * @exclusiveMinimum 0
+     */
+  maxDischargeKw: number;
+  /**
+     * @minimum 0.01
+     * @maximum 1
+     */
+  chargeEfficiency: number;
+  /**
+     * @minimum 0.01
+     * @maximum 1
+     */
+  dischargeEfficiency: number;
+}
+
+export type EvChargingInputsModel = typeof EvChargingInputsModel[keyof typeof EvChargingInputsModel];
+
+
+export const EvChargingInputsModel = {
+  'ev-charging': 'ev-charging',
+} as const;
+
+export type EvChargingInputsEnergyUnit = typeof EvChargingInputsEnergyUnit[keyof typeof EvChargingInputsEnergyUnit];
+
+
+export const EvChargingInputsEnergyUnit = {
+  kWh: 'kWh',
+} as const;
+
+export type EvChargingInputsPowerUnit = typeof EvChargingInputsPowerUnit[keyof typeof EvChargingInputsPowerUnit];
+
+
+export const EvChargingInputsPowerUnit = {
+  kW: 'kW',
+} as const;
+
+export interface EvChargingInputs {
+  model: EvChargingInputsModel;
+  /**
+     * @minLength 10
+     * @maxLength 2000
+     */
+  sourceNotes: string;
+  energyUnit: EvChargingInputsEnergyUnit;
+  powerUnit: EvChargingInputsPowerUnit;
+  /**
+     * @minimum 1
+     * @maximum 500
+     */
+  chargerCount: number;
+  /**
+     * @maximum 10000
+     * @exclusiveMinimum 0
+     */
+  chargerPowerKw: number;
+  /**
+     * @minItems 1
+     * @maxItems 1000
+     */
+  sessions: EvChargingSession[];
+  /**
+     * @minItems 1
+     * @maxItems 1000
+     */
+  intervals: EvChargingInterval[];
+  battery?: EvChargingBattery;
+}
+
+export type EngineeringInputs = ConsultingInputs | AuditingInputs | SolarInputs | BatteryInputs | EvChargingInputs | CarbonInputs | TwinInputs;
 
 export interface EngineeringScenarioInput {
   projectId: string;
@@ -970,6 +1044,26 @@ export const EnergyRecordInputKind = {
   rule: 'rule',
 } as const;
 
+export type EnergyRecordInputAreaUnit = typeof EnergyRecordInputAreaUnit[keyof typeof EnergyRecordInputAreaUnit];
+
+
+export const EnergyRecordInputAreaUnit = {
+  m2: 'm2',
+  ft2: 'ft2',
+} as const;
+
+export type EnergyRecordInputStatus = typeof EnergyRecordInputStatus[keyof typeof EnergyRecordInputStatus];
+
+
+export const EnergyRecordInputStatus = {
+  planned: 'planned',
+  operational: 'operational',
+  maintenance: 'maintenance',
+  retired: 'retired',
+} as const;
+
+export type EnergyRecordInputMetadata = {[key: string]: string | number | boolean | null};
+
 export type EnergyRecordInputMetric = typeof EnergyRecordInputMetric[keyof typeof EnergyRecordInputMetric];
 
 
@@ -997,36 +1091,81 @@ export interface EnergyRecordInput {
      * @nullable
      */
   areaM2?: number | null;
+  /**
+     * @minLength 2
+     * @maxLength 80
+     */
   buildingType?: string;
-  /** @maxLength 400 @nullable */
+  /**
+     * @maxLength 400
+     * @nullable
+     */
   address?: string | null;
-  /** @minimum -90 @maximum 90 @nullable */
+  /**
+     * @minimum -90
+     * @maximum 90
+     * @nullable
+     */
   latitude?: number | null;
-  /** @minimum -180 @maximum 180 @nullable */
+  /**
+     * @minimum -180
+     * @maximum 180
+     * @nullable
+     */
   longitude?: number | null;
-  /** @exclusiveMinimum 0 @maximum 1000000000 @nullable */
+  /**
+     * @maximum 1000000000
+     * @exclusiveMinimum 0
+     * @nullable
+     */
   floorArea?: number | null;
-  areaUnit?: 'm2' | 'ft2';
-  /** @maxLength 2000 @nullable */
+  areaUnit?: EnergyRecordInputAreaUnit;
+  /**
+     * @maxLength 2000
+     * @nullable
+     */
   description?: string | null;
+  /**
+     * @minLength 2
+     * @maxLength 80
+     */
   assetType?: string;
-  /** @maxLength 120 @nullable */
+  /**
+     * @maxLength 120
+     * @nullable
+     */
   identifier?: string | null;
-  /** @maxLength 120 @nullable */
+  /**
+     * @maxLength 120
+     * @nullable
+     */
   manufacturer?: string | null;
-  /** @maxLength 120 @nullable */
+  /**
+     * @maxLength 120
+     * @nullable
+     */
   model?: string | null;
-  /** @maxLength 120 @nullable */
+  /**
+     * @maxLength 120
+     * @nullable
+     */
   serialNumber?: string | null;
-  /** @format date @nullable */
+  /** @nullable */
   commissioningDate?: string | null;
-  status?: 'planned' | 'operational' | 'maintenance' | 'retired';
-  /** @exclusiveMinimum 0 @maximum 1000000000000 @nullable */
+  status?: EnergyRecordInputStatus;
+  /**
+     * @maximum 1000000000000
+     * @exclusiveMinimum 0
+     * @nullable
+     */
   capacity?: number | null;
-  /** @minLength 1 @maxLength 32 @nullable */
+  /**
+     * @minLength 1
+     * @maxLength 32
+     * @nullable
+     */
   capacityUnit?: string | null;
-  /** @maxProperties 30 */
-  metadata?: Record<string, string | number | boolean | null>;
+  metadata?: EnergyRecordInputMetadata;
   unit?: EnergyUnit;
   /** @pattern ^[A-Z]{3}$ */
   currency?: string;
@@ -1052,6 +1191,87 @@ export interface EnergyRecordInput {
      */
   threshold?: number;
   archived?: boolean;
+}
+
+export type EnergyBuildingAreaUnit = typeof EnergyBuildingAreaUnit[keyof typeof EnergyBuildingAreaUnit];
+
+
+export const EnergyBuildingAreaUnit = {
+  m2: 'm2',
+  ft2: 'ft2',
+} as const;
+
+export type EnergyBuildingMetadata = {[key: string]: string | number | boolean | null};
+
+export interface EnergyBuilding {
+  id: string;
+  site_id: string;
+  name: string;
+  building_type: string;
+  /** @nullable */
+  address: string | null;
+  /** @nullable */
+  latitude: number | null;
+  /** @nullable */
+  longitude: number | null;
+  timezone: string;
+  /** @nullable */
+  floor_area: number | null;
+  area_unit: EnergyBuildingAreaUnit;
+  /** @nullable */
+  description: string | null;
+  metadata: EnergyBuildingMetadata;
+  is_demo: boolean;
+  archived: boolean;
+  /** @nullable */
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export type EnergyAssetStatus = typeof EnergyAssetStatus[keyof typeof EnergyAssetStatus];
+
+
+export const EnergyAssetStatus = {
+  planned: 'planned',
+  operational: 'operational',
+  maintenance: 'maintenance',
+  retired: 'retired',
+} as const;
+
+export type EnergyAssetMetadata = {[key: string]: string | number | boolean | null};
+
+export interface EnergyAsset {
+  id: string;
+  site_id: string;
+  /** @nullable */
+  building_id: string | null;
+  name: string;
+  asset_type: string;
+  /** @nullable */
+  identifier: string | null;
+  /** @nullable */
+  description: string | null;
+  /** @nullable */
+  manufacturer: string | null;
+  /** @nullable */
+  model: string | null;
+  /** @nullable */
+  serial_number: string | null;
+  /** @nullable */
+  commissioning_date: string | null;
+  status: EnergyAssetStatus;
+  /** @nullable */
+  capacity: number | null;
+  /** @nullable */
+  capacity_unit: string | null;
+  metadata: EnergyAssetMetadata;
+  is_demo: boolean;
+  archived: boolean;
+  /** @nullable */
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface EnergyTariff {
@@ -1202,6 +1422,25 @@ export interface EnergyAlert {
   acknowledged: boolean;
   created_at: string;
   is_demo: boolean;
+}
+
+export interface EnergyBuildingPage {
+  items: EnergyBuilding[];
+  count: number;
+  limit: number;
+  offset: number;
+}
+
+export interface EnergyAssetPage {
+  items: EnergyAsset[];
+  count: number;
+  limit: number;
+  offset: number;
+}
+
+export interface EnergyBuildingDetail {
+  building: EnergyBuilding;
+  assets: EnergyAsset[];
 }
 
 export interface EnergyWorkspace {
@@ -1376,4 +1615,52 @@ export interface EnquiryReceipt {
 export interface ApiError {
   error: string;
 }
+
+export type ListEnergyBuildingsParams = {
+siteId?: string;
+/**
+ * @maxLength 120
+ */
+search?: string;
+/**
+ * @minimum 1
+ * @maximum 100
+ */
+limit?: number;
+/**
+ * @minimum 0
+ * @maximum 100000
+ */
+offset?: number;
+};
+
+export type ListEnergyAssetsParams = {
+siteId?: string;
+buildingId?: string;
+status?: ListEnergyAssetsStatus;
+/**
+ * @maxLength 120
+ */
+search?: string;
+/**
+ * @minimum 1
+ * @maximum 100
+ */
+limit?: number;
+/**
+ * @minimum 0
+ * @maximum 100000
+ */
+offset?: number;
+};
+
+export type ListEnergyAssetsStatus = typeof ListEnergyAssetsStatus[keyof typeof ListEnergyAssetsStatus];
+
+
+export const ListEnergyAssetsStatus = {
+  planned: 'planned',
+  operational: 'operational',
+  maintenance: 'maintenance',
+  retired: 'retired',
+} as const;
 

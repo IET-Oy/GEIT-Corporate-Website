@@ -650,7 +650,7 @@ components:
   schemas:
     EngineeringModule:
       type: string
-      enum: [energy-consulting, energy-auditing, renewable-energy, battery-flexibility, carbon-footprint, digital-energy]
+      enum: [energy-consulting, energy-auditing, renewable-energy, battery-flexibility, ev-charging, carbon-footprint, digital-energy]
     CarbonUnit:
       type: string
       enum: [kWh, MWh, GJ, L, m3, kg, km, passenger_km, tonne_km]
@@ -932,12 +932,71 @@ components:
           minItems: 1
           maxItems: 1000
           items: { $ref: "#/components/schemas/BatteryInterval" }
+    EvChargingInterval:
+      type: object
+      additionalProperties: false
+      required: [start, end, siteLoadKwh, solarKwh, importRatePerKwh, exportRatePerKwh]
+      properties:
+        start: { type: string, maxLength: 40 }
+        end: { type: string, maxLength: 40 }
+        siteLoadKwh: { type: number, minimum: 0, maximum: 1000000000 }
+        solarKwh: { type: number, minimum: 0, maximum: 1000000000 }
+        importRatePerKwh: { type: number, minimum: 0, maximum: 1000000 }
+        exportRatePerKwh: { type: number, minimum: 0, maximum: 1000000 }
+    EvChargingSession:
+      type: object
+      additionalProperties: false
+      required: [sessionId, chargerId, availableFrom, departureAt, actualStart, actualEnd, energyKwh]
+      properties:
+        sessionId: { type: string, minLength: 2, maxLength: 80 }
+        chargerId: { type: string, minLength: 2, maxLength: 80 }
+        availableFrom: { type: string, maxLength: 40 }
+        departureAt: { type: string, maxLength: 40 }
+        actualStart: { type: string, maxLength: 40 }
+        actualEnd: { type: string, maxLength: 40 }
+        energyKwh: { type: number, exclusiveMinimum: 0, maximum: 1000000 }
+    EvChargingBattery:
+      type: object
+      additionalProperties: false
+      required: [capacityKwh, minSocPercent, maxSocPercent, initialSocPercent, maxChargeKw, maxDischargeKw, chargeEfficiency, dischargeEfficiency]
+      properties:
+        capacityKwh: { type: number, exclusiveMinimum: 0, maximum: 10000000 }
+        minSocPercent: { type: number, minimum: 0, maximum: 100 }
+        maxSocPercent: { type: number, minimum: 0, maximum: 100 }
+        initialSocPercent: { type: number, minimum: 0, maximum: 100 }
+        maxChargeKw: { type: number, exclusiveMinimum: 0, maximum: 10000000 }
+        maxDischargeKw: { type: number, exclusiveMinimum: 0, maximum: 10000000 }
+        chargeEfficiency: { type: number, minimum: 0.01, maximum: 1 }
+        dischargeEfficiency: { type: number, minimum: 0.01, maximum: 1 }
+    EvChargingInputs:
+      type: object
+      additionalProperties: false
+      required: [model, sourceNotes, energyUnit, powerUnit, chargerCount, chargerPowerKw, sessions, intervals]
+      properties:
+        model: { type: string, enum: [ev-charging] }
+        sourceNotes: { type: string, minLength: 10, maxLength: 2000 }
+        energyUnit: { type: string, enum: [kWh] }
+        powerUnit: { type: string, enum: [kW] }
+        chargerCount: { type: integer, minimum: 1, maximum: 500 }
+        chargerPowerKw: { type: number, exclusiveMinimum: 0, maximum: 10000 }
+        sessions:
+          type: array
+          minItems: 1
+          maxItems: 1000
+          items: { $ref: "#/components/schemas/EvChargingSession" }
+        intervals:
+          type: array
+          minItems: 1
+          maxItems: 1000
+          items: { $ref: "#/components/schemas/EvChargingInterval" }
+        battery: { $ref: "#/components/schemas/EvChargingBattery" }
     EngineeringInputs:
       oneOf:
         - $ref: "#/components/schemas/ConsultingInputs"
         - $ref: "#/components/schemas/AuditingInputs"
         - $ref: "#/components/schemas/SolarInputs"
         - $ref: "#/components/schemas/BatteryInputs"
+        - $ref: "#/components/schemas/EvChargingInputs"
         - $ref: "#/components/schemas/CarbonInputs"
         - $ref: "#/components/schemas/TwinInputs"
     EngineeringScenarioInput:

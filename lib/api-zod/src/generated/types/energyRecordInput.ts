@@ -5,8 +5,11 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { EnergyRecordInputAreaUnit } from './energyRecordInputAreaUnit';
 import type { EnergyRecordInputKind } from './energyRecordInputKind';
+import type { EnergyRecordInputMetadata } from './energyRecordInputMetadata';
 import type { EnergyRecordInputMetric } from './energyRecordInputMetric';
+import type { EnergyRecordInputStatus } from './energyRecordInputStatus';
 import type { EnergyUnit } from './energyUnit';
 
 export interface EnergyRecordInput {
@@ -18,6 +21,7 @@ export interface EnergyRecordInput {
      */
   name: string;
   siteId?: string;
+  buildingId?: string;
   meterId?: string;
   /** @maxLength 80 */
   timezone?: string;
@@ -27,6 +31,81 @@ export interface EnergyRecordInput {
      * @nullable
      */
   areaM2?: number | null;
+  /**
+     * @minLength 2
+     * @maxLength 80
+     */
+  buildingType?: string;
+  /**
+     * @maxLength 400
+     * @nullable
+     */
+  address?: string | null;
+  /**
+     * @minimum -90
+     * @maximum 90
+     * @nullable
+     */
+  latitude?: number | null;
+  /**
+     * @minimum -180
+     * @maximum 180
+     * @nullable
+     */
+  longitude?: number | null;
+  /**
+     * @maximum 1000000000
+     * @exclusiveMinimum 0
+     * @nullable
+     */
+  floorArea?: number | null;
+  areaUnit?: EnergyRecordInputAreaUnit;
+  /**
+     * @maxLength 2000
+     * @nullable
+     */
+  description?: string | null;
+  /**
+     * @minLength 2
+     * @maxLength 80
+     */
+  assetType?: string;
+  /**
+     * @maxLength 120
+     * @nullable
+     */
+  identifier?: string | null;
+  /**
+     * @maxLength 120
+     * @nullable
+     */
+  manufacturer?: string | null;
+  /**
+     * @maxLength 120
+     * @nullable
+     */
+  model?: string | null;
+  /**
+     * @maxLength 120
+     * @nullable
+     */
+  serialNumber?: string | null;
+  /** @nullable */
+  commissioningDate?: Date | null;
+  status?: EnergyRecordInputStatus;
+  /**
+     * @maximum 1000000000000
+     * @exclusiveMinimum 0
+     * @nullable
+     */
+  capacity?: number | null;
+  /**
+     * @minLength 1
+     * @maxLength 32
+     * @nullable
+     */
+  capacityUnit?: string | null;
+  metadata?: EnergyRecordInputMetadata;
   unit?: EnergyUnit;
   /** @pattern ^[A-Z]{3}$ */
   currency?: string;

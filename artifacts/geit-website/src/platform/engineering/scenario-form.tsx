@@ -2,7 +2,7 @@ import { useState, type ChangeEvent } from "react";
 import { Plus, Trash2, Download, Upload } from "lucide-react";
 import { Field } from "../common";
 import { Btn } from "../energy/ui";
-import { CSV_HEADER, MEASURE_SPECS, MONTHS, SCALARS, blankMeasure, cu, parseCsv, type Errors, type FormState, type Model, type Spec } from "./model-forms";
+import { CSV_HEADER, EV_CSV_HEADER, MEASURE_SPECS, MONTHS, SCALARS, blankMeasure, blankSession, cu, parseCsv, parseEvCsv, type Errors, type FormState, type Model, type Spec } from "./model-forms";
 
 const inp = "form-input min-w-0";
 type Setter = (f: (s: FormState) => FormState) => void;
@@ -20,7 +20,8 @@ export function ScenarioForm({ model, st, setSt, errors, cur, disabled }: { mode
   const setV = (k: string, val: string) => setSt((s) => ({ ...s, v: { ...s.v, [k]: val } }));
   const specs = SCALARS[model].map((sp) => sp.key === "baselineEnergy" || sp.key === "proposedEnergy" ? { ...sp, unit: st.v.energyUnit || "kWh" } : sp);
   const [csvNote, setCsvNote] = useState<string | null>(null);
-  const parsed = model === "battery" ? parseCsv(st.csv) : null;
+  const parsed = model === "battery" ? parseCsv(st.csv) : model === "ev-charging" ? parseEvCsv(st.csv) : null;
+  const csvHeader = model === "ev-charging" ? EV_CSV_HEADER : CSV_HEADER;
 
   async function upload(e: ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0]; if (!f) return;
@@ -28,8 +29,8 @@ export function ScenarioForm({ model, st, setSt, errors, cur, disabled }: { mode
     const text = await f.text(); setSt((s) => ({ ...s, csv: text })); setCsvNote(`Loaded ${f.name}.`); e.target.value = "";
   }
   function template() {
-    const url = URL.createObjectURL(new Blob([CSV_HEADER + "\n"], { type: "text/csv" }));
-    const a = document.createElement("a"); a.href = url; a.download = "battery-intervals-template.csv"; a.click(); URL.revokeObjectURL(url);
+    const url = URL.createObjectURL(new Blob([csvHeader + "\n"], { type: "text/csv" }));
+    const a = document.createElement("a"); a.href = url; a.download = model === "ev-charging" ? "ev-site-intervals-template.csv" : "battery-intervals-template.csv"; a.click(); URL.revokeObjectURL(url);
   }
 
   return (
@@ -40,6 +41,12 @@ export function ScenarioForm({ model, st, setSt, errors, cur, disabled }: { mode
       )}
       {model === "battery" && (
         <p className="border-l-2 border-[#e8b64b] pl-3 text-xs text-[#5d707c]">Units are fixed: energy in kWh, power in kW.</p>
+      )}
+      {model === "ev-charging" && (
+        <p className="border-l-2 border-[#e8b64b] pl-3 text-xs leading-5 text-[#5d707c]">
+          Analysis only. Enter real session records and site intervals; the schedule screen does not control chargers.
+          Interval site load must exclude EV charging. Timestamps use explicit UTC offsets.
+        </p>
       )}
       <div className="grid min-w-0 gap-4 sm:grid-cols-2">
         {specs.map((sp) => <Num key={sp.key} sp={sp} value={st.v[sp.key] ?? ""} onChange={(x) => setV(sp.key, x)} error={errors[sp.key]} cur={cur} disabled={disabled} testId={`input-${sp.key}`} />)}
@@ -113,6 +120,144 @@ export function ScenarioForm({ model, st, setSt, errors, cur, disabled }: { mode
                 <tbody>{parsed.rows.slice(0, 10).map((r, i) => <tr key={i} className="border-t border-[#edf0f2]">{Object.values(r).map((c, j) => <td key={j} className="px-2 py-1 whitespace-nowrap">{String(c)}</td>)}</tr>)}</tbody></table></div>}
             </div>)}
         </fieldset>
+      )}
+
+      {model === "ev-charging" && (
+        <>
+          <fieldset className="min-w-0 space-y-4" data-testid="ev-session-inputs">
+            <legend className="text-sm font-bold text-[#10243a]">Charging sessions ({st.sessions.length} of 1000)</legend>
+            <p className="text-xs leading-5 text-[#6b7b87]">
+              Include the connection window and measured charging window for each session. Use ISO 8601 timestamps with Z or an offset.
+              The schedule screen only places charge in complete site intervals within the connection window.
+            </p>
+            {errors.sessions && <p role="alert" className="text-xs font-semibold text-[#9b2c1b]">{errors.sessions}</p>}
+            {st.sessions.map((session, index) => {
+              const update = (key: string, value: string) => setSt((state) => ({
+                ...state, sessions: state.sessions.map((item, i) => i === index ? { ...item, [key]: value } : item),
+              }));
+              const timestamps = [
+                ["availableFrom", "Connected from"],
+                ["departureAt", "Depart by"],
+                ["actualStart", "Measured charge start"],
+                ["actualEnd", "Measured charge end"],
+              ] as const;
+              return (
+                <div key={index} className="min-w-0 border border-[#dce3e8] bg-[#f8fafb] p-4" data-testid={`row-ev-session-${index}`}>
+                  <div className="mb-3 flex items-center justify-between">
+                    <span className="text-xs font-bold text-[#34495a]">SESSION {index + 1}</span>
+                    <Btn tone="danger" testId={`button-remove-ev-session-${index}`} disabled={disabled || st.sessions.length <= 1}
+                      onClick={() => setSt((state) => ({ ...state, sessions: state.sessions.filter((_, i) => i !== index) }))}>
+                      <Trash2 size={13} aria-hidden="true" />Remove
+                    </Btn>
+                  </div>
+                  <div className="grid min-w-0 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                    {(["sessionId", "chargerId"] as const).map((key) => (
+                      <Field key={key} label={key === "sessionId" ? "SESSION ID" : "CHARGER ID"} error={errors[`s.${index}.${key}`]}>
+                        {(p) => <input id={p.id} className={inp} maxLength={80} value={session[key] ?? ""} disabled={disabled}
+                          onChange={(event) => update(key, event.target.value)} aria-invalid={p.invalid} aria-describedby={p.describedBy}
+                          data-testid={`input-ev-session-${index}-${key}`} />}
+                      </Field>
+                    ))}
+                    {timestamps.map(([key, label]) => (
+                      <Field key={key} label={label.toUpperCase()} hint="ISO 8601, including Z or a UTC offset."
+                        error={errors[`s.${index}.${key}`]}>
+                        {(p) => <input id={p.id} type="text" inputMode="text" placeholder="2026-01-01T00:00:00Z"
+                          className={inp} value={session[key] ?? ""} disabled={disabled} onChange={(event) => update(key, event.target.value)}
+                          aria-invalid={p.invalid} aria-describedby={p.describedBy} data-testid={`input-ev-session-${index}-${key}`} />}
+                      </Field>
+                    ))}
+                    <Num sp={{ key: "energyKwh", label: "Delivered session energy", unit: "kWh", exMin: true, min: 0, max: 1e6 }}
+                      value={session.energyKwh ?? ""} onChange={(value) => update("energyKwh", value)}
+                      error={errors[`s.${index}.energyKwh`]} cur={cur} disabled={disabled}
+                      testId={`input-ev-session-${index}-energyKwh`} />
+                  </div>
+                </div>
+              );
+            })}
+            <Btn testId="button-add-ev-session" disabled={disabled || st.sessions.length >= 1000}
+              onClick={() => setSt((state) => ({ ...state, sessions: [...state.sessions, blankSession()] }))}>
+              <Plus size={14} aria-hidden="true" />Add session
+            </Btn>
+          </fieldset>
+
+          <fieldset className="min-w-0 space-y-3">
+            <legend className="text-sm font-bold text-[#10243a]">Site intervals</legend>
+            <p className="text-xs leading-5 text-[#6b7b87]">
+              Import interval totals for non-EV site load, solar generation and import/export rates. Use one row per contiguous interval.
+              Energy is kWh per interval and rates are {cur}/kWh. Maximum 1000 intervals; analysis horizon is limited to 31 days.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <Btn testId="button-download-template" onClick={template}><Download size={14} aria-hidden="true" />Blank template</Btn>
+              <label className={`inline-flex min-h-[38px] cursor-pointer items-center gap-2 border border-[#10243a] px-4 text-xs font-bold text-[#10243a] hover:bg-[#10243a] hover:text-white ${disabled ? "pointer-events-none opacity-50" : ""}`}>
+                <Upload size={14} aria-hidden="true" />Upload CSV
+                <input type="file" accept=".csv,text/csv,text/plain" className="sr-only" onChange={upload} disabled={disabled} data-testid="input-ev-csv-file" />
+              </label>
+            </div>
+            {csvNote && <p role="status" className="text-xs text-[#1c5946]">{csvNote}</p>}
+            <Field label="PASTE EV SITE INTERVAL CSV" error={errors.csv}>
+              {(p) => <textarea id={p.id} rows={8} spellCheck={false} className={`${inp} font-mono text-xs`} wrap="off"
+                value={st.csv} disabled={disabled} onChange={(event) => setSt((state) => ({ ...state, csv: event.target.value }))}
+                aria-invalid={p.invalid} aria-describedby={p.describedBy} data-testid="input-ev-intervals-csv" />}
+            </Field>
+            {st.csv.trim() && parsed && (
+              <div className="min-w-0" data-testid="preview-ev-intervals">
+                <p className="text-xs font-bold text-[#34495a]">
+                  {parsed.rows.length} valid row{parsed.rows.length === 1 ? "" : "s"}{parsed.errors.length ? `, ${parsed.errors.length} problem${parsed.errors.length === 1 ? "" : "s"}` : ""}
+                </p>
+                {parsed.errors.length > 0 && <ul className="mt-1 list-disc pl-5 text-xs text-[#9b2c1b]" data-testid="list-ev-csv-errors">
+                  {parsed.errors.slice(0, 8).map((message, index) => <li key={index}>{message}</li>)}
+                  {parsed.errors.length > 8 && <li>and {parsed.errors.length - 8} more</li>}
+                </ul>}
+                {parsed.rows.length > 0 && <div className="mt-2 max-h-56 overflow-auto border border-[#dce3e8]">
+                  <table className="w-full min-w-[620px] text-xs"><caption className="sr-only">Preview of EV site intervals</caption>
+                    <thead className="sticky top-0 bg-[#f2f5f7]"><tr>{EV_CSV_HEADER.split(",").map((header) =>
+                      <th key={header} scope="col" className="px-2 py-1 text-left">{header}</th>)}</tr></thead>
+                    <tbody>{parsed.rows.slice(0, 10).map((row, index) =>
+                      <tr key={index} className="border-t border-[#edf0f2]">{Object.values(row).map((value, cell) =>
+                        <td key={cell} className="whitespace-nowrap px-2 py-1">{String(value)}</td>)}</tr>)}</tbody>
+                  </table>
+                </div>}
+              </div>
+            )}
+          </fieldset>
+
+          <fieldset className="min-w-0 space-y-4">
+            <legend className="text-sm font-bold text-[#10243a]">Optional battery coordination</legend>
+            <Field label="INCLUDE A SITE BATTERY" hint="Runs the existing solar self-consumption battery model for both measured and managed EV schedules.">
+              {(p) => <input id={p.id} type="checkbox" className="size-4 accent-[#194d3a]" checked={st.v.includeBattery === "true"} disabled={disabled}
+                onChange={(event) => setV("includeBattery", event.target.checked ? "true" : "false")}
+                aria-describedby={p.describedBy} data-testid="checkbox-ev-battery" />}
+            </Field>
+            {st.v.includeBattery === "true" && (
+              <div className="grid min-w-0 gap-4 sm:grid-cols-2 lg:grid-cols-3" data-testid="ev-battery-fields">
+                <Num sp={{ key: "capacityKwh", label: "Usable battery capacity", unit: "kWh", exMin: true, min: 0, max: 1e7 }}
+                  value={st.v.batteryCapacityKwh} onChange={(value) => setV("batteryCapacityKwh", value)} error={errors.batteryCapacityKwh}
+                  cur={cur} disabled={disabled} testId="input-ev-battery-capacity" />
+                <Num sp={{ key: "minSocPercent", label: "Minimum state of charge", unit: "%" }}
+                  value={st.v.batteryMinSocPercent} onChange={(value) => setV("batteryMinSocPercent", value)} error={errors.batteryMinSocPercent}
+                  cur={cur} disabled={disabled} testId="input-ev-battery-min-soc" />
+                <Num sp={{ key: "maxSocPercent", label: "Maximum state of charge", unit: "%" }}
+                  value={st.v.batteryMaxSocPercent} onChange={(value) => setV("batteryMaxSocPercent", value)} error={errors.batteryMaxSocPercent}
+                  cur={cur} disabled={disabled} testId="input-ev-battery-max-soc" />
+                <Num sp={{ key: "initialSocPercent", label: "Initial state of charge", unit: "%" }}
+                  value={st.v.batteryInitialSocPercent} onChange={(value) => setV("batteryInitialSocPercent", value)} error={errors.batteryInitialSocPercent}
+                  cur={cur} disabled={disabled} testId="input-ev-battery-initial-soc" />
+                <Num sp={{ key: "maxChargeKw", label: "Maximum charge power", unit: "kW", exMin: true, min: 0, max: 1e7 }}
+                  value={st.v.batteryMaxChargeKw} onChange={(value) => setV("batteryMaxChargeKw", value)} error={errors.batteryMaxChargeKw}
+                  cur={cur} disabled={disabled} testId="input-ev-battery-max-charge" />
+                <Num sp={{ key: "maxDischargeKw", label: "Maximum discharge power", unit: "kW", exMin: true, min: 0, max: 1e7 }}
+                  value={st.v.batteryMaxDischargeKw} onChange={(value) => setV("batteryMaxDischargeKw", value)} error={errors.batteryMaxDischargeKw}
+                  cur={cur} disabled={disabled} testId="input-ev-battery-max-discharge" />
+                <Num sp={{ key: "chargeEfficiency", label: "One-way charge efficiency", unit: "fraction", min: 0.01, max: 1 }}
+                  value={st.v.batteryChargeEfficiency} onChange={(value) => setV("batteryChargeEfficiency", value)} error={errors.batteryChargeEfficiency}
+                  cur={cur} disabled={disabled} testId="input-ev-battery-charge-efficiency" />
+                <Num sp={{ key: "dischargeEfficiency", label: "One-way discharge efficiency", unit: "fraction", min: 0.01, max: 1 }}
+                  value={st.v.batteryDischargeEfficiency} onChange={(value) => setV("batteryDischargeEfficiency", value)} error={errors.batteryDischargeEfficiency}
+                  cur={cur} disabled={disabled} testId="input-ev-battery-discharge-efficiency" />
+              </div>
+            )}
+          </fieldset>
+        </>
       )}
 
       <Field label="SOURCE NOTES (REQUIRED)" hint="Where did these figures come from: meter, audit report, quote, design file, assumption. At least 10 characters. Not filled in for you." error={errors.sourceNotes}>

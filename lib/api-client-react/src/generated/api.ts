@@ -26,6 +26,10 @@ import type {
   EmissionFactorInput,
   EnergyAnalysis,
   EnergyAnalysisInput,
+  EnergyAsset,
+  EnergyAssetPage,
+  EnergyBuildingDetail,
+  EnergyBuildingPage,
   EnergyEmptyInput,
   EnergyImport,
   EnergyImportInput,
@@ -41,6 +45,8 @@ import type {
   EvidenceAnswer,
   EvidenceQuestion,
   HealthStatus,
+  ListEnergyAssetsParams,
+  ListEnergyBuildingsParams,
   MembershipInput,
   OrganisationInput,
   PlatformCredentials,
@@ -303,7 +309,7 @@ export function useGetDigitalTwinSources<TData = Awaited<ReturnType<typeof getDi
 
 
 export const getExplainEngineeringScenarioUrl = (orgId: string,
-    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'carbon-footprint' | 'digital-energy',
+    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'ev-charging' | 'carbon-footprint' | 'digital-energy',
     id: string,) => {
 
 
@@ -313,7 +319,7 @@ export const getExplainEngineeringScenarioUrl = (orgId: string,
 }
 
 export const explainEngineeringScenario = async (orgId: string,
-    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'carbon-footprint' | 'digital-energy',
+    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'ev-charging' | 'carbon-footprint' | 'digital-energy',
     id: string,
     evidenceQuestion: EvidenceQuestion, options?: Parameters<typeof customFetch>[1]): Promise<EvidenceAnswer> => {
 
@@ -376,7 +382,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type ExplainEngineeringScenarioMutationResult = NonNullable<Awaited<ReturnType<typeof explainEngineeringScenario>>>
     export type ExplainEngineeringScenarioMutationBody = BodyType<EvidenceQuestion>
     export type ExplainEngineeringScenarioMutationError = ErrorType<unknown>
-    export type ExplainEngineeringScenarioMutationVariables = {orgId: string;module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'carbon-footprint' | 'digital-energy';id: string;data: BodyType<EvidenceQuestion>}
+    export type ExplainEngineeringScenarioMutationVariables = {orgId: string;module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'ev-charging' | 'carbon-footprint' | 'digital-energy';id: string;data: BodyType<EvidenceQuestion>}
 
     export const useExplainEngineeringScenario = <TError = ErrorType<unknown>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof explainEngineeringScenario>>, TError,ExplainEngineeringScenarioMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
@@ -390,7 +396,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     }
 
 export const getGetEngineeringWorkspaceUrl = (orgId: string,
-    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'carbon-footprint' | 'digital-energy',) => {
+    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'ev-charging' | 'carbon-footprint' | 'digital-energy',) => {
 
 
 
@@ -399,7 +405,7 @@ export const getGetEngineeringWorkspaceUrl = (orgId: string,
 }
 
 export const getEngineeringWorkspace = async (orgId: string,
-    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'carbon-footprint' | 'digital-energy', options?: Parameters<typeof customFetch>[1]): Promise<EngineeringWorkspace> => {
+    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'ev-charging' | 'carbon-footprint' | 'digital-energy', options?: Parameters<typeof customFetch>[1]): Promise<EngineeringWorkspace> => {
 
   return customFetch<EngineeringWorkspace>(getGetEngineeringWorkspaceUrl(orgId,module),
   {
@@ -415,7 +421,7 @@ export const getEngineeringWorkspace = async (orgId: string,
 
 
 export const getGetEngineeringWorkspaceQueryKey = (orgId: string,
-    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'carbon-footprint' | 'digital-energy',) => {
+    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'ev-charging' | 'carbon-footprint' | 'digital-energy',) => {
     return [
     `/api/platform/engineering/${orgId}/${module}`
     ] as const;
@@ -423,7 +429,7 @@ export const getGetEngineeringWorkspaceQueryKey = (orgId: string,
 
 
 export const getGetEngineeringWorkspaceQueryOptions = <TData = Awaited<ReturnType<typeof getEngineeringWorkspace>>, TError = ErrorType<unknown>>(orgId: string,
-    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'carbon-footprint' | 'digital-energy', options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getEngineeringWorkspace>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'ev-charging' | 'carbon-footprint' | 'digital-energy', options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getEngineeringWorkspace>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
@@ -448,7 +454,7 @@ export type GetEngineeringWorkspaceQueryError = ErrorType<unknown>
 
 export function useGetEngineeringWorkspace<TData = Awaited<ReturnType<typeof getEngineeringWorkspace>>, TError = ErrorType<unknown>>(
  orgId: string,
-    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'carbon-footprint' | 'digital-energy', options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getEngineeringWorkspace>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'ev-charging' | 'carbon-footprint' | 'digital-energy', options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getEngineeringWorkspace>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
@@ -466,7 +472,7 @@ export function useGetEngineeringWorkspace<TData = Awaited<ReturnType<typeof get
 
 
 export const getSaveEngineeringProjectUrl = (orgId: string,
-    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'carbon-footprint' | 'digital-energy',) => {
+    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'ev-charging' | 'carbon-footprint' | 'digital-energy',) => {
 
 
 
@@ -475,7 +481,7 @@ export const getSaveEngineeringProjectUrl = (orgId: string,
 }
 
 export const saveEngineeringProject = async (orgId: string,
-    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'carbon-footprint' | 'digital-energy',
+    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'ev-charging' | 'carbon-footprint' | 'digital-energy',
     engineeringProjectInput: EngineeringProjectInput, options?: Parameters<typeof customFetch>[1]): Promise<EngineeringProject> => {
 
     const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
@@ -537,7 +543,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type SaveEngineeringProjectMutationResult = NonNullable<Awaited<ReturnType<typeof saveEngineeringProject>>>
     export type SaveEngineeringProjectMutationBody = BodyType<EngineeringProjectInput>
     export type SaveEngineeringProjectMutationError = ErrorType<unknown>
-    export type SaveEngineeringProjectMutationVariables = {orgId: string;module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'carbon-footprint' | 'digital-energy';data: BodyType<EngineeringProjectInput>}
+    export type SaveEngineeringProjectMutationVariables = {orgId: string;module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'ev-charging' | 'carbon-footprint' | 'digital-energy';data: BodyType<EngineeringProjectInput>}
 
     export const useSaveEngineeringProject = <TError = ErrorType<unknown>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof saveEngineeringProject>>, TError,SaveEngineeringProjectMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
@@ -551,7 +557,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     }
 
 export const getCreateEngineeringScenarioUrl = (orgId: string,
-    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'carbon-footprint' | 'digital-energy',) => {
+    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'ev-charging' | 'carbon-footprint' | 'digital-energy',) => {
 
 
 
@@ -560,7 +566,7 @@ export const getCreateEngineeringScenarioUrl = (orgId: string,
 }
 
 export const createEngineeringScenario = async (orgId: string,
-    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'carbon-footprint' | 'digital-energy',
+    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'ev-charging' | 'carbon-footprint' | 'digital-energy',
     engineeringScenarioInput: EngineeringScenarioInput, options?: Parameters<typeof customFetch>[1]): Promise<EngineeringScenario> => {
 
     const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
@@ -622,7 +628,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type CreateEngineeringScenarioMutationResult = NonNullable<Awaited<ReturnType<typeof createEngineeringScenario>>>
     export type CreateEngineeringScenarioMutationBody = BodyType<EngineeringScenarioInput>
     export type CreateEngineeringScenarioMutationError = ErrorType<unknown>
-    export type CreateEngineeringScenarioMutationVariables = {orgId: string;module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'carbon-footprint' | 'digital-energy';data: BodyType<EngineeringScenarioInput>}
+    export type CreateEngineeringScenarioMutationVariables = {orgId: string;module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'ev-charging' | 'carbon-footprint' | 'digital-energy';data: BodyType<EngineeringScenarioInput>}
 
     export const useCreateEngineeringScenario = <TError = ErrorType<unknown>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createEngineeringScenario>>, TError,CreateEngineeringScenarioMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
@@ -636,7 +642,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     }
 
 export const getGetEngineeringScenarioUrl = (orgId: string,
-    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'carbon-footprint' | 'digital-energy',
+    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'ev-charging' | 'carbon-footprint' | 'digital-energy',
     id: string,) => {
 
 
@@ -646,7 +652,7 @@ export const getGetEngineeringScenarioUrl = (orgId: string,
 }
 
 export const getEngineeringScenario = async (orgId: string,
-    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'carbon-footprint' | 'digital-energy',
+    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'ev-charging' | 'carbon-footprint' | 'digital-energy',
     id: string, options?: Parameters<typeof customFetch>[1]): Promise<EngineeringScenario> => {
 
   return customFetch<EngineeringScenario>(getGetEngineeringScenarioUrl(orgId,module,id),
@@ -663,7 +669,7 @@ export const getEngineeringScenario = async (orgId: string,
 
 
 export const getGetEngineeringScenarioQueryKey = (orgId: string,
-    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'carbon-footprint' | 'digital-energy',
+    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'ev-charging' | 'carbon-footprint' | 'digital-energy',
     id: string,) => {
     return [
     `/api/platform/engineering/${orgId}/${module}/scenarios/${id}`
@@ -672,7 +678,7 @@ export const getGetEngineeringScenarioQueryKey = (orgId: string,
 
 
 export const getGetEngineeringScenarioQueryOptions = <TData = Awaited<ReturnType<typeof getEngineeringScenario>>, TError = ErrorType<unknown>>(orgId: string,
-    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'carbon-footprint' | 'digital-energy',
+    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'ev-charging' | 'carbon-footprint' | 'digital-energy',
     id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getEngineeringScenario>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
@@ -698,7 +704,7 @@ export type GetEngineeringScenarioQueryError = ErrorType<unknown>
 
 export function useGetEngineeringScenario<TData = Awaited<ReturnType<typeof getEngineeringScenario>>, TError = ErrorType<unknown>>(
  orgId: string,
-    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'carbon-footprint' | 'digital-energy',
+    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'ev-charging' | 'carbon-footprint' | 'digital-energy',
     id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getEngineeringScenario>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
@@ -717,7 +723,7 @@ export function useGetEngineeringScenario<TData = Awaited<ReturnType<typeof getE
 
 
 export const getExportEngineeringScenarioUrl = (orgId: string,
-    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'carbon-footprint' | 'digital-energy',
+    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'ev-charging' | 'carbon-footprint' | 'digital-energy',
     id: string,
     format: 'csv' | 'xlsx' | 'pdf' | 'json',) => {
 
@@ -728,7 +734,7 @@ export const getExportEngineeringScenarioUrl = (orgId: string,
 }
 
 export const exportEngineeringScenario = async (orgId: string,
-    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'carbon-footprint' | 'digital-energy',
+    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'ev-charging' | 'carbon-footprint' | 'digital-energy',
     id: string,
     format: 'csv' | 'xlsx' | 'pdf' | 'json', options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
 
@@ -746,7 +752,7 @@ export const exportEngineeringScenario = async (orgId: string,
 
 
 export const getExportEngineeringScenarioQueryKey = (orgId: string,
-    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'carbon-footprint' | 'digital-energy',
+    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'ev-charging' | 'carbon-footprint' | 'digital-energy',
     id: string,
     format: 'csv' | 'xlsx' | 'pdf' | 'json',) => {
     return [
@@ -756,7 +762,7 @@ export const getExportEngineeringScenarioQueryKey = (orgId: string,
 
 
 export const getExportEngineeringScenarioQueryOptions = <TData = Awaited<ReturnType<typeof exportEngineeringScenario>>, TError = ErrorType<unknown>>(orgId: string,
-    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'carbon-footprint' | 'digital-energy',
+    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'ev-charging' | 'carbon-footprint' | 'digital-energy',
     id: string,
     format: 'csv' | 'xlsx' | 'pdf' | 'json', options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportEngineeringScenario>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 ) => {
@@ -783,7 +789,7 @@ export type ExportEngineeringScenarioQueryError = ErrorType<unknown>
 
 export function useExportEngineeringScenario<TData = Awaited<ReturnType<typeof exportEngineeringScenario>>, TError = ErrorType<unknown>>(
  orgId: string,
-    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'carbon-footprint' | 'digital-energy',
+    module: 'energy-consulting' | 'energy-auditing' | 'renewable-energy' | 'battery-flexibility' | 'ev-charging' | 'carbon-footprint' | 'digital-energy',
     id: string,
     format: 'csv' | 'xlsx' | 'pdf' | 'json', options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportEngineeringScenario>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 
@@ -872,6 +878,800 @@ export function useGetEnergyWorkspace<TData = Awaited<ReturnType<typeof getEnerg
 
 
 
+
+export const getListEnergyBuildingsUrl = (orgId: string,
+    params?: ListEnergyBuildingsParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/platform/energy/${orgId}/buildings?${stringifiedParams}` : `/api/platform/energy/${orgId}/buildings`
+}
+
+export const listEnergyBuildings = async (orgId: string,
+    params?: ListEnergyBuildingsParams, options?: Parameters<typeof customFetch>[1]): Promise<EnergyBuildingPage> => {
+
+  return customFetch<EnergyBuildingPage>(getListEnergyBuildingsUrl(orgId,params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListEnergyBuildingsQueryKey = (orgId: string,
+    params?: ListEnergyBuildingsParams,) => {
+    return [
+    `/api/platform/energy/${orgId}/buildings`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListEnergyBuildingsQueryOptions = <TData = Awaited<ReturnType<typeof listEnergyBuildings>>, TError = ErrorType<unknown>>(orgId: string,
+    params?: ListEnergyBuildingsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listEnergyBuildings>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListEnergyBuildingsQueryKey(orgId,params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listEnergyBuildings>>> = ({ signal }) => listEnergyBuildings(orgId,params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: orgId !== null && orgId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listEnergyBuildings>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListEnergyBuildingsQueryResult = NonNullable<Awaited<ReturnType<typeof listEnergyBuildings>>>
+export type ListEnergyBuildingsQueryError = ErrorType<unknown>
+
+
+
+export function useListEnergyBuildings<TData = Awaited<ReturnType<typeof listEnergyBuildings>>, TError = ErrorType<unknown>>(
+ orgId: string,
+    params?: ListEnergyBuildingsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listEnergyBuildings>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListEnergyBuildingsQueryOptions(orgId,params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCreateEnergyBuildingUrl = (orgId: string,) => {
+
+
+
+
+  return `/api/platform/energy/${orgId}/buildings`
+}
+
+export const createEnergyBuilding = async (orgId: string,
+    energyRecordInput: EnergyRecordInput, options?: Parameters<typeof customFetch>[1]): Promise<PlatformMessage> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return customFetch<PlatformMessage>(getCreateEnergyBuildingUrl(orgId),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(energyRecordInput)
+  }
+);}
+
+
+
+
+
+export const getCreateEnergyBuildingMutationKey = () => ['createEnergyBuilding'] as const;
+
+export const getCreateEnergyBuildingMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createEnergyBuilding>>, TError,CreateEnergyBuildingMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createEnergyBuilding>>, TError,CreateEnergyBuildingMutationVariables, TContext> => {
+
+const mutationKey = getCreateEnergyBuildingMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createEnergyBuilding>>, CreateEnergyBuildingMutationVariables> = (props) => {
+          const {orgId,data} = props ?? {};
+
+          return  createEnergyBuilding(orgId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateEnergyBuildingMutationResult = NonNullable<Awaited<ReturnType<typeof createEnergyBuilding>>>
+    export type CreateEnergyBuildingMutationBody = BodyType<EnergyRecordInput>
+    export type CreateEnergyBuildingMutationError = ErrorType<unknown>
+    export type CreateEnergyBuildingMutationVariables = {orgId: string;data: BodyType<EnergyRecordInput>}
+
+    export const useCreateEnergyBuilding = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createEnergyBuilding>>, TError,CreateEnergyBuildingMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createEnergyBuilding>>,
+        TError,
+        CreateEnergyBuildingMutationVariables,
+        TContext
+      > => {
+      return useMutation(getCreateEnergyBuildingMutationOptions(options));
+    }
+
+export const getGetEnergyBuildingUrl = (orgId: string,
+    id: string,) => {
+
+
+
+
+  return `/api/platform/energy/${orgId}/buildings/${id}`
+}
+
+export const getEnergyBuilding = async (orgId: string,
+    id: string, options?: Parameters<typeof customFetch>[1]): Promise<EnergyBuildingDetail> => {
+
+  return customFetch<EnergyBuildingDetail>(getGetEnergyBuildingUrl(orgId,id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetEnergyBuildingQueryKey = (orgId: string,
+    id: string,) => {
+    return [
+    `/api/platform/energy/${orgId}/buildings/${id}`
+    ] as const;
+    }
+
+
+export const getGetEnergyBuildingQueryOptions = <TData = Awaited<ReturnType<typeof getEnergyBuilding>>, TError = ErrorType<unknown>>(orgId: string,
+    id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getEnergyBuilding>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetEnergyBuildingQueryKey(orgId,id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getEnergyBuilding>>> = ({ signal }) => getEnergyBuilding(orgId,id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: orgId !== null && orgId !== undefined && id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getEnergyBuilding>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetEnergyBuildingQueryResult = NonNullable<Awaited<ReturnType<typeof getEnergyBuilding>>>
+export type GetEnergyBuildingQueryError = ErrorType<unknown>
+
+
+
+export function useGetEnergyBuilding<TData = Awaited<ReturnType<typeof getEnergyBuilding>>, TError = ErrorType<unknown>>(
+ orgId: string,
+    id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getEnergyBuilding>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetEnergyBuildingQueryOptions(orgId,id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getUpdateEnergyBuildingUrl = (orgId: string,
+    id: string,) => {
+
+
+
+
+  return `/api/platform/energy/${orgId}/buildings/${id}`
+}
+
+export const updateEnergyBuilding = async (orgId: string,
+    id: string,
+    energyRecordInput: EnergyRecordInput, options?: Parameters<typeof customFetch>[1]): Promise<PlatformMessage> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return customFetch<PlatformMessage>(getUpdateEnergyBuildingUrl(orgId,id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(energyRecordInput)
+  }
+);}
+
+
+
+
+
+export const getUpdateEnergyBuildingMutationKey = () => ['updateEnergyBuilding'] as const;
+
+export const getUpdateEnergyBuildingMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateEnergyBuilding>>, TError,UpdateEnergyBuildingMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateEnergyBuilding>>, TError,UpdateEnergyBuildingMutationVariables, TContext> => {
+
+const mutationKey = getUpdateEnergyBuildingMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateEnergyBuilding>>, UpdateEnergyBuildingMutationVariables> = (props) => {
+          const {orgId,id,data} = props ?? {};
+
+          return  updateEnergyBuilding(orgId,id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateEnergyBuildingMutationResult = NonNullable<Awaited<ReturnType<typeof updateEnergyBuilding>>>
+    export type UpdateEnergyBuildingMutationBody = BodyType<EnergyRecordInput>
+    export type UpdateEnergyBuildingMutationError = ErrorType<unknown>
+    export type UpdateEnergyBuildingMutationVariables = {orgId: string;id: string;data: BodyType<EnergyRecordInput>}
+
+    export const useUpdateEnergyBuilding = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateEnergyBuilding>>, TError,UpdateEnergyBuildingMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateEnergyBuilding>>,
+        TError,
+        UpdateEnergyBuildingMutationVariables,
+        TContext
+      > => {
+      return useMutation(getUpdateEnergyBuildingMutationOptions(options));
+    }
+
+export const getArchiveEnergyBuildingUrl = (orgId: string,
+    id: string,) => {
+
+
+
+
+  return `/api/platform/energy/${orgId}/buildings/${id}`
+}
+
+export const archiveEnergyBuilding = async (orgId: string,
+    id: string, options?: Parameters<typeof customFetch>[1]): Promise<PlatformMessage> => {
+
+  return customFetch<PlatformMessage>(getArchiveEnergyBuildingUrl(orgId,id),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+
+export const getArchiveEnergyBuildingMutationKey = () => ['archiveEnergyBuilding'] as const;
+
+export const getArchiveEnergyBuildingMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof archiveEnergyBuilding>>, TError,ArchiveEnergyBuildingMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof archiveEnergyBuilding>>, TError,ArchiveEnergyBuildingMutationVariables, TContext> => {
+
+const mutationKey = getArchiveEnergyBuildingMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof archiveEnergyBuilding>>, ArchiveEnergyBuildingMutationVariables> = (props) => {
+          const {orgId,id} = props ?? {};
+
+          return  archiveEnergyBuilding(orgId,id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ArchiveEnergyBuildingMutationResult = NonNullable<Awaited<ReturnType<typeof archiveEnergyBuilding>>>
+
+    export type ArchiveEnergyBuildingMutationError = ErrorType<unknown>
+    export type ArchiveEnergyBuildingMutationVariables = {orgId: string;id: string}
+
+    export const useArchiveEnergyBuilding = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof archiveEnergyBuilding>>, TError,ArchiveEnergyBuildingMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof archiveEnergyBuilding>>,
+        TError,
+        ArchiveEnergyBuildingMutationVariables,
+        TContext
+      > => {
+      return useMutation(getArchiveEnergyBuildingMutationOptions(options));
+    }
+
+export const getListEnergyAssetsUrl = (orgId: string,
+    params?: ListEnergyAssetsParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/platform/energy/${orgId}/assets?${stringifiedParams}` : `/api/platform/energy/${orgId}/assets`
+}
+
+export const listEnergyAssets = async (orgId: string,
+    params?: ListEnergyAssetsParams, options?: Parameters<typeof customFetch>[1]): Promise<EnergyAssetPage> => {
+
+  return customFetch<EnergyAssetPage>(getListEnergyAssetsUrl(orgId,params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListEnergyAssetsQueryKey = (orgId: string,
+    params?: ListEnergyAssetsParams,) => {
+    return [
+    `/api/platform/energy/${orgId}/assets`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListEnergyAssetsQueryOptions = <TData = Awaited<ReturnType<typeof listEnergyAssets>>, TError = ErrorType<unknown>>(orgId: string,
+    params?: ListEnergyAssetsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listEnergyAssets>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListEnergyAssetsQueryKey(orgId,params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listEnergyAssets>>> = ({ signal }) => listEnergyAssets(orgId,params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: orgId !== null && orgId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listEnergyAssets>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListEnergyAssetsQueryResult = NonNullable<Awaited<ReturnType<typeof listEnergyAssets>>>
+export type ListEnergyAssetsQueryError = ErrorType<unknown>
+
+
+
+export function useListEnergyAssets<TData = Awaited<ReturnType<typeof listEnergyAssets>>, TError = ErrorType<unknown>>(
+ orgId: string,
+    params?: ListEnergyAssetsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listEnergyAssets>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListEnergyAssetsQueryOptions(orgId,params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCreateEnergyAssetUrl = (orgId: string,) => {
+
+
+
+
+  return `/api/platform/energy/${orgId}/assets`
+}
+
+export const createEnergyAsset = async (orgId: string,
+    energyRecordInput: EnergyRecordInput, options?: Parameters<typeof customFetch>[1]): Promise<PlatformMessage> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return customFetch<PlatformMessage>(getCreateEnergyAssetUrl(orgId),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(energyRecordInput)
+  }
+);}
+
+
+
+
+
+export const getCreateEnergyAssetMutationKey = () => ['createEnergyAsset'] as const;
+
+export const getCreateEnergyAssetMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createEnergyAsset>>, TError,CreateEnergyAssetMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createEnergyAsset>>, TError,CreateEnergyAssetMutationVariables, TContext> => {
+
+const mutationKey = getCreateEnergyAssetMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createEnergyAsset>>, CreateEnergyAssetMutationVariables> = (props) => {
+          const {orgId,data} = props ?? {};
+
+          return  createEnergyAsset(orgId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateEnergyAssetMutationResult = NonNullable<Awaited<ReturnType<typeof createEnergyAsset>>>
+    export type CreateEnergyAssetMutationBody = BodyType<EnergyRecordInput>
+    export type CreateEnergyAssetMutationError = ErrorType<unknown>
+    export type CreateEnergyAssetMutationVariables = {orgId: string;data: BodyType<EnergyRecordInput>}
+
+    export const useCreateEnergyAsset = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createEnergyAsset>>, TError,CreateEnergyAssetMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createEnergyAsset>>,
+        TError,
+        CreateEnergyAssetMutationVariables,
+        TContext
+      > => {
+      return useMutation(getCreateEnergyAssetMutationOptions(options));
+    }
+
+export const getGetEnergyAssetUrl = (orgId: string,
+    id: string,) => {
+
+
+
+
+  return `/api/platform/energy/${orgId}/assets/${id}`
+}
+
+export const getEnergyAsset = async (orgId: string,
+    id: string, options?: Parameters<typeof customFetch>[1]): Promise<EnergyAsset> => {
+
+  return customFetch<EnergyAsset>(getGetEnergyAssetUrl(orgId,id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetEnergyAssetQueryKey = (orgId: string,
+    id: string,) => {
+    return [
+    `/api/platform/energy/${orgId}/assets/${id}`
+    ] as const;
+    }
+
+
+export const getGetEnergyAssetQueryOptions = <TData = Awaited<ReturnType<typeof getEnergyAsset>>, TError = ErrorType<unknown>>(orgId: string,
+    id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getEnergyAsset>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetEnergyAssetQueryKey(orgId,id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getEnergyAsset>>> = ({ signal }) => getEnergyAsset(orgId,id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: orgId !== null && orgId !== undefined && id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getEnergyAsset>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetEnergyAssetQueryResult = NonNullable<Awaited<ReturnType<typeof getEnergyAsset>>>
+export type GetEnergyAssetQueryError = ErrorType<unknown>
+
+
+
+export function useGetEnergyAsset<TData = Awaited<ReturnType<typeof getEnergyAsset>>, TError = ErrorType<unknown>>(
+ orgId: string,
+    id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getEnergyAsset>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetEnergyAssetQueryOptions(orgId,id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getUpdateEnergyAssetUrl = (orgId: string,
+    id: string,) => {
+
+
+
+
+  return `/api/platform/energy/${orgId}/assets/${id}`
+}
+
+export const updateEnergyAsset = async (orgId: string,
+    id: string,
+    energyRecordInput: EnergyRecordInput, options?: Parameters<typeof customFetch>[1]): Promise<PlatformMessage> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return customFetch<PlatformMessage>(getUpdateEnergyAssetUrl(orgId,id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(energyRecordInput)
+  }
+);}
+
+
+
+
+
+export const getUpdateEnergyAssetMutationKey = () => ['updateEnergyAsset'] as const;
+
+export const getUpdateEnergyAssetMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateEnergyAsset>>, TError,UpdateEnergyAssetMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateEnergyAsset>>, TError,UpdateEnergyAssetMutationVariables, TContext> => {
+
+const mutationKey = getUpdateEnergyAssetMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateEnergyAsset>>, UpdateEnergyAssetMutationVariables> = (props) => {
+          const {orgId,id,data} = props ?? {};
+
+          return  updateEnergyAsset(orgId,id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateEnergyAssetMutationResult = NonNullable<Awaited<ReturnType<typeof updateEnergyAsset>>>
+    export type UpdateEnergyAssetMutationBody = BodyType<EnergyRecordInput>
+    export type UpdateEnergyAssetMutationError = ErrorType<unknown>
+    export type UpdateEnergyAssetMutationVariables = {orgId: string;id: string;data: BodyType<EnergyRecordInput>}
+
+    export const useUpdateEnergyAsset = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateEnergyAsset>>, TError,UpdateEnergyAssetMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateEnergyAsset>>,
+        TError,
+        UpdateEnergyAssetMutationVariables,
+        TContext
+      > => {
+      return useMutation(getUpdateEnergyAssetMutationOptions(options));
+    }
+
+export const getArchiveEnergyAssetUrl = (orgId: string,
+    id: string,) => {
+
+
+
+
+  return `/api/platform/energy/${orgId}/assets/${id}`
+}
+
+export const archiveEnergyAsset = async (orgId: string,
+    id: string, options?: Parameters<typeof customFetch>[1]): Promise<PlatformMessage> => {
+
+  return customFetch<PlatformMessage>(getArchiveEnergyAssetUrl(orgId,id),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+
+export const getArchiveEnergyAssetMutationKey = () => ['archiveEnergyAsset'] as const;
+
+export const getArchiveEnergyAssetMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof archiveEnergyAsset>>, TError,ArchiveEnergyAssetMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof archiveEnergyAsset>>, TError,ArchiveEnergyAssetMutationVariables, TContext> => {
+
+const mutationKey = getArchiveEnergyAssetMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof archiveEnergyAsset>>, ArchiveEnergyAssetMutationVariables> = (props) => {
+          const {orgId,id} = props ?? {};
+
+          return  archiveEnergyAsset(orgId,id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ArchiveEnergyAssetMutationResult = NonNullable<Awaited<ReturnType<typeof archiveEnergyAsset>>>
+
+    export type ArchiveEnergyAssetMutationError = ErrorType<unknown>
+    export type ArchiveEnergyAssetMutationVariables = {orgId: string;id: string}
+
+    export const useArchiveEnergyAsset = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof archiveEnergyAsset>>, TError,ArchiveEnergyAssetMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof archiveEnergyAsset>>,
+        TError,
+        ArchiveEnergyAssetMutationVariables,
+        TContext
+      > => {
+      return useMutation(getArchiveEnergyAssetMutationOptions(options));
+    }
 
 export const getSaveEnergyRecordUrl = (orgId: string,) => {
 

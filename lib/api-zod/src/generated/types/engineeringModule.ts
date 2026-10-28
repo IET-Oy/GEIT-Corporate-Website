@@ -14,6 +14,7 @@ export const EngineeringModule = {
   'energy-auditing': 'energy-auditing',
   'renewable-energy': 'renewable-energy',
   'battery-flexibility': 'battery-flexibility',
+  'ev-charging': 'ev-charging',
   'carbon-footprint': 'carbon-footprint',
   'digital-energy': 'digital-energy',
 } as const;

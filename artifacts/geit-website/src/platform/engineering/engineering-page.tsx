@@ -19,6 +19,7 @@ const BRIEFS: Record<EngModule, string> = {
   "energy-auditing": "Record audit measures such as lighting or motors. Each row converts quantity, power and hours into annual energy and cost effects. Nothing is pre-filled.",
   "renewable-energy": "Screening model: monthly generation = capacity x plane-of-array irradiation x performance ratio. Self-use proxy = min(generation, demand) x coincidence factor. This is not an hourly simulation.",
   "battery-flexibility": "Interval dispatch with a greedy rule: the battery charges from solar surplus only (no grid charging) and discharges by the chosen mode. It is not an optimiser.",
+  "ev-charging": "Review measured charging sessions against site load, solar and tariffs. Compare the observed schedule with a transparent, rule-based charging screen; no charger integration or control commands are configured.",
 };
 
 export function EngineeringPage({ moduleId }: { moduleId: EngModule }) {

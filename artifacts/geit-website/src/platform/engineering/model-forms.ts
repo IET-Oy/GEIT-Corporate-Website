@@ -1,12 +1,12 @@
 import type { EngineeringInputs } from "@workspace/api-client-react";
 
-export type EngModule = "energy-consulting" | "energy-auditing" | "renewable-energy" | "battery-flexibility";
-export type Model = "consulting" | "auditing" | "solar" | "battery";
-export const MODULE_MODEL: Record<EngModule, Model> = { "energy-consulting": "consulting", "energy-auditing": "auditing", "renewable-energy": "solar", "battery-flexibility": "battery" };
-export const MODULE_PATH: Record<EngModule, string> = { "energy-consulting": "/app/energy-consulting", "energy-auditing": "/app/energy-auditing", "renewable-energy": "/app/renewable-energy", "battery-flexibility": "/app/battery-flexibility" };
+export type EngModule = "energy-consulting" | "energy-auditing" | "renewable-energy" | "battery-flexibility" | "ev-charging";
+export type Model = "consulting" | "auditing" | "solar" | "battery" | "ev-charging";
+export const MODULE_MODEL: Record<EngModule, Model> = { "energy-consulting": "consulting", "energy-auditing": "auditing", "renewable-energy": "solar", "battery-flexibility": "battery", "ev-charging": "ev-charging" };
+export const MODULE_PATH: Record<EngModule, string> = { "energy-consulting": "/app/energy-consulting", "energy-auditing": "/app/energy-auditing", "renewable-energy": "/app/renewable-energy", "battery-flexibility": "/app/battery-flexibility", "ev-charging": "/app/ev-charging" };
 
 export type Spec = { key: string; label: string; unit: string; min?: number; max?: number; exMin?: boolean; int?: boolean; optional?: boolean; hint?: string };
-export type FormState = { v: Record<string, string>; measures: Record<string, string>[]; months: Record<string, string>[]; csv: string };
+export type FormState = { v: Record<string, string>; measures: Record<string, string>[]; months: Record<string, string>[]; sessions: Record<string, string>[]; csv: string };
 export type Errors = Record<string, string>;
 export const CUR = "{cur}";
 export const cu = (u: string, cur: string) => u.replace(CUR, cur);
@@ -38,6 +38,10 @@ export const SCALARS: Record<Model, Spec[]> = {
     { key: "discountRatePercent", label: "Discount rate", unit: "%", min: 0, max: 100, hint: "Editable default." },
     { key: "years", label: "Evaluation horizon", unit: "years", min: 1, max: 50, int: true, hint: "Editable default." },
   ],
+  "ev-charging": [
+    { key: "chargerCount", label: "Number of chargers", unit: "chargers", min: 1, max: 500, int: true },
+    { key: "chargerPowerKw", label: "Rated power per charger", unit: "kW", exMin: true, min: 0, max: 10000 },
+  ],
   battery: [
     { key: "capacityKwh", label: "Usable nameplate capacity", unit: "kWh", exMin: true, min: 0, max: 1e7 },
     { key: "minSocPercent", label: "Minimum state of charge", unit: "%", min: 0, max: 100 },
@@ -59,8 +63,10 @@ export const MEASURE_SPECS: Spec[] = [
 ];
 export const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 export const CSV_HEADER = "start,end,loadKwh,solarKwh,importRatePerKwh,exportRatePerKwh";
+export const EV_CSV_HEADER = "start,end,siteLoadKwh,solarKwh,importRatePerKwh,exportRatePerKwh";
 
 export const blankMeasure = (): Record<string, string> => ({ name: "", powerUnit: "kW", quantity: "", baselinePower: "", proposedPower: "", hoursPerYear: "", capex: "", annualOpexDelta: "" });
+export const blankSession = (): Record<string, string> => ({ sessionId: "", chargerId: "", availableFrom: "", departureAt: "", actualStart: "", actualEnd: "", energyKwh: "" });
 
 export function initialState(model: Model): FormState {
   const v: Record<string, string> = { sourceNotes: "" };
@@ -68,7 +74,12 @@ export function initialState(model: Model): FormState {
   if (model === "auditing") Object.assign(v, { discountRatePercent: "8", years: "10" });
   if (model === "solar") Object.assign(v, { performanceRatio: "0.75", discountRatePercent: "8", years: "20" });
   if (model === "battery") Object.assign(v, { chargeEfficiency: "0.95", dischargeEfficiency: "0.95", dispatchMode: "self_consumption", gridTargetKw: "" });
-  return { v, measures: [blankMeasure()], months: MONTHS.map((_, i) => ({ month: String(i + 1), irradiationKwhM2: "", demandKwh: "" })), csv: "" };
+  if (model === "ev-charging") Object.assign(v, {
+    includeBattery: "false",
+    batteryCapacityKwh: "", batteryMinSocPercent: "0", batteryMaxSocPercent: "100", batteryInitialSocPercent: "50",
+    batteryMaxChargeKw: "", batteryMaxDischargeKw: "", batteryChargeEfficiency: "0.95", batteryDischargeEfficiency: "0.95",
+  });
+  return { v, measures: [blankMeasure()], months: MONTHS.map((_, i) => ({ month: String(i + 1), irradiationKwhM2: "", demandKwh: "" })), sessions: [blankSession()], csv: "" };
 }
 
 export function stateFromInputs(i: EngineeringInputs): FormState {
@@ -81,6 +92,17 @@ export function stateFromInputs(i: EngineeringInputs): FormState {
   if (i.model === "auditing") st.measures = i.measures.map((m) => Object.fromEntries(Object.entries(m).map(([k, x]) => [k, s(x)])));
   if (i.model === "solar") st.months = i.months.map((m) => ({ month: s(m.month), irradiationKwhM2: s(m.irradiationKwhM2), demandKwh: s(m.demandKwh) }));
   if (i.model === "battery") st.csv = [CSV_HEADER, ...i.intervals.map((r) => [r.start, r.end, r.loadKwh, r.solarKwh, r.importRatePerKwh, r.exportRatePerKwh].join(","))].join("\n");
+  if (i.model === "ev-charging") {
+    st.sessions = i.sessions.map((session) => Object.fromEntries(Object.entries(session).map(([k, x]) => [k, s(x)])));
+    st.csv = [EV_CSV_HEADER, ...i.intervals.map((r) => [r.start, r.end, r.siteLoadKwh, r.solarKwh, r.importRatePerKwh, r.exportRatePerKwh].join(","))].join("\n");
+    if (i.battery) Object.assign(st.v, {
+      includeBattery: "true",
+      batteryCapacityKwh: s(i.battery.capacityKwh), batteryMinSocPercent: s(i.battery.minSocPercent),
+      batteryMaxSocPercent: s(i.battery.maxSocPercent), batteryInitialSocPercent: s(i.battery.initialSocPercent),
+      batteryMaxChargeKw: s(i.battery.maxChargeKw), batteryMaxDischargeKw: s(i.battery.maxDischargeKw),
+      batteryChargeEfficiency: s(i.battery.chargeEfficiency), batteryDischargeEfficiency: s(i.battery.dischargeEfficiency),
+    });
+  }
   return st;
 }
 
@@ -97,11 +119,11 @@ function num(raw: string | undefined, sp: Spec, errs: Errors, ek: string): numbe
 
 const ISO = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d+)?)?(Z|[+-]\d{2}:\d{2})$/;
 export type ParsedCsv = { rows: Record<string, string | number>[]; errors: string[] };
-export function parseCsv(text: string): ParsedCsv {
+function parseIntervalCsv(text: string, header: string): ParsedCsv {
   const lines = text.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
   const errors: string[] = []; const rows: ParsedCsv["rows"] = [];
   if (!lines.length) return { rows, errors };
-  if (lines[0].replace(/\s/g, "") !== CSV_HEADER) errors.push(`Line 1: header must be exactly ${CSV_HEADER}`);
+  if (lines[0].replace(/\s/g, "") !== header) errors.push(`Line 1: header must be exactly ${header}`);
   const body = lines.slice(1);
   if (body.length > 1000) errors.push("At most 1000 intervals are allowed.");
   body.forEach((l, idx) => {
@@ -109,14 +131,16 @@ export function parseCsv(text: string): ParsedCsv {
     if (c.length !== 6) { errors.push(`Line ${ln}: expected 6 columns, found ${c.length}. Quoted values are not supported.`); return; }
     if (!ISO.test(c[0]) || !ISO.test(c[1])) { errors.push(`Line ${ln}: start and end need ISO 8601 with Z or an offset, e.g. 2025-01-01T00:00:00Z.`); return; }
     const nums = c.slice(2).map((x) => (x === "" ? NaN : Number(x)));
-    const names = ["loadKwh", "solarKwh", "importRatePerKwh", "exportRatePerKwh"];
+    const names = header.split(",").slice(2);
     const bad = nums.findIndex((n, k) => !Number.isFinite(n) || n < 0 || n > (k < 2 ? 1e9 : 1e6));
     if (bad >= 0) { errors.push(`Line ${ln}: ${names[bad]} must be a number of 0 or more within range.`); return; }
-    rows.push({ start: c[0], end: c[1], loadKwh: nums[0], solarKwh: nums[1], importRatePerKwh: nums[2], exportRatePerKwh: nums[3] });
+    rows.push({ start: c[0], end: c[1], ...Object.fromEntries(names.map((name, index) => [name, nums[index]])) });
   });
   if (lines.length && body.length === 0 && !errors.length) errors.push("Add at least one interval row under the header.");
   return { rows, errors };
 }
+export const parseCsv = (text: string): ParsedCsv => parseIntervalCsv(text, CSV_HEADER);
+export const parseEvCsv = (text: string): ParsedCsv => parseIntervalCsv(text, EV_CSV_HEADER);
 
 export function buildInputs(model: Model, st: FormState): { inputs?: EngineeringInputs; errors: Errors } {
   const errors: Errors = {}; const v = st.v;
@@ -158,6 +182,60 @@ export function buildInputs(model: Model, st: FormState): { inputs?: Engineering
     if (!st.csv.trim()) errors.csv = "Paste or upload interval data. No default dataset is supplied.";
     else if (p.errors.length) errors.csv = p.errors[0];
     out.intervals = p.rows;
+  }
+  if (model === "ev-charging") {
+    out.energyUnit = "kWh";
+    out.powerUnit = "kW";
+    const parsed = parseEvCsv(st.csv);
+    if (!st.csv.trim()) errors.csv = "Paste or upload site interval data. No default dataset is supplied.";
+    else if (parsed.errors.length) errors.csv = parsed.errors[0];
+    out.intervals = parsed.rows;
+
+    const sessions = st.sessions.map((session, index) => {
+      const sessionId = (session.sessionId ?? "").trim();
+      const chargerId = (session.chargerId ?? "").trim();
+      if (sessionId.length < 2 || sessionId.length > 80) errors[`s.${index}.sessionId`] = "Session ID must be 2 to 80 characters.";
+      if (chargerId.length < 2 || chargerId.length > 80) errors[`s.${index}.chargerId`] = "Charger ID must be 2 to 80 characters.";
+      const row: Record<string, string | number> = { sessionId, chargerId };
+      for (const key of ["availableFrom", "departureAt", "actualStart", "actualEnd"] as const) {
+        const value = (session[key] ?? "").trim();
+        if (!ISO.test(value) || !Number.isFinite(Date.parse(value))) errors[`s.${index}.${key}`] = "Use ISO 8601 with Z or a UTC offset.";
+        row[key] = value;
+      }
+      const energy = num(session.energyKwh, { key: "energyKwh", label: "Session energy", unit: "kWh", exMin: true, min: 0, max: 1e6 }, errors, `s.${index}.energyKwh`);
+      if (energy !== null) row.energyKwh = energy;
+      const a = Date.parse(session.availableFrom ?? ""), d = Date.parse(session.departureAt ?? "");
+      const chargeStart = Date.parse(session.actualStart ?? ""), chargeEnd = Date.parse(session.actualEnd ?? "");
+      if ([a, d, chargeStart, chargeEnd].every(Number.isFinite) && !(a < d && a <= chargeStart && chargeStart < chargeEnd && chargeEnd <= d)) {
+        errors[`s.${index}.actualEnd`] = "Require arrival ≤ actual charge start < actual charge end ≤ departure.";
+      }
+      return row;
+    });
+    if (!sessions.length || sessions.length > 1000) errors.sessions = "Between 1 and 1000 sessions are required.";
+    if (new Set(sessions.map((session) => session.sessionId)).size !== sessions.length) errors.sessions = "Session IDs must be unique.";
+    out.sessions = sessions;
+
+    if (v.includeBattery === "true") {
+      const fields = {
+        capacityKwh: { key: "batteryCapacityKwh", label: "Battery capacity", unit: "kWh", exMin: true, min: 0, max: 1e7 },
+        minSocPercent: { key: "batteryMinSocPercent", label: "Minimum state of charge", unit: "%", min: 0, max: 100 },
+        maxSocPercent: { key: "batteryMaxSocPercent", label: "Maximum state of charge", unit: "%", min: 0, max: 100 },
+        initialSocPercent: { key: "batteryInitialSocPercent", label: "Initial state of charge", unit: "%", min: 0, max: 100 },
+        maxChargeKw: { key: "batteryMaxChargeKw", label: "Maximum charge power", unit: "kW", exMin: true, min: 0, max: 1e7 },
+        maxDischargeKw: { key: "batteryMaxDischargeKw", label: "Maximum discharge power", unit: "kW", exMin: true, min: 0, max: 1e7 },
+        chargeEfficiency: { key: "batteryChargeEfficiency", label: "Charge efficiency", unit: "fraction", min: 0.01, max: 1 },
+        dischargeEfficiency: { key: "batteryDischargeEfficiency", label: "Discharge efficiency", unit: "fraction", min: 0.01, max: 1 },
+      } as const;
+      const batteryInputs = Object.fromEntries(Object.entries(fields).map(([key, spec]) => [
+        key, num(v[spec.key], spec, errors, spec.key),
+      ]));
+      const minimum = batteryInputs.minSocPercent, maximum = batteryInputs.maxSocPercent, initial = batteryInputs.initialSocPercent;
+      if (minimum !== null && maximum !== null && minimum >= maximum) errors.batteryMaxSocPercent = "Maximum must be greater than the minimum.";
+      if (minimum !== null && maximum !== null && initial !== null && (initial < minimum || initial > maximum)) {
+        errors.batteryInitialSocPercent = "Initial state of charge must lie within the minimum and maximum.";
+      }
+      out.battery = batteryInputs;
+    }
   }
   return Object.keys(errors).length ? { errors } : { inputs: out as unknown as EngineeringInputs, errors };
 }
