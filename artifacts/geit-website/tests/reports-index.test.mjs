@@ -25,7 +25,7 @@ test("report index uses saved summaries, newest first, without inventing missing
   assert.equal(rows[1].archived, true);
   assert.equal(rows[1].project, "Building A");
   assert.deepEqual(reportEntries(org, undefined, {}), []);
-  assert.equal(REPORT_MODULES.length, 6);
+  assert.equal(REPORT_MODULES.length, 7);
 });
 test("report links bind organisation and saved IDs, encode parameters and separate demo navigation", () => {
   for (const row of reportEntries(org, energy, engineering)) {

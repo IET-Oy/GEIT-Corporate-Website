@@ -1,11 +1,11 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link, useLocation, useSearch } from "wouter";
-import { LogOut, Settings, LayoutGrid } from "lucide-react";
+import { CheckCircle2, Circle, LogOut, Settings, LayoutGrid } from "lucide-react";
 import {
-  getGetPlatformMembersQueryKey, getGetPlatformSessionQueryKey, useAddPlatformMember, useCreatePlatformOrganisation,
+  getGetEnergyWorkspaceQueryKey, getGetPlatformMembersQueryKey, getGetPlatformSessionQueryKey, useGetEnergyWorkspace, useAddPlatformMember, useCreatePlatformOrganisation,
   useGetPlatformMembers, useGetPlatformSession, usePlatformAuth, useRemovePlatformMember, useUpdatePlatformOrganisation,
-  PlatformRole, type PlatformOrganisation,
+  PlatformRole, type EnergyWorkspace, type PlatformOrganisation,
 } from "@workspace/api-client-react";
 import { platformModules } from "@/config/platform-modules";
 import { Alert, Field, PlannedBadge, ROLE_LABELS, Skeleton, SubmitButton, TextLink, WRITE, apiMessage, apiStatus, useOrgParam, usePageMeta, withOrg } from "./common";
@@ -14,7 +14,7 @@ const NAV_LABELS: Record<string, string> = { "energy-management": "Energy Manage
 const NAV_GROUPS = [
   { label: "Overview", ids: ["overview"] },
   { label: "Analysis", ids: ["energy-management", "digital-energy"] },
-  { label: "Engineering", ids: ["energy-consulting", "renewable-energy", "energy-auditing", "battery-flexibility"] },
+  { label: "Engineering", ids: ["energy-consulting", "renewable-energy", "energy-auditing", "battery-flexibility", "ev-charging"] },
   { label: "Sustainability", ids: ["carbon-footprint"] },
   { label: "Projects", ids: ["projects-reports", "recommendations"] },
   { label: "Settings", ids: ["organisation-settings"] },
@@ -160,6 +160,91 @@ export function Workspace({ title, path, children }: { title: string; path: stri
   );
 }
 
+const SERVICE_AREAS = [
+  { title: "Energy Management", text: "Sites, buildings, assets, meters, interval data imports, tariffs, analyses and alert rules.", links: [["energy-management", "Open Energy Management"]] },
+  { title: "Renewable Energy", text: "Solar PV yield, self-consumption and investment screening from your own inputs.", links: [["renewable-energy", "Open Renewable Energy"]] },
+  { title: "Energy Efficiency", text: "Audit measures, savings estimates and consulting baselines with saved revisions.", links: [["energy-auditing", "Open Efficiency & Auditing"], ["energy-consulting", "Open Energy Consulting"]] },
+  { title: "Battery Storage & Flexibility", text: "Battery sizing and dispatch scenarios for peak shaving and load shifting.", links: [["battery-flexibility", "Open Battery & Flexibility"]] },
+  { title: "Carbon Footprint", text: "Scope-based screening using versioned emission factors and documented inputs.", links: [["carbon-footprint", "Open Carbon Footprint"]] },
+  { title: "EV Charging Infrastructure", text: "Charger demand, session profiles and site capacity checks.", links: [["ev-charging", "Open EV Charging"]] },
+  { title: "AI-Powered Energy Analytics", text: "Digital twin, forecasting and anomaly signals once sufficient measured history is imported.", links: [["digital-energy", "Open Digital Twin"]] },
+] as const;
+
+type EnergyRecords = EnergyWorkspace;
+function liveRecords<T extends { is_demo: boolean; archived?: boolean }>(rows: T[] | undefined) {
+  return (rows ?? []).filter((r) => !r.is_demo && !r.archived);
+}
+
+/** Summarises the organisation's own stored records. Demo and archived rows are excluded; nothing is estimated. */
+export function workspaceSnapshot(w: EnergyRecords | undefined) {
+  const alerts = (w?.alerts ?? []).filter((a) => !a.is_demo);
+  return {
+    sites: liveRecords(w?.sites).length,
+    buildings: liveRecords(w?.buildings).length,
+    assets: liveRecords(w?.assets).length,
+    meters: liveRecords(w?.meters).length,
+    tariffs: liveRecords(w?.tariffs).length,
+    imports: (w?.imports ?? []).filter((i) => !i.is_demo).length,
+    analyses: (w?.analyses ?? []).filter((a) => !a.is_demo).length,
+    openAlerts: alerts.filter((a) => !a.acknowledged).length,
+  };
+}
+
+export function setupSteps(s: ReturnType<typeof workspaceSnapshot>) {
+  return [
+    { done: s.sites > 0, label: "Register at least one site", hint: "Sites hold buildings, assets and meters." },
+    { done: s.meters > 0, label: "Add a meter", hint: "Meters receive imported interval readings." },
+    { done: s.tariffs > 0, label: "Record a tariff", hint: "Tariffs are needed to convert energy into cost." },
+    { done: s.imports > 0, label: "Import interval data", hint: "Upload a CSV or Excel file using the provided template." },
+    { done: s.analyses > 0, label: "Run your first analysis", hint: "Results are calculated from imported readings only." },
+  ];
+}
+
+function Snapshot({ orgId }: { orgId: string }) {
+  const q = useGetEnergyWorkspace(orgId, { query: { retry: false, queryKey: getGetEnergyWorkspaceQueryKey(orgId) } });
+  if (q.isLoading) return <Skeleton label="Loading organisation records" />;
+  if (q.isError) return <Alert testId="error-overview-snapshot">{apiStatus(q.error) === 403 ? "Your role cannot read Energy Management records for this organisation." : apiMessage(q.error, "We could not load your organisation’s records.")} <button type="button" className="font-bold underline" onClick={() => q.refetch()}>Retry</button></Alert>;
+  const s = workspaceSnapshot(q.data);
+  const steps = setupSteps(s);
+  const remaining = steps.filter((x) => !x.done);
+  const tiles: [string, number, string][] = [
+    ["Sites", s.sites, "Active, non-demo"], ["Buildings", s.buildings, "Active, non-demo"], ["Assets", s.assets, "Active, non-demo"],
+    ["Meters", s.meters, "Active, non-demo"], ["Analyses", s.analyses, "Saved results"], ["Open alerts", s.openAlerts, "Not yet acknowledged"],
+  ];
+  return (
+    <div className="space-y-6">
+      <section aria-labelledby="snapshot-h">
+        <h2 id="snapshot-h" className="text-[11px] font-bold tracking-[.19em] text-[#168568]">YOUR RECORDS</h2>
+        <dl className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-6" data-testid="overview-snapshot">
+          {tiles.map(([label, value, note]) => (
+            <div key={label} className={`border bg-white p-4 ${label === "Open alerts" && value > 0 ? "border-[#e8b64b]" : "border-[#dce3e8]"}`}>
+              <dt className="text-xs font-semibold text-[#5d707c]">{label}</dt>
+              <dd className="mt-1 text-2xl font-extrabold text-[#10243a]">{value}</dd>
+              <dd className="text-[11px] text-[#6b7b87]">{note}</dd>
+            </div>
+          ))}
+        </dl>
+        <p className="mt-2 text-xs text-[#6b7b87]">Counts come from records stored for this organisation. Demonstration and archived records are excluded.</p>
+      </section>
+      {s.openAlerts > 0 && <Alert tone="info" testId="overview-open-alerts">{s.openAlerts} alert{s.openAlerts === 1 ? "" : "s"} need review. <TextLink href={withOrg("/app/energy-management", orgId)}>Review alerts in Energy Management</TextLink></Alert>}
+      {remaining.length > 0 && (
+        <section aria-labelledby="setup-h" className="border border-[#dce3e8] bg-white p-6" data-testid="overview-setup">
+          <h2 id="setup-h" className="text-lg font-bold text-[#10243a]">Getting started · {steps.length - remaining.length} of {steps.length} complete</h2>
+          <ol className="mt-4 space-y-3">
+            {steps.map((step) => (
+              <li key={step.label} className="flex items-start gap-3 text-sm">
+                {step.done ? <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-[#168568]" aria-hidden="true" /> : <Circle size={18} className="mt-0.5 shrink-0 text-[#9aa8b1]" aria-hidden="true" />}
+                <span><span className={step.done ? "text-[#5d707c] line-through" : "font-semibold text-[#10243a]"}>{step.label}</span><span className="sr-only">{step.done ? " (complete)" : " (to do)"}</span><span className="block text-xs text-[#6b7b87]">{step.hint}</span></span>
+              </li>
+            ))}
+          </ol>
+          <div className="mt-5"><TextLink href={withOrg("/app/energy-management", orgId)}>Continue in Energy Management</TextLink></div>
+        </section>
+      )}
+    </div>
+  );
+}
+
 export function OverviewPage() {
   return (
     <Workspace title="Workspace overview" path="/app">{({ user, org }) => (
@@ -169,7 +254,22 @@ export function OverviewPage() {
           <h1 className="mt-3 text-3xl font-extrabold text-[#10243a]" data-testid="text-org-name">{org.name}</h1>
           <p className="mt-2 text-sm text-[#5d707c]">Signed in as {user.fullName}. Your role: <strong>{ROLE_LABELS[org.role]}</strong>. Time zone: {org.timezone}.</p>
         </header>
-        <Alert tone="info">Use Energy Management, the engineering modules, Carbon Footprint and Digital Energy to work with your organisation’s records. Projects and Reports brings saved work together; numerical results appear only after an analysis or scenario is saved.</Alert>
+        <Snapshot orgId={org.id} />
+        <section aria-labelledby="areas-h">
+          <h2 id="areas-h" className="text-[11px] font-bold tracking-[.19em] text-[#168568]">SERVICE AREAS</h2>
+          <div className="mt-3 grid gap-3 md:grid-cols-2 xl:grid-cols-3" data-testid="overview-service-areas">
+            {SERVICE_AREAS.map((area) => (
+              <div key={area.title} className="flex flex-col border border-[#dce3e8] bg-white p-5">
+                <h3 className="font-bold text-[#10243a]">{area.title}</h3>
+                <p className="mt-1 text-sm leading-6 text-[#5d707c]">{area.text}</p>
+                <div className="mt-auto flex flex-wrap gap-x-4 gap-y-1 pt-3">
+                  {area.links.map(([id, label]) => <Link key={id} href={withOrg(platformModules.find((m) => m.id === id)!.path, org.id)} className="text-sm font-bold text-[#168568] underline underline-offset-2" data-testid={`link-overview-${id}`}>{label}</Link>)}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+        <Alert tone="info">Numerical results appear only after you import data and save an analysis or scenario. Projects and Reports brings saved work together.</Alert>
         <div className="grid gap-4 sm:grid-cols-2">
           <Link href={withOrg("/app/organisation-settings", org.id)} data-testid="link-overview-settings" className="flex items-start gap-4 border border-[#dce3e8] bg-white p-7 hover:bg-[#f2f5f7]"><Settings className="mt-1 text-[#168568]" size={20} aria-hidden="true" /><span><strong className="block text-[#10243a]">Organisation settings</strong><span className="text-sm text-[#5d707c]">Edit details and manage members.</span></span></Link>
           <Link href={withOrg("/app/projects-reports", org.id)} className="flex items-start gap-4 border border-[#dce3e8] bg-white p-7 hover:bg-[#f2f5f7]"><LayoutGrid className="mt-1 text-[#6b7b87]" size={20} aria-hidden="true" /><span><strong className="block text-[#10243a]">Projects and Reports</strong><span className="text-sm text-[#5d707c]">Find saved projects, analyses and scenarios, then open their verified report and export options.</span></span></Link>
