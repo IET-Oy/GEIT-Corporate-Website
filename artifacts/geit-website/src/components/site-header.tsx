@@ -1,39 +1,15 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import LanguageSelector from "@/components/language-selector";
 import { useLanguage } from "@/lib/language-context";
-import type { MessageKey } from "@/lib/i18n";
 import { translationReview } from "@/lib/page-copy";
-import { primaryNavigation } from "@/config/site-navigation";
+import { isNavActive, mainNavigation, type NavItem } from "@/config/site-navigation";
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [path] = useLocation();
-  const { c, t, language } = useLanguage();
-  const primaryNav = useRef<HTMLElement>(null);
-
-  useLayoutEffect(() => {
-    const nav = primaryNav.current;
-    const secondaryStart = document.querySelector<HTMLElement>("[data-secondary-start]");
-    if (!nav || !secondaryStart) return;
-    let active = true;
-    const align = () => {
-      if (!active || getComputedStyle(nav).display === "none") return;
-      // Grow only the links' box to the left. Its right edge and the following
-      // language selector stay fixed; translated labels need no pixel offsets.
-      const brand = nav.closest("header")?.querySelector<HTMLElement>("[data-testid='link-home-brand']");
-      const start = Math.max(secondaryStart.getBoundingClientRect().left, (brand?.getBoundingClientRect().right ?? 0) + 12);
-      const width = nav.getBoundingClientRect().right - start;
-      if (width > 0) nav.style.width = `${width}px`;
-    };
-    align();
-    const observer = new ResizeObserver(align);
-    observer.observe(document.documentElement);
-    observer.observe(secondaryStart);
-    void document.fonts.ready.then(align);
-    return () => { active = false; observer.disconnect(); };
-  }, [language]);
+  const { c, t } = useLanguage();
 
   useEffect(() => setOpen(false), [path]);
   useEffect(() => {
@@ -43,14 +19,7 @@ export function SiteHeader() {
     return () => document.removeEventListener("keydown", h);
   }, [open]);
 
-  const isActive = (href: string) => (href === "/" ? path === "/" : path === href || path.startsWith(href + "/"));
-  const cls = (href: string, extra = "") =>
-    `navlink whitespace-nowrap leading-4 lg:!text-[14px] ${extra} ${isActive(href) ? "border-b-2 border-[#e8b64b] font-bold" : ""}`;
-  const item = (l: { key: MessageKey; href: string }, extra = "") => (
-    <Link key={l.href} href={l.href} className={cls(l.href, extra)} aria-current={isActive(l.href) ? "page" : undefined}>
-      {t(l.key)}
-    </Link>
-  );
+  const label = (l: NavItem) => (l.key ? t(l.key) : l.label);
 
   return (
     <>
@@ -61,23 +30,39 @@ export function SiteHeader() {
               <img src="/images/geit-logo.jpg" alt={c("GEIT Ltd. — Global Energy Innovation Technologies")} className="h-[50px] w-[120px] object-contain sm:h-[60px] sm:w-[144px] lg:h-[50px] lg:w-[120px] xl:h-[60px] xl:w-[144px]" width="373" height="157" />
             </span>
           </Link>
-          <div className="ml-auto flex min-w-0 items-center gap-2 sm:gap-3">
-            <nav ref={primaryNav} className="hidden shrink-0 flex-nowrap items-center gap-2.5 py-1 md:flex xl:gap-5" aria-label={t("mainNavigation")}>
-              {primaryNavigation.map((link) => item(link))}
+          <div className="ml-auto flex min-w-0 items-center gap-2 sm:gap-3 xl:gap-5">
+            <nav className="hidden shrink-0 flex-nowrap items-center gap-3 py-1 lg:flex xl:gap-5" aria-label={t("mainNavigation")} data-testid="nav-main">
+              {mainNavigation.map((l) => {
+                const active = isNavActive(l.href, path);
+                return (
+                  <Link key={l.href} href={l.href} aria-current={active ? "page" : undefined}
+                    data-testid={l.product ? "link-energy-dt" : undefined}
+                    className={l.product
+                      ? "navlink geit-silver-link geit-nav-product whitespace-nowrap leading-4 lg:!text-[14px]"
+                      : `navlink inline-flex min-h-10 items-center whitespace-nowrap leading-4 lg:!text-[14px] ${active ? "border-b-2 border-[#e8b64b] font-bold" : "border-b-2 border-transparent"}`}>
+                    {label(l)}
+                  </Link>
+                );
+              })}
             </nav>
             <LanguageSelector />
-            <button type="button" className="grid h-10 w-10 place-items-center rounded-md text-[#10243a] transition hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#168568] md:hidden" onClick={() => setOpen((v) => !v)} aria-label={open ? t("menuClose") : t("menuOpen")} aria-expanded={open} aria-controls="mobile-navigation" data-testid="button-mobile-menu">
+            <button type="button" className="grid h-11 w-11 place-items-center rounded-md text-[#10243a] transition hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#168568] lg:hidden" onClick={() => setOpen((v) => !v)} aria-label={open ? t("menuClose") : t("menuOpen")} aria-expanded={open} aria-controls="mobile-navigation" data-testid="button-mobile-menu">
               {open ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
             </button>
           </div>
         </div>
         {open && (
-          <nav id="mobile-navigation" className="border-t border-[#dce3e8] bg-white px-5 py-3 md:hidden" aria-label={t("mainNavigation")}>
-            {primaryNavigation.map((l) => (
-              <Link key={l.href} href={l.href} aria-current={isActive(l.href) ? "page" : undefined} className={`block border-b border-[#edf0f2] py-3 text-sm font-semibold hover:text-[#168568] ${isActive(l.href) ? "text-[#168568]" : "text-[#10243a]"}`}>
-                {t(l.key)}
-              </Link>
-            ))}
+          <nav id="mobile-navigation" className="border-t border-[#dce3e8] bg-white px-5 py-3 lg:hidden" aria-label={t("mainNavigation")}>
+            {mainNavigation.map((l) => {
+              const active = isNavActive(l.href, path);
+              return (
+                <Link key={l.href} href={l.href} aria-current={active ? "page" : undefined}
+                  data-testid={l.product ? "link-energy-dt-mobile" : undefined}
+                  className={`flex min-h-11 items-center border-b border-[#edf0f2] py-3 text-sm font-semibold hover:text-[#168568] ${active ? "text-[#168568]" : "text-[#10243a]"}`}>
+                  {label(l)}
+                </Link>
+              );
+            })}
           </nav>
         )}
       </header>

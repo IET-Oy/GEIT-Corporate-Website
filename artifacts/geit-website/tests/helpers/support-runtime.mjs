@@ -72,13 +72,13 @@ export async function supportRuntime(root) {
       load("lib/language-context.tsx"), load("components/language-selector.tsx"),
       load("components/saas-faq-section.tsx"), load("components/support-widget.tsx"),
       load("components/support-language-notice.tsx"), load("data/saas-faq.ts"),
-      load("lib/translations/support.ts"), load("platform/app-nav.tsx"), server.ssrLoadModule(virtualId),
+      load("lib/translations/support.ts"), load("components/site-header.tsx"), server.ssrLoadModule(virtualId),
     ]);
     return {
       ...testing, user: userEvent.setup({ document: dom.window.document }),
       LanguageProvider: language.LanguageProvider, LanguageSelector: selector.default,
       SaasFaqSection: section.SaasFaqSection, SupportWidget: widget.SupportWidget,
-      SupportLanguageNotice: notice.SupportLanguageNotice, AppNav: appNav.AppNav, faq, ...translations, timing,
+      SupportLanguageNotice: notice.SupportLanguageNotice, SiteHeader: appNav.SiteHeader, faq, ...translations, timing,
       async close() {
         testing.cleanup();
         await server.close();

@@ -1,37 +1,44 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
-import { primaryNavigation, secondaryNavigation } from "../src/config/site-navigation.ts";
+import { isNavActive, mainNavigation } from "../src/config/site-navigation.ts";
 
-test("approved navigation has four primary and four secondary links in exact order", () => {
-  assert.deepEqual(primaryNavigation.map((link) => link.href), ["/", "/about", "/services", "/insights"]);
-  assert.deepEqual(secondaryNavigation.map((link) => link.href), ["/industries", "/digital-energy-solutions", "/energy-saas", "/contact"]);
-  const all = [...primaryNavigation, ...secondaryNavigation];
-  assert.equal(new Set(all.map((link) => link.href)).size, 8);
-  assert.equal(secondaryNavigation[2].label, "Energy DT");
+test("approved navigation is a single level of seven links in exact order", () => {
+  assert.deepEqual(mainNavigation.map((link) => link.href), ["/", "/about", "/services", "/industries", "/energy-dt", "/insights", "/contact"]);
+  assert.equal(new Set(mainNavigation.map((link) => link.href)).size, 7);
+  assert.equal(mainNavigation[4].label, "Energy DT");
+  assert.equal(mainNavigation[3].key, "navIndustries");
 });
 
-test("language selector keeps its header slot and Energy DT entry opens its overview", () => {
+test("Energy DT stays active across its overview and the protected application", () => {
+  for (const path of ["/energy-dt", "/app", "/app/energy-management"]) assert.ok(isNavActive("/energy-dt", path), path);
+  assert.ok(!isNavActive("/energy-dt", "/about"));
+  assert.ok(isNavActive("/industries", "/digital-energy-solutions"));
+  assert.ok(isNavActive("/", "/") && !isNavActive("/", "/about"));
+});
+
+test("language selector keeps its header slot and Energy DT routes are preserved", () => {
   const header = readFileSync(new URL("../src/components/site-header.tsx", import.meta.url), "utf8");
   assert.equal((header.match(/<LanguageSelector \/>/g) ?? []).length, 1);
   assert.match(header, /<\/nav>\s*<LanguageSelector \/>\s*<button/);
+  assert.doesNotMatch(header, /data-secondary-start|ResizeObserver/);
   const workspace = readFileSync(new URL("../src/platform/app-routes.tsx", import.meta.url), "utf8");
-  assert.match(workspace, /<SiteHeader \/>\s*<AppNav \/>/);
+  assert.match(workspace, /<SiteHeader \/>/);
+  assert.doesNotMatch(workspace, /AppNav/);
   const app = readFileSync(new URL("../src/App.tsx", import.meta.url), "utf8");
+  assert.doesNotMatch(app, /AppNav/);
   assert.match(app, /location === "\/energy-saas"[\s\S]*<Redirect to="\/energy-dt" \/>/);
   assert.match(app, /location === "\/app" \|\| location\.startsWith\("\/app\/"\)[\s\S]*<AppRoutes \/>/);
-  const appNav = readFileSync(new URL("../src/platform/app-nav.tsx", import.meta.url), "utf8");
-  assert.match(appNav, /href=\{link\.href\}/);
-  assert.doesNotMatch(appNav, /preventDefault|setComingSoon|energy-dt-coming-soon/);
+  assert.match(app, /className="skip-link"/);
   assert.ok(readFileSync(new URL("../src/components/hero-headline.tsx", import.meta.url), "utf8").includes('c("Make smarter energy decisions.")') && app.includes("<HeroHeadline/>") && !app.includes("Build a more efficient, resilient and low-carbon future."));
   assert.ok(app.includes("Integrated consulting, project development, digital energy and carbon services—grounded in data, rigorous analysis and sound economics."));
 });
 
-test("upper-bar links remain visible in compact desktop previews with a phone-only menu", () => {
+test("all seven links show on desktop widths with a menu below the large breakpoint", () => {
   const header = readFileSync(new URL("../src/components/site-header.tsx", import.meta.url), "utf8");
-  assert.match(header, /<nav ref=\{primaryNav\} className="[^"]*\bmd:flex\b/);
-  assert.match(header, /<button type="button" className="[^"]*\bmd:hidden\b/);
-  assert.match(header, /<nav id="mobile-navigation" className="[^"]*\bmd:hidden\b/);
+  assert.match(header, /<nav className="[^"]*\blg:flex\b[^"]*" aria-label=\{t\("mainNavigation"\)\} data-testid="nav-main"/);
+  assert.match(header, /<button type="button" className="[^"]*\blg:hidden\b/);
+  assert.match(header, /<nav id="mobile-navigation" className="[^"]*\blg:hidden\b/);
 });
 
 test("homepage hero combines the supplied photo with the light-field animation", () => {

@@ -32,7 +32,7 @@
   backdrop-filter: blur(12px);
   box-shadow: 0 10px 28px -20px rgba(0, 0, 0, .6), inset 0 1px 0 rgba(255, 255, 255, .18);
 }
-.geit-public > header .navlink,
+.geit-public > header .navlink:not(.geit-nav-product),
 .geit-public #mobile-navigation a { color: #fff; }
 .geit-public > header button[data-testid="button-mobile-menu"] { color: #fff; }
 .geit-public > header button[data-testid="button-mobile-menu"]:hover { background: rgba(255, 255, 255, .12); }
@@ -76,7 +76,7 @@
   background-color: rgba(222, 242, 231, .94);
   box-shadow: 0 0 0 2px rgba(222, 242, 231, .94);
 }
-.geit-public > header .navlink:is([aria-current="page"],:hover,:focus-visible) {
+.geit-public > header .navlink:not(.geit-nav-product):is([aria-current="page"],:hover,:focus-visible) {
   color: #fff !important;
   background: transparent;
   box-shadow: none;
