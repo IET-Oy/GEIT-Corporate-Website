@@ -53,7 +53,7 @@ GEIT Ltd presents 11 energy consulting and digital service areas, sector solutio
 
 ## Gotchas
 
-- Replace origin-neutral sitemap paths with absolute URLs once GEIT's official publication domain is confirmed; do not assume `geit.rw`.
+- The public domain is `https://geit.rw` (registered at register.rw, DNS pointing to the Replit deployment). Production `PLATFORM_ORIGIN` must be exactly `https://geit.rw`: Energy DT rejects writes (including sign-in) from any other origin, so `*.replit.app` sign-in is intentionally refused.
 
 ## Pointers
 
