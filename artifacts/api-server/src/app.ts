@@ -4,6 +4,7 @@ import pinoHttp from "pino-http";
 import router from "./routes";
 import { logger } from "./lib/logger";
 import { httpErrors } from "./lib/http-errors";
+import { mountStaticSite } from "./lib/static-site";
 
 const app: Express = express();
 app.set("trust proxy", 1);
@@ -39,6 +40,7 @@ app.use("/api", router);
 app.use("/api", (_req, res) => {
   res.set({ "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" }).status(404).json({ error: "API route not found." });
 });
+mountStaticSite(app, process.env.STATIC_SITE_DIR);
 app.use(httpErrors);
 
 export default app;

@@ -1,5 +1,4 @@
 import { Router, type IRouter } from "express";
-import { db, enquiriesTable } from "@workspace/db";
 import {
   CreateEnquiryBody,
   CreateEnquiryResponse,
@@ -63,7 +62,15 @@ router.post("/enquiries", async (req, res): Promise<void> => {
     return;
   }
 
+  // The legacy enquiry database is optional so the API can run where it is not
+  // provisioned (for example geit.rw hosting). Load it only when configured.
+  if (!process.env.DATABASE_URL) {
+    res.status(503).json({ error: "Online enquiries are not available. Please contact GEIT by email or telephone." });
+    return;
+  }
+
   try {
+    const { db, enquiriesTable } = await import("@workspace/db");
     const [savedEnquiry] = await db
       .insert(enquiriesTable)
       .values({

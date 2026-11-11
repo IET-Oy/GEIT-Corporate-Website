@@ -50,3 +50,6 @@ Thumbs.db
 .cache/
 .local/
 /generated-artifacts/
+
+# geit.rw deployment bundles (built locally, never committed)
+/deploy/out/
