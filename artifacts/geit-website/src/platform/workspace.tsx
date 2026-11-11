@@ -166,7 +166,7 @@ const SERVICE_AREAS = [
   { title: "Energy Efficiency", text: "Audit measures, savings estimates and consulting baselines with saved revisions.", links: [["energy-auditing", "Open Efficiency & Auditing"], ["energy-consulting", "Open Energy Consulting"]] },
   { title: "Battery Storage & Flexibility", text: "Battery sizing and dispatch scenarios for peak shaving and load shifting.", links: [["battery-flexibility", "Open Battery & Flexibility"]] },
   { title: "Carbon Footprint", text: "Scope-based screening using versioned emission factors and documented inputs.", links: [["carbon-footprint", "Open Carbon Footprint"]] },
-  { title: "EV Charging Infrastructure", text: "Charger demand, session profiles and site capacity checks.", links: [["ev-charging", "Open EV Charging"]] },
+  { title: "EV Charging Infrastructure", text: "Charging sessions, site peak import and managed-charging schedules.", links: [["ev-charging", "Open EV Charging"]] },
   { title: "AI-Powered Energy Analytics", text: "Digital twin, forecasting and anomaly signals once sufficient measured history is imported.", links: [["digital-energy", "Open Digital Twin"]] },
 ] as const;
 
@@ -226,7 +226,7 @@ function Snapshot({ orgId }: { orgId: string }) {
         </dl>
         <p className="mt-2 text-xs text-[#6b7b87]">Counts come from records stored for this organisation. Demonstration and archived records are excluded.</p>
       </section>
-      {s.openAlerts > 0 && <Alert tone="info" testId="overview-open-alerts">{s.openAlerts} alert{s.openAlerts === 1 ? "" : "s"} need review. <TextLink href={withOrg("/app/energy-management", orgId)}>Review alerts in Energy Management</TextLink></Alert>}
+      {s.openAlerts > 0 && <Alert tone="info" testId="overview-open-alerts">{s.openAlerts === 1 ? "1 alert needs review." : `${s.openAlerts} alerts need review.`} <TextLink href={withOrg("/app/energy-management", orgId)}>Review alerts in Energy Management</TextLink></Alert>}
       {remaining.length > 0 && (
         <section aria-labelledby="setup-h" className="border border-[#dce3e8] bg-white p-6" data-testid="overview-setup">
           <h2 id="setup-h" className="text-lg font-bold text-[#10243a]">Getting started · {steps.length - remaining.length} of {steps.length} complete</h2>

@@ -218,3 +218,31 @@ test("all corporate pages share glass styling while retaining inner-page scope a
     await server.close();
   }
 });
+
+test("workspace overview counts only the organisation's live records and derives honest setup steps", async () => {
+  const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+  const server = await createServer({
+    root, configFile: false, appType: "custom", logLevel: "error",
+    resolve: { alias: { "@": path.join(root, "src") }, dedupe: ["react", "react-dom"] },
+    esbuild: { jsx: "automatic" },
+    server: { middlewareMode: true, watch: null, hmr: false },
+    optimizeDeps: { noDiscovery: true },
+  });
+  try {
+    const { workspaceSnapshot, setupSteps } = await server.ssrLoadModule("/src/platform/workspace.tsx");
+    const row = (extra) => ({ is_demo: false, archived: false, ...extra });
+    const snapshot = workspaceSnapshot({
+      sites: [row({}), row({ is_demo: true }), row({ archived: true })],
+      buildings: [row({})], assets: [], meters: [row({}), row({ is_demo: true })], tariffs: [],
+      rules: [], imports: [{ is_demo: true }], analyses: [{ is_demo: false }, { is_demo: true }],
+      alerts: [{ is_demo: false, acknowledged: false }, { is_demo: false, acknowledged: true }, { is_demo: true, acknowledged: false }],
+    });
+    assert.deepEqual(snapshot, { sites: 1, buildings: 1, assets: 0, meters: 1, tariffs: 0, imports: 0, analyses: 1, openAlerts: 1 });
+    assert.deepEqual(setupSteps(snapshot).map((s) => s.done), [true, true, false, false, true]);
+    assert.deepEqual(workspaceSnapshot(undefined), { sites: 0, buildings: 0, assets: 0, meters: 0, tariffs: 0, imports: 0, analyses: 0, openAlerts: 0 });
+    const nav = source("platform/workspace.tsx");
+    assert.match(nav, /"battery-flexibility", "ev-charging"\]/);
+  } finally {
+    await server.close();
+  }
+});
