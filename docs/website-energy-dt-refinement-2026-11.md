@@ -53,6 +53,23 @@ domain, it is injected by Replit hosting, not by this code; disable it in the
 Replit deployment settings. The published domain could not be reached from
 this environment, so it was not inspected.
 
+### Follow-up: live geit.rw inspection (11 Nov 2026)
+
+geit.rw is registered at register.rw but its DNS points to the **Replit
+deployment** (responses come from `server: Google Frontend`; `/api/healthz`
+answers). The live build dates from 22 Oct 2026. Replit hosting injects two
+scripts at the end of every served page, outside this repository:
+
+- `https://replit-cdn.com/feedback-widget/widget.global.js` — the feedback widget
+- `https://i.replit.com/script.js` — Replit analytics
+
+Production builds now carry a Content-Security-Policy
+(`script-src 'self'; object-src 'none'; base-uri 'self'`), injected by a
+build-only Vite plugin. A browser test that injected those exact tags into the
+new build showed both refused on every page, the widget never executed, and no
+other errors. The site uses no inline scripts or `eval`. Also turn the feedback
+widget off in Replit's deployment settings so it is not injected at all.
+
 ## Remaining incomplete or externally dependent
 
 | Item | Dependency |
