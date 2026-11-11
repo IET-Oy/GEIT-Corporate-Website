@@ -1,5 +1,9 @@
 # Hosting GEIT on geit.rw (register.rw)
 
+> **Current setup (Nov 2026):** geit.rw is registered at register.rw and its DNS
+> points to the Replit deployment. To update the live site, redeploy on Replit.
+> Use this bundle only if you decide to move hosting to register.rw cPanel.
+
 This bundle runs the **corporate website and the Energy DT application in one
 Node.js process**. The API serves `/api/*`; every other path serves the built
 website, so `https://geit.rw/` and `https://geit.rw/app/...` work from the same

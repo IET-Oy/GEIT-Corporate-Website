@@ -1,7 +1,7 @@
 import path from 'path';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
-import { defineConfig } from 'vite';
+import { defineConfig, type Plugin } from 'vite';
 
 import runtimeErrorOverlay from '@replit/vite-plugin-runtime-error-modal';
 
@@ -19,6 +19,21 @@ if (Number.isNaN(port) || port <= 0) {
   throw new Error(`Invalid PORT value: "${rawPort}"`);
 }
 
+/**
+ * Production-only Content-Security-Policy. The site loads scripts only from its
+ * own origin, so hosting-injected third-party scripts (for example Replit's
+ * feedback widget and analytics) are refused by the browser on any host.
+ * Not applied to the dev server, which needs inline HMR scripts.
+ */
+export const productionScriptPolicy = "script-src 'self'; object-src 'none'; base-uri 'self'";
+function scriptPolicy(): Plugin {
+  return {
+    name: 'geit-script-policy',
+    apply: 'build',
+    transformIndexHtml: () => [{ tag: 'meta', attrs: { 'http-equiv': 'Content-Security-Policy', content: productionScriptPolicy }, injectTo: 'head-prepend' }],
+  };
+}
+
 const basePath = process.env.BASE_PATH;
 
 if (!basePath) {
@@ -33,6 +48,7 @@ export default defineConfig({
     react(),
     tailwindcss(),
     runtimeErrorOverlay(),
+    scriptPolicy(),
     ...(process.env.NODE_ENV !== 'production' &&
     process.env.REPL_ID !== undefined
       ? [

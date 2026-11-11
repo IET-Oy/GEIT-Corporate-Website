@@ -85,3 +85,13 @@ test("hero aligns positioning labels at the top, anchors the headline below and 
   assert.ok(!css.includes(".hero-veil"));
   assert.match(css, /background:rgba\(0,0,0,\.38\).*backdrop-filter:blur\(8px\)/);
 });
+
+test("production builds refuse hosting-injected third-party scripts such as Replit's feedback widget", () => {
+  const config = readFileSync(new URL("../vite.config.ts", import.meta.url), "utf8");
+  assert.match(config, /productionScriptPolicy = "script-src 'self'; object-src 'none'; base-uri 'self'"/);
+  assert.match(config, /name: 'geit-script-policy',\s*apply: 'build'/);
+  assert.match(config, /scriptPolicy\(\),/);
+  assert.doesNotMatch(config, /vite-plugin-dev-banner/);
+  const html = readFileSync(new URL("../index.html", import.meta.url), "utf8");
+  assert.doesNotMatch(html, /<script(?![^>]*type="module")[^>]*>/, "index.html must not add inline or third-party scripts");
+});
