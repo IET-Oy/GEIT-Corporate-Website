@@ -28,7 +28,8 @@ channel = "stable-25_05"
 SUPABASE_URL = "https://ahtoaubpffxbgkydguxi.supabase.co"
 
 [userenv.production]
-PLATFORM_ORIGIN = "https://geit-corporate-website.replit.app"
+PLATFORM_ORIGIN = "https://geit.rw"
+VITE_PUBLIC_SITE_URL = "https://geit.rw"
 
 [[ports]]
 localPort = 18414
