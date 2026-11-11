@@ -10,7 +10,7 @@ A corporate website for Global Energy Innovation Technologies Ltd (GEIT Ltd), wi
 - `pnpm run build` — typecheck + build all packages
 - `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
 - `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- Legacy env: `DATABASE_URL` — existing enquiry PostgreSQL; do not repurpose.
+- Legacy env: `DATABASE_URL` — existing enquiry PostgreSQL; do not repurpose. Optional: without it only `POST /api/enquiries` returns 503.
 - SaaS env: `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_DB_URL`.
   The last is for explicit reviewed migrations/tests only, never runtime queries.
 - `PLATFORM_ORIGIN` — explicit HTTPS application origin for production auth/CSRF;
@@ -38,6 +38,7 @@ A corporate website for Global Energy Innovation Technologies Ltd (GEIT Ltd), wi
 - The public consultation form is validation-only and does not send or store enquiries. A separate legacy enquiry API has PostgreSQL persistence code; do not implicitly connect the UI or migrate existing records.
 - The SaaS foundation uses the configured development Supabase Auth, PostgreSQL and private Storage. Versioned identity, private-bucket and Energy Management migrations have been applied; tenant and storage RLS are enabled. Energy Management is functional; document-upload UI and seven other service modules remain later phases. Preserve the legacy database.
 - `docs/geit-foundation-setup.md` covers the user's current Phase 1 scope, configuration, migrations, permission matrix, storage rules, repeatable tests and honest release gates.
+- `deploy/geit-rw/` builds a single Node.js bundle (website + API) for hosting on geit.rw via register.rw cPanel; see its README. Set `STATIC_SITE_DIR` only for that single-process mode.
 - See `docs/website-energy-dt-refinement-2026-11.md` for the single-level navigation, Energy DT product page, overview dashboard and Replit dev-banner removal.
 - See `docs/geit-energy-management.md` for the implemented module, customer workflow, interval/cost assumptions, permissions, test commands and limits. The user explicitly authorised this module after the foundation. Real email confirmation/recovery and redirect allowlists remain unverified; do not claim production readiness.
 
