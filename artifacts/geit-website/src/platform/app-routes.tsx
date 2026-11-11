@@ -1,6 +1,5 @@
 import { Link, Redirect, Route, Switch } from "wouter";
 import { SiteHeader } from "@/components/site-header";
-import { AppNav } from "./app-nav";
 import { CallbackPage, ForgotPasswordPage, RegisterPage, ResetPasswordPage, SignInPage } from "./auth-pages";
 import { OverviewPage, PlannedPage, SettingsPage } from "./workspace";
 import { EnergyPage } from "./energy/energy-page";
@@ -16,9 +15,9 @@ const engineering = Object.keys(MODULE_PATH) as EngModule[];
 export function AppRoutes() {
   return (
     <div className="geit-app min-h-[100dvh] bg-[#f2f5f7]">
+      <a href="#app-main" className="skip-link">Skip to main content</a>
       <SiteHeader />
-      <AppNav />
-      <main id="app-main">
+      <main id="app-main" tabIndex={-1}>
         <Switch>
           <Route path="/energy-dt" component={EnergyDtOverviewPage} />
           <Route path="/energy-dt/sign-in"><Redirect to="/app/sign-in" /></Route>

@@ -41,9 +41,8 @@ export default defineConfig({
               root: path.resolve(import.meta.dirname, '..'),
             }),
           ),
-          await import('@replit/vite-plugin-dev-banner').then((m) =>
-            m.devBanner(),
-          ),
+          // The Replit dev banner is intentionally not loaded: it injected a
+          // fixed overlay notification on preview domains.
         ]
       : []),
   ],

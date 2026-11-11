@@ -7,11 +7,11 @@ test("the platform route contract preserves existing sections and planned Recomm
   assert.deepEqual(platformModules.map(module => module.title), [
     "Overview", "Energy Management", "Energy Consulting", "Renewable Energy Advisory",
     "Energy Efficiency & Auditing", "Battery Storage & Flexibility",
-    "AI & Digital Energy Solutions", "Carbon Footprint", "Projects and Reports",
+    "EV Charging Infrastructure", "AI & Digital Energy Solutions", "Carbon Footprint", "Projects and Reports",
     "Recommendations", "Organisation Settings",
   ]);
-  assert.equal(new Set(platformModules.map(module => module.id)).size, 11);
-  assert.equal(new Set(platformModules.map(module => module.path)).size, 11);
+  assert.equal(new Set(platformModules.map(module => module.id)).size, 12);
+  assert.equal(new Set(platformModules.map(module => module.path)).size, 12);
 });
 
 test("available and planned routes preserve corporate routes without claiming production readiness", () => {

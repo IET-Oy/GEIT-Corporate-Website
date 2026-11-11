@@ -54,7 +54,7 @@ test("HTTP tenant and role boundaries fail closed with a synthetic provider", as
         assert.equal(response.status, 200);
         assert.deepEqual(Object.values(await response.json()).flat(), []);
       }
-      assert.equal(reads.length, 12 * 7);
+      assert.equal(reads.length, 12 * 9); // sites, buildings, assets, meters, tariffs, rules, imports, analyses, alerts
       for (const url of reads) assert.equal(url.searchParams.get("organisation_id"), `eq.${org}`);
     });
     await t.test("foreign IDs cannot download a report even inside an authorised organisation", async () => {

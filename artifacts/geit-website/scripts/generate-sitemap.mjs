@@ -24,6 +24,7 @@ const routes = [
   "/carbon-footprint-services",
   "/industries",
   "/digital-energy-solutions",
+  "/energy-dt",
   "/insights",
   "/contact",
   "/privacy-policy",
@@ -32,7 +33,7 @@ const routes = [
 
 if (!configuredBase) {
   console.warn("VITE_PUBLIC_SITE_URL is not set; sitemap generation is skipped until GEIT's public domain is confirmed.");
-  await writeFile(robotsPath, "User-agent: *\nAllow: /\n", "utf8");
+  await writeFile(robotsPath, "User-agent: *\nAllow: /\nDisallow: /app/\n", "utf8");
   process.exit(0);
 }
 
@@ -56,5 +57,5 @@ const sitemap = [
 ].join("\n");
 
 await writeFile(sitemapPath, sitemap, "utf8");
-await writeFile(robotsPath, `User-agent: *\nAllow: /\nSitemap: ${publicBase}/sitemap.xml\n`, "utf8");
+await writeFile(robotsPath, `User-agent: *\nAllow: /\nDisallow: /app/\nSitemap: ${publicBase}/sitemap.xml\n`, "utf8");
 console.log(`Generated sitemap for ${publicBase}.`);

@@ -17,14 +17,14 @@ const accountQuestions = {
 
 test("Energy DT navigation remains visible and follows its workspace route on click", async () => {
   const r = await supportRuntime(root);
-  const { render, within, user, cleanup, LanguageProvider, AppNav } = r;
+  const { render, within, user, cleanup, LanguageProvider, SiteHeader } = r;
   try {
     render(h(LanguageProvider, { initialLanguage: "en" },
-      h(Router, { ssrPath: "/" }, h(AppNav))));
+      h(Router, { ssrPath: "/" }, h(SiteHeader))));
     const link = within(document.body).getByRole("link", { name: "Energy DT" });
-    assert.equal(link.getAttribute("href"), "/energy-saas");
+    assert.equal(link.getAttribute("href"), "/energy-dt");
     await user.click(link);
-    assert.equal(window.location.pathname, "/energy-saas");
+    assert.equal(window.location.pathname, "/energy-dt");
   } finally {
     cleanup();
     await r.close();
