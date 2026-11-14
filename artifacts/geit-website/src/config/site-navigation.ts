@@ -19,10 +19,10 @@ export const mainNavigation: readonly NavItem[] = [
   { key: "navContact", href: "/contact" },
 ];
 
-/** Energy DT stays active across its public overview and the protected application. */
+/** Energy DT is an information page here; the application itself is a separate deployment. */
 export function isNavActive(href: string, path: string) {
   if (href === "/") return path === "/";
-  if (href === "/energy-dt") return path === "/energy-dt" || path.startsWith("/energy-dt/") || path === "/app" || path.startsWith("/app/");
+  if (href === "/energy-dt") return path === "/energy-dt" || path.startsWith("/energy-dt/");
   if (href === "/industries") return path === "/industries" || path.startsWith("/industries/") || path === "/digital-energy-solutions";
   return path === href || path.startsWith(href + "/");
 }

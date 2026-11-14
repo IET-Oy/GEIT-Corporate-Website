@@ -10,9 +10,9 @@ test("approved navigation is a single level of seven links in exact order", () =
   assert.equal(mainNavigation[3].key, "navIndustries");
 });
 
-test("Energy DT stays active across its overview and the protected application", () => {
-  for (const path of ["/energy-dt", "/app", "/app/energy-management"]) assert.ok(isNavActive("/energy-dt", path), path);
-  assert.ok(!isNavActive("/energy-dt", "/about"));
+test("Energy DT is highlighted on its information page only; the application is a separate site", () => {
+  assert.ok(isNavActive("/energy-dt", "/energy-dt"));
+  for (const path of ["/about", "/app", "/app/energy-management"]) assert.ok(!isNavActive("/energy-dt", path), path);
   assert.ok(isNavActive("/industries", "/digital-energy-solutions"));
   assert.ok(isNavActive("/", "/") && !isNavActive("/", "/about"));
 });
@@ -22,13 +22,12 @@ test("language selector keeps its header slot and Energy DT routes are preserved
   assert.equal((header.match(/<LanguageSelector \/>/g) ?? []).length, 1);
   assert.match(header, /<\/nav>\s*<LanguageSelector \/>\s*<button/);
   assert.doesNotMatch(header, /data-secondary-start|ResizeObserver/);
-  const workspace = readFileSync(new URL("../src/platform/app-routes.tsx", import.meta.url), "utf8");
-  assert.match(workspace, /<SiteHeader \/>/);
-  assert.doesNotMatch(workspace, /AppNav/);
   const app = readFileSync(new URL("../src/App.tsx", import.meta.url), "utf8");
   assert.doesNotMatch(app, /AppNav/);
   assert.match(app, /location === "\/energy-saas"[\s\S]*<Redirect to="\/energy-dt" \/>/);
-  assert.match(app, /location === "\/app" \|\| location\.startsWith\("\/app\/"\)[\s\S]*<AppRoutes \/>/);
+  assert.match(app, /<Route path="\/energy-dt" component=\{EnergyDtPage\}\/>/);
+  assert.match(app, /<Route path="\/app\/:rest\*" component=\{EnergyDtMovedPage\}\/>/);
+  assert.doesNotMatch(app, /AppRoutes|@\/platform\//);
   assert.match(app, /className="skip-link"/);
   assert.ok(readFileSync(new URL("../src/components/hero-headline.tsx", import.meta.url), "utf8").includes('c("Make smarter energy decisions.")') && app.includes("<HeroHeadline/>") && !app.includes("Build a more efficient, resilient and low-carbon future."));
   assert.ok(app.includes("Integrated consulting, project development, digital energy and carbon services—grounded in data, rigorous analysis and sound economics."));

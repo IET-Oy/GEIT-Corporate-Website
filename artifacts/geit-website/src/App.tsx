@@ -18,7 +18,8 @@ import { RouteScroll } from '@/components/route-scroll';
 import { companyContact } from '@/config/company-contact';
 import { ContactMethods } from '@/components/contact-methods';
 import { PageMetadata as Meta } from '@/components/page-metadata';
-import { AppRoutes } from '@/platform/app-routes';
+import { EnergyDtPage } from '@/pages/energy-dt';
+import { EnergyDtMovedPage } from '@/pages/energy-dt-moved';
 import { HeroHeadline } from '@/components/hero-headline';
 import { SaasFaqSection } from '@/components/saas-faq-section';
 import { SupportWidget } from '@/components/support-widget';
@@ -305,10 +306,6 @@ function Router() {
     return <ErrorBoundary resetKey={location}><Redirect to="/energy-dt" /></ErrorBoundary>;
   }
 
-  if (location === "/energy-dt" || location.startsWith("/energy-dt/") || location === "/app" || location.startsWith("/app/")) {
-    return <ErrorBoundary resetKey={location}><AppRoutes /></ErrorBoundary>;
-  }
-
   return (
     <ErrorBoundary resetKey={location}>
       <Shell>
@@ -322,6 +319,10 @@ function Router() {
           <Route path="/carbon-footprint-services" component={CarbonPage}/>
           <Route path="/insights" component={InsightsPage}/>
           <Route path="/contact" component={ContactPage}/>
+          <Route path="/energy-dt" component={EnergyDtPage}/>
+          <Route path="/energy-dt/:rest*" component={EnergyDtMovedPage}/>
+          <Route path="/app" component={EnergyDtMovedPage}/>
+          <Route path="/app/:rest*" component={EnergyDtMovedPage}/>
           <Route path="/privacy-policy"><LegalPage kind="privacy"/></Route>
           <Route path="/terms-of-use"><LegalPage kind="terms"/></Route>
           <Route><NotFound/></Route>

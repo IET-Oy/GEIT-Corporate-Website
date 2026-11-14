@@ -97,7 +97,7 @@ function LocalizedSupport({ open, setOpen }: { open: boolean; setOpen: (open: bo
                 <p>{m.text}</p>
                 {m.answer && m.answer.links.length > 0 && (
                   <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1 font-bold">
-                    {m.answer.links.map((l) => <li key={l.href}><Link href={l.href} onClick={() => setOpen(false)} className="text-[#168568] underline underline-offset-2">{l.label}</Link></li>)}
+                    {m.answer.links.map((l) => <li key={l.href}>{/^https?:/.test(l.href) ? <a href={l.href} className="text-[#168568] underline underline-offset-2">{l.label}</a> : <Link href={l.href} onClick={() => setOpen(false)} className="text-[#168568] underline underline-offset-2">{l.label}</Link>}</li>)}
                   </ul>
                 )}
                 {m.answer?.kind === "human" && (

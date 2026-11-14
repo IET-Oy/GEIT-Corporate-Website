@@ -58,7 +58,7 @@ function LocalizedFaq() {
                         <p className="mb-3 inline-block border border-[#c9d5db] bg-[#f2f5f7] px-2 py-1 text-[11px] font-bold tracking-[.08em] text-[#10243a]">{copy[f.status].toUpperCase()}: {f.statusNote}</p>
                         <p className="text-sm leading-7 text-[#4f6370]">{f.answer}</p>
                         <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm font-bold">
-                          {f.links.map((l) => <Link key={l.href} href={l.href} className="text-[#168568] underline underline-offset-4">{l.label}</Link>)}
+                          {f.links.map((l) => /^https?:/.test(l.href) ? <a key={l.href} href={l.href} className="text-[#168568] underline underline-offset-4">{l.label}</a> : <Link key={l.href} href={l.href} className="text-[#168568] underline underline-offset-4">{l.label}</Link>)}
                           <button type="button" onClick={() => window.dispatchEvent(new CustomEvent(SUPPORT_OPEN_EVENT, { detail: { question: f.question } }))} className="inline-flex items-center gap-2 text-[#10243a] underline underline-offset-4"><MessageCircle size={15} aria-hidden="true" />{copy.ask}</button>
                         </div>
                       </div>

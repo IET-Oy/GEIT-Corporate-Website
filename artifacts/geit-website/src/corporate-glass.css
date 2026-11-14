@@ -23,7 +23,6 @@
 
 /* Keep all existing widths, padding, margins and responsive positions. */
 .geit-public > header,
-.geit-public > [data-testid="nav-application"],
 .geit-public #mobile-navigation,
 .geit-public > footer {
   background: var(--corporate-glass);
@@ -152,8 +151,7 @@
 }
 @media (max-width: 767px) {
   .geit-public > header,
-  .geit-public > [data-testid="nav-application"],
-  .geit-public main > section:not([data-testid="home-hero"]) > div {
+    .geit-public main > section:not([data-testid="home-hero"]) > div {
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
   }

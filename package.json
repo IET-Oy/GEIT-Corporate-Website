@@ -4,7 +4,7 @@
   "license": "MIT",
   "packageManager": "pnpm@12.15.0",
   "scripts": {
-    "test:local": "pnpm --filter @workspace/api-server run test:safe && pnpm --filter @workspace/geit-website run test:platform && pnpm --filter @workspace/geit-website run test:reports && pnpm --filter @workspace/geit-website run test:auth-ui && pnpm --filter @workspace/geit-website run check:localization",
+    "test:local": "pnpm --filter @workspace/api-server run test:safe && pnpm --filter @workspace/geit-website run test:platform && pnpm --filter @workspace/geit-website run check:localization",
     "preinstall": "sh -c 'rm -f package-lock.json yarn.lock; case \"$npm_config_user_agent\" in pnpm/*) ;; *) echo \"Use pnpm instead\" >&2; exit 1 ;; esac'",
     "build": "corepack pnpm run typecheck && corepack pnpm -r --if-present run build",
     "typecheck:libs": "tsc --build",

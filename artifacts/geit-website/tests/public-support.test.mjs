@@ -68,7 +68,8 @@ test("public FAQ answers, fallbacks and rendered accessibility contracts", async
       assert.ok(faq.searchFaq("solar").some((item) => item.id === "solar-battery"));
       const app = readFileSync(path.join(root, "src/App.tsx"), "utf8");
       const slugs = [...app.matchAll(/slug:'([^']+)'/g)].map((match) => `/services/${match[1]}`);
-      const routes = new Set(["/services", "/contact", "/app", "/app/sign-in", "/app/forgot-password",
+      // Energy DT links go to its info page until VITE_ENERGY_DT_URL points at the standalone app.
+      const routes = new Set(["/services", "/contact", "/energy-dt",
         "/privacy-policy", "/digital-energy-solutions", ...slugs]);
       for (const item of faq.saasFaq) {
         for (const link of item.links) assert.ok(routes.has(link.href), `Unknown FAQ link: ${link.href}`);

@@ -6,13 +6,15 @@ type PageMetadataProps = {
   description: string;
   path?: string;
   noIndex?: boolean;
+  /** English-only pages pass their copy through unchanged instead of the catalogue. */
+  untranslated?: boolean;
 };
 
 /** Copy inputs are always English source strings, like all shared page helpers. */
-export function PageMetadata({ title, description, path, noIndex = false }: PageMetadataProps) {
+export function PageMetadata({ title, description, path, noIndex = false, untranslated = false }: PageMetadataProps) {
   const { c, language } = useLanguage();
-  const localizedTitle = `${c(title)} | GEIT Ltd`;
-  const localizedDescription = c(description);
+  const localizedTitle = `${untranslated ? title : c(title)} | GEIT Ltd`;
+  const localizedDescription = untranslated ? description : c(description);
 
   useEffect(() => {
     document.title = localizedTitle;

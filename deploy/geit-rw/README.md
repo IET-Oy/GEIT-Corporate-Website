@@ -1,114 +1,39 @@
-# Hosting GEIT on geit.rw (register.rw)
+# Hosting the GEIT corporate website on geit.rw (register.rw)
 
-> **Current setup (Nov 2026):** geit.rw is registered at register.rw and its DNS
-> points to the Replit deployment. To update the live site, redeploy on Replit.
-> Use this bundle only if you decide to move hosting to register.rw cPanel.
+The corporate website is a **static site**. It needs no Node.js, database or
+environment secrets on the server. Energy DT is a separate application
+(repository `IET-Oy/Energy-DT`, deployed on Vercel); this site only links to it.
 
-This bundle runs the **corporate website and the Energy DT application in one
-Node.js process**. The API serves `/api/*`; every other path serves the built
-website, so `https://geit.rw/` and `https://geit.rw/app/...` work from the same
-origin (required for Energy DT's secure cookies).
-
-## 0. Check your register.rw hosting plan
-
-| Plan feature | What works |
-| --- | --- |
-| cPanel with **"Setup Node.js App"** (Node 20.12+; 22 recommended) | Everything: website + Energy DT. Use steps 1–6. |
-| Static/PHP-only hosting (no Node.js) | Corporate pages only. Energy DT sign-in/workspace will **not** work. See "Static-only fallback". |
-| VPS | Everything. Run `npm install --omit=dev && npm start` behind Nginx/Apache with HTTPS. |
-
-If the cPanel "Software" section has no **Setup Node.js App**, ask register.rw
-support to enable Node.js on the plan or upgrade to one that has it.
-
-## 1. Build the bundle (on a computer with the repository)
+## 1. Build the package
 
 ```bash
 corepack pnpm install --frozen-lockfile
-node deploy/geit-rw/build-package.mjs
+VITE_ENERGY_DT_URL=https://<energy-dt-domain> node deploy/geit-rw/build-package.mjs
 ```
 
-This produces `deploy/out/geit-rw-node.zip` (website built for
-`https://geit.rw`, including `sitemap.xml` and `robots.txt`).
+`VITE_ENERGY_DT_URL` is the HTTPS origin of the Energy DT deployment (no path),
+for example `https://energy-dt.vercel.app` or `https://app.geit.rw`. It is baked
+into the build and powers the "Launch Energy DT" button. Without it the button
+falls back to "Request access", which links to the contact page.
 
-## 2. Point geit.rw at the hosting and enable HTTPS
+Output: `deploy/out/geit-rw-static.zip` (website, `sitemap.xml`, `robots.txt`
+and `.htaccess` for HTTPS, page routing and caching).
 
-- If geit.rw uses register.rw nameservers on the same account, the domain
-  already points at the hosting. Otherwise set an `A` record for `geit.rw`
-  and `www` to the server IP shown in cPanel.
-- cPanel → **SSL/TLS Status** → run **AutoSSL** for `geit.rw` and `www.geit.rw`.
-  HTTPS is mandatory: the server refuses to start without an `https://` origin.
+## 2. Upload (cPanel)
 
-## 3. Upload
-
-cPanel → **File Manager** → create `/home/<user>/geit-app` (outside
-`public_html`) → upload and extract `geit-rw-node.zip` there.
-
-## 4. Create the Node.js application
-
-cPanel → **Setup Node.js App** → **Create Application**:
-
-- Node.js version: **22** (minimum 20.12)
-- Application mode: **Production**
-- Application root: `geit-app`
-- Application URL: `geit.rw` (leave the path empty)
-- Application startup file: `app.cjs`
-
-Then **Run NPM Install** (installs `pdfkit`, `exceljs`, `unzipper`).
-
-## 5. Environment variables
-
-Add these in the application's **Environment variables** section (or copy
-`env.example` to `.env` in `geit-app`):
-
-| Name | Value |
-| --- | --- |
-| `NODE_ENV` | `production` |
-| `PLATFORM_ORIGIN` | `https://geit.rw` |
-| `SUPABASE_URL` | `https://ahtoaubpffxbgkydguxi.supabase.co` |
-| `SUPABASE_PUBLISHABLE_KEY` | Supabase → Project Settings → API Keys → publishable key |
-| `SESSION_SECRET` | **Copy the existing value from Replit Secrets.** A new value makes saved analyses fail signature checks. |
-
-Optional: `GEIT_AI_ENABLED=true`, `OPENAI_API_KEY`, `GEIT_AI_MODEL` for AI
-explanations. Leave `DATABASE_URL` unset; without it, only the unused legacy
-`/api/enquiries` endpoint returns 503.
-
-Click **Restart**.
-
-## 6. Supabase Auth settings
-
-Supabase dashboard → **Authentication → URL Configuration**:
-
-- Site URL: `https://geit.rw`
-- Redirect URLs: `https://geit.rw/app/auth/callback` and
-  `https://geit.rw/app/auth/callback?flow=recovery`
-
-Without this, confirmation and password-reset emails link to the wrong site.
-
-## 7. Verify
-
-- `https://geit.rw/api/healthz` returns `{"status":"ok"}`.
-- `https://geit.rw/`, `/about`, `/energy-dt` load; refreshing `/energy-dt`
-  does not 404.
-- Register a test account with a real inbox; confirm the email and sign in at
-  `https://geit.rw/app/sign-in`.
-- No Replit badge or banner appears (this bundle contains no Replit code).
-
-Logs: cPanel → Setup Node.js App → your app → the log file path shown there.
+1. **SSL/TLS Status** → run **AutoSSL** for `geit.rw` and `www.geit.rw`
+   (DNS must already point to the cPanel server).
+2. **File Manager** → `public_html` → upload `geit-rw-static.zip` → **Extract**
+   (enable "Show Hidden Files" to see `.htaccess`). Replace existing files.
+3. Visit `https://geit.rw`, `https://geit.rw/energy-dt` and refresh a deep link
+   such as `https://geit.rw/services/energy-management`; it must not 404.
 
 ## Updating later
 
-Rebuild the bundle, upload, overwrite `dist/` and `public/`, then **Restart**.
-Keep `.env` and environment variables as they are.
+Rebuild the package and extract it over `public_html` again. If the Energy DT
+URL changes, rebuild with the new `VITE_ENERGY_DT_URL`.
 
-## Static-only fallback (no Node.js)
+## Old Energy DT links
 
-Upload the contents of `public/` to `public_html/` and rename
-`static-only.htaccess` to `public_html/.htaccess`. The corporate pages, contact
-details and the Energy DT information page work; the Energy DT application
-(sign-in and workspace) does not, because it needs the Node.js API.
-
-## Once geit.rw is live
-
-Turn off or delete the Replit deployment so there is one public copy.
-`geit-corporate-website.replit.app` also shows Replit's own hosting badge,
-which this bundle does not include.
+`https://geit.rw/app/...` addresses (bookmarks, earlier account emails) show
+"Energy DT has moved" and forward to the same path on `VITE_ENERGY_DT_URL`.

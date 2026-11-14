@@ -1,4 +1,5 @@
 import { companyContact } from "@/config/company-contact";
+import { ENERGY_DT_URL, energyDtLink } from "@/config/energy-dt";
 import type { LanguageCode } from "@/lib/i18n";
 import { supportCopy, supportLinks } from "@/lib/translations/support";
 import { frFaq } from "@/lib/translations/faq-fr";
@@ -26,7 +27,9 @@ export const STATUS_LABEL: Record<FaqStatus, string> = {
 };
 
 const CONTACT: FaqLink = { label: "Contact GEIT", href: "/contact" };
-const PLATFORM: FaqLink = { label: "Energy DT sign-in", href: "/app" };
+// Energy DT is a separate application; until its URL is configured, link to its information page.
+const platformLink = (path: string) => (ENERGY_DT_URL ? energyDtLink(path) : "/energy-dt");
+const PLATFORM: FaqLink = { label: "Energy DT sign-in", href: platformLink("/app/sign-in") };
 
 export const saasFaq: FaqItem[] = [
   {
@@ -153,8 +156,8 @@ export const saasFaq: FaqItem[] = [
     statusNote: "Human support via the contact route.",
     keywords: ["support", "help", "technical", "problem", "issue", "bug", "password", "reset", "forgot", "recover", "recovery", "account", "human", "agent", "person"],
     links: [
-      { label: "Forgot password", href: "/app/forgot-password" },
-      { label: "Sign in", href: "/app/sign-in" },
+      { label: "Forgot password", href: platformLink("/app/forgot-password") },
+      { label: "Sign in", href: platformLink("/app/sign-in") },
       CONTACT,
     ],
     humanHelp: true,
