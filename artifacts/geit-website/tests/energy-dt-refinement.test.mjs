@@ -8,48 +8,47 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Router } from "wouter";
 import { createServer } from "vite";
+import { existsSync } from "node:fs";
 import { mainNavigation } from "../src/config/site-navigation.ts";
+import { energyDtLink, normaliseEnergyDtUrl } from "../src/config/energy-dt.ts";
 
 const source = (path) => readFileSync(new URL(`../src/${path}`, import.meta.url), "utf8");
 
-test("Energy DT navigation opens the existing protected workspace routes", () => {
+test("Energy DT navigation opens the corporate information page, not the application", () => {
   const product = mainNavigation.find((item) => item.href === "/energy-dt");
   assert.equal(product.label, "Energy DT");
   const navigation = source("components/site-header.tsx");
   assert.match(navigation, /geit-silver-link/);
-  assert.match(navigation, /link-energy-dt/);
   assert.match(navigation, /href=\{l\.href\}/);
-  assert.doesNotMatch(navigation, /preventDefault|setComingSoon|energy-dt-coming-soon/);
   const routes = source("App.tsx");
   assert.match(routes, /location === "\/energy-saas"[\s\S]*<Redirect to="\/energy-dt" \/>/);
-  assert.match(routes, /location === "\/energy-dt" \|\| location\.startsWith\("\/energy-dt\/"\)/);
-  assert.match(routes, /location === "\/app" \|\| location\.startsWith\("\/app\/"\)[\s\S]*<AppRoutes \/>/);
-  const appRoutes = source("platform/app-routes.tsx");
-  assert.match(appRoutes, /<Route path="\/app\/sign-in" component=\{SignInPage\} \/>/);
-  assert.match(appRoutes, /<Route path="\/app" component=\{OverviewPage\} \/>/);
-  assert.match(source("platform/workspace.tsx"), /data-testid="state-signed-out"/);
+  assert.match(routes, /<Route path="\/energy-dt" component=\{EnergyDtPage\}\/>/);
+  for (const path of ["/app", "/app/:rest*", "/energy-dt/:rest*"]) assert.ok(routes.includes(`<Route path="${path}" component={EnergyDtMovedPage}/>`), path);
 });
 
-test("Energy DT has a distinct overview, honest status and usable workspace destinations", () => {
-  const overview = source("platform/energy-dt-overview.tsx");
-  for (const label of [
-    "Dashboard", "Organisations & Sites", "Assets & Meters",
-    "Digital Twin, Forecasting & Anomaly Detection", "Engineering & Simulations",
-    "Tariffs, Costs & Savings", "Carbon Footprint", "Reports & Documents",
-    "Projects & Recommendations", "Settings & Organisation Management",
-  ]) assert.ok(overview.includes(label), `missing destination: ${label}`);
-  assert.match(overview, /not verify live sign-in,[\s\S]*Row-Level Security against a dedicated staging project/);
-  for (const area of ["Energy Management", "Renewable Energy", "Energy Efficiency", "Battery Storage & Energy Flexibility",
-    "Carbon Footprint Services", "EV Charging Infrastructure", "AI-Powered Energy Analytics"]) {
-    assert.ok(overview.includes(`title: "${area}"`), `missing service area: ${area}`);
-  }
-  assert.match(overview, /AI-Powered Energy Digital Twin/);
-  assert.match(overview, /href="\/app\/sign-in"/);
-  assert.match(overview, /href="\/app\/register"/);
-  assert.match(overview, /href="\/privacy-policy"/);
-  assert.match(overview, /href="\/terms-of-use"/);
-  assert.match(source("platform/app-routes.tsx"), /path="\/app\/recommendations"><PlannedPage moduleId="recommendations"/);
-  assert.match(source("config/platform-modules.ts"), /id: "recommendations"[\s\S]*readiness: "planned"/);
+test("the Energy DT application code has left the corporate repository", () => {
+  for (const path of ["platform", "config/platform-modules.ts"]) assert.equal(existsSync(new URL(`../src/${path}`, import.meta.url)), false, path);
+  const pkg = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8"));
+  assert.equal(pkg.devDependencies["@workspace/api-client-react"], undefined);
+  assert.doesNotMatch(source("index.css") + source("corporate-glass.css"), /\.geit-app|nav-application/);
+});
+
+test("the Launch Energy DT link targets only an HTTPS application origin, otherwise the contact page", () => {
+  assert.equal(normaliseEnergyDtUrl("https://energy-dt.example.com/"), "https://energy-dt.example.com");
+  for (const bad of ["http://energy-dt.example.com", "https://x.example.com/app", "javascript:alert(1)", "", "https://u:p@x.example.com"]) assert.equal(normaliseEnergyDtUrl(bad), "", bad);
+  assert.equal(energyDtLink("/app", "https://energy-dt.example.com"), "https://energy-dt.example.com/app");
+  assert.equal(energyDtLink("/app/register", ""), "/contact");
+});
+
+test("the Energy DT page explains the platform and offers a launch call-to-action", () => {
+  const page = source("pages/energy-dt.tsx");
+  for (const title of ["Energy Management", "Renewable Energy Management", "Battery Storage and Flexibility", "Energy Efficiency and Optimization",
+    "Carbon Footprint Monitoring", "EV Charging Management", "AI-Powered Energy Insights and Analytics"]) assert.ok(page.includes(`title: "${title}"`), title);
+  for (const heading of ["WHAT ENERGY DT IS", "THE PROBLEMS IT ADDRESSES", "CAPABILITIES AND SERVICES", "WHO IT IS FOR", "BUSINESS BENEFITS", "CURRENT AVAILABILITY", "ACCESS ENERGY DT"]) assert.ok(page.includes(heading), heading);
+  for (const customer of ["SMEs", "Commercial buildings", "Organisations with multiple sites"]) assert.ok(page.includes(`title: "${customer}"`), customer);
+  assert.match(page, /Launch Energy DT/);
+  assert.match(page, /energyDtLink\("\/app"\)/);
+  assert.doesNotMatch(page, /@workspace\/api-client-react|@\/platform/);
 });
 
 test("silver-fluid control supports touch, focus, pressed and reduced-motion modes", () => {
@@ -65,13 +64,10 @@ test("silver-fluid control supports touch, focus, pressed and reduced-motion mod
   assert.match(silver, /prefers-reduced-motion:reduce/);
 });
 
-test("corporate and application refinements have separate route scopes", () => {
-  const corporate = source("App.tsx");
-  assert.match(corporate, /geit-corp/);
-  assert.match(source("platform/app-routes.tsx"), /geit-app/);
+test("corporate pages keep their route scope", () => {
+  assert.match(source("App.tsx"), /geit-corp/);
   const css = source("index.css");
   assert.match(css, /\.geit-corp/);
-  assert.match(css, /\.geit-app/);
   assert.match(css, /#123B2A/i);
   assert.ok(css.includes(".geit-corp main a.text-\\[\\#116d55\\]"), "industry service-chip text gets dark green without changing its background");
   assert.ok(css.includes(".geit-corp main a span.text-\\[\\#168568\\]"), "nested link labels get dark green without changing decorative icons");
@@ -83,7 +79,6 @@ test("public product descriptions and multilingual support use the Energy DT nam
     assert.match(contents, /Energy DT/);
     assert.doesNotMatch(contents, /Energy SaaS|ENERGY SAAS/);
   }
-  assert.match(source("platform/common.tsx"), /ENERGY DT/);
 });
 
 test("corporate navigation glass is paint-only and text recolouring excludes the hero and SVGs", () => {
@@ -180,68 +175,25 @@ test("all corporate pages share glass styling while retaining inner-page scope a
       const html = renderToStaticMarkup(createElement(LanguageProvider, { initialLanguage: "en" },
         createElement(QueryClientProvider, { client: queryClient },
           createElement(Router, { ssrPath: route }, createElement(SiteRoutes)))));
-      const appRoute = route === "/energy-dt" || route.startsWith("/energy-dt/") || route === "/app" || route.startsWith("/app/");
-      assert.equal(/class="grain min-h-\[100dvh\] geit-public/.test(html), !appRoute, route);
-      if (!appRoute) assert.equal(/class="grain min-h-\[100dvh\] geit-public geit-corp"/.test(html), route !== "/", route);
+      // Every route, including /energy-dt and the old /app links, is now a corporate page.
+      assert.match(html, /class="grain min-h-\[100dvh\] geit-public/, route);
+      assert.equal(/class="grain min-h-\[100dvh\] geit-public geit-corp"/.test(html), route !== "/", route);
       assert.match(html, /geit-silver-link/);
       assert.match(html, /href="\/energy-dt"/);
-      assert.doesNotMatch(html, /data-testid="nav-application"/);
-      if (appRoute) {
-        assert.match(html, /class="geit-app min-h-\[100dvh\] bg-\[#f2f5f7\]"/);
-        assert.doesNotMatch(html, /Energy DT is coming soon/);
-        if (route === "/app/sign-in") assert.match(html, /Sign in to your workspace/);
-        if (route === "/energy-dt") assert.match(html, /data-testid="energy-dt-overview"/);
-      } else {
-        assert.match(html, /data-testid="corporate-backdrop"/);
+      assert.match(html, /data-testid="corporate-backdrop"/);
+      assert.doesNotMatch(html, /geit-app|data-testid="nav-application"|Sign in to your workspace/, route);
+      if (route !== "/") assert.match(html, /geit-glass/, `${route}: floating glass content`);
+      if (route === "/energy-dt") {
+        assert.match(html, /data-testid="energy-dt-info"/);
+        assert.match(html, /data-testid="link-launch-energy-dt"/);
       }
-      if (route !== "/" && !appRoute) assert.match(html, /geit-glass/, `${route}: floating glass content`);
+      if (route.startsWith("/app")) assert.match(html, /data-testid="energy-dt-moved"/);
       if (route === "/") {
         assert.match(html, /data-testid="home-hero"/);
         assert.match(html, /homepage-background\.webp/);
         assert.match(html, /Make smarter energy decisions\./);
       }
     }
-    const { TwinCharts } = await server.ssrLoadModule("/src/platform/sustainability/twin-charts.tsx");
-    assert.equal(renderToStaticMarkup(createElement(TwinCharts, { result: { tables: [] } })), "");
-    const html = renderToStaticMarkup(createElement(TwinCharts, { result: { tables: [{
-      title: "Historical building series", rows: [{
-        start: "2026-01-01T00:00:00Z", end: "2026-01-01T01:00:00Z",
-        loadKwh: 5, solarKwh: 2, gridImportKwh: 3,
-      }],
-    }] } }));
-    assert.match(html, /Measured:/);
-    assert.match(html, /imported building load and solar readings/);
-    assert.match(html, /Simulated:/);
-    assert.match(html, /grid flows and battery dispatch, where configured/);
-    assert.doesNotMatch(html, /Estimated \/ forecast:/);
-  } finally {
-    await server.close();
-  }
-});
-
-test("workspace overview counts only the organisation's live records and derives honest setup steps", async () => {
-  const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-  const server = await createServer({
-    root, configFile: false, appType: "custom", logLevel: "error",
-    resolve: { alias: { "@": path.join(root, "src") }, dedupe: ["react", "react-dom"] },
-    esbuild: { jsx: "automatic" },
-    server: { middlewareMode: true, watch: null, hmr: false },
-    optimizeDeps: { noDiscovery: true },
-  });
-  try {
-    const { workspaceSnapshot, setupSteps } = await server.ssrLoadModule("/src/platform/workspace.tsx");
-    const row = (extra) => ({ is_demo: false, archived: false, ...extra });
-    const snapshot = workspaceSnapshot({
-      sites: [row({}), row({ is_demo: true }), row({ archived: true })],
-      buildings: [row({})], assets: [], meters: [row({}), row({ is_demo: true })], tariffs: [],
-      rules: [], imports: [{ is_demo: true }], analyses: [{ is_demo: false }, { is_demo: true }],
-      alerts: [{ is_demo: false, acknowledged: false }, { is_demo: false, acknowledged: true }, { is_demo: true, acknowledged: false }],
-    });
-    assert.deepEqual(snapshot, { sites: 1, buildings: 1, assets: 0, meters: 1, tariffs: 0, imports: 0, analyses: 1, openAlerts: 1 });
-    assert.deepEqual(setupSteps(snapshot).map((s) => s.done), [true, true, false, false, true]);
-    assert.deepEqual(workspaceSnapshot(undefined), { sites: 0, buildings: 0, assets: 0, meters: 0, tariffs: 0, imports: 0, analyses: 0, openAlerts: 0 });
-    const nav = source("platform/workspace.tsx");
-    assert.match(nav, /"battery-flexibility", "ev-charging"\]/);
   } finally {
     await server.close();
   }
