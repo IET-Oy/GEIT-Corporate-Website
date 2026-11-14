@@ -1,5 +1,5 @@
 /**
- * Energy DT is a separate application (repository IET-Oy/Energy-DT, deployed on Vercel).
+ * Energy DT is a separate application (repository IET-Oy/IET-Oy-Energy-DT, not yet deployed).
  * The corporate site only links to it. Set VITE_ENERGY_DT_URL at build time to its HTTPS
  * origin, e.g. https://energy-dt.vercel.app or https://app.geit.rw (no path).
  */

@@ -2,7 +2,7 @@
 
 The corporate website is a **static site**. It needs no Node.js, database or
 environment secrets on the server. Energy DT is a separate application
-(repository `IET-Oy/Energy-DT`, deployed on Vercel); this site only links to it.
+(repository `IET-Oy/IET-Oy-Energy-DT`, not yet deployed); this site only links to it.
 
 ## 1. Build the package
 

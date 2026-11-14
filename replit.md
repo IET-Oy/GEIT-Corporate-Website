@@ -1,6 +1,6 @@
 # GEIT Ltd Corporate Website
 
-> Energy DT is now a separate application in `IET-Oy/Energy-DT` (Vercel). This repository is the corporate website only; see `docs/architecture.md`. Notes below about the SaaS, Supabase and `/app` are historical.
+> Energy DT is now a separate application in `IET-Oy/IET-Oy-Energy-DT` (source only, not yet deployed). This repository is the corporate website only; see `docs/architecture.md`. Notes below about the SaaS, Supabase and `/app` are historical.
 
 A corporate website for Global Energy Innovation Technologies Ltd (GEIT Ltd), with global energy and technology positioning. The user approved extending it into an Energy Intelligence SaaS in phases without rebuilding the corporate site.
 

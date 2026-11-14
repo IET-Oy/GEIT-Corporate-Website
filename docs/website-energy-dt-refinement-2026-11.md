@@ -1,6 +1,6 @@
 # GEIT website and Energy DT refinement — November 2026
 
-> Superseded for Energy DT: the application moved to `IET-Oy/Energy-DT`. See `docs/architecture.md`.
+> Superseded for Energy DT: the application moved to `IET-Oy/IET-Oy-Energy-DT`. See `docs/architecture.md`.
 
 Branch: `claude/ecstatic-planck-9rr0km`. Not merged, published or deployed.
 No database migrations were written or applied. No production records,
